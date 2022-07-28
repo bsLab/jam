@@ -1,3 +1,3 @@
 # Documentation
 
-This directory contains articels and books about JAM.
+This directory contains articles and books about JAM.
