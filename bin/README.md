@@ -1,3 +1,3 @@
 # Distribution
 
-This directory contains compile ready-to-use programs and libraries.
+This directory contains compile ready-to-use shell programs and Web applications.
