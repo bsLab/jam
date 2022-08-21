@@ -3533,10 +3533,10 @@ module.exports = {
 
     <div class="app-page" data-page="home">
       <div class="app-topbar teal">
-        <div class="app-button left" poweroff onclick="javascript:(function () { if (Network.state==0) Network.start(); else Network.stop(); if (Jam.state==0) Jam.start(); else Jam.stop(); })()"></div>
+        <div class="app-button left" poweroff="" onclick="javascript:(function () { if (Network.state==0) Network.start(); else Network.stop(); if (Jam.state==0) Jam.start(); else Jam.stop(); })()"></div>
         <div class="app-title">Menu</div>
-        <div class="app-button right" reload onclick="javascript:window.location.reload(true)"></div>
-        <div class="app-button right" setup data-target="page-setup"></div>
+        <div class="app-button right" reload="" onclick="javascript:window.location.reload(true)"></div>
+        <div class="app-button right" setup="" data-target="page-setup"></div>
       </div>
       <div class="app-content">
         <div class="app-section">
@@ -3557,13 +3557,13 @@ module.exports = {
 
     <div class="app-page" data-page="page-network">
       <div class="app-topbar teal">
-        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-button left" data-back="" data-autotitle=""></div>
         <div class="app-title">Network</div>
       </div>
       <div class="app-content">
         <div class="app-section">
-          <div class="app-button green" style="opacity: 0.2;" ; onclick="javascript:Network.start()" id="app-net-start">Connect</div>
-          <div class="app-button red" style="opacity: 0.2;" ; onclick="javascript:Network.stop()" id="app-net-stop">Disconnect</div>
+          <div class="app-button green" style="opacity: 0.2;" ;="" onclick="javascript:Network.start()" id="app-net-start">Connect</div>
+          <div class="app-button red" style="opacity: 0.2;" ;="" onclick="javascript:Network.stop()" id="app-net-stop">Disconnect</div>
         </div>
         <div class="app-section">
           <b>Status</b><br>
@@ -3580,17 +3580,17 @@ module.exports = {
 
     <div class="app-page" data-page="page-jam">
       <div class="app-topbar teal">
-        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-button left" data-back="" data-autotitle=""></div>
         <div class="app-title">JAM</div>
       </div>
       <div class="app-content">
         <div class="app-section">
-          <div class="app-button green" style="opacity: 0.2;" ; id="app-jam-start" onclick="javascript:Jam.start()">Start</div>
-          <div class="app-button red" style="opacity: 0.2;" ; id="app-jam-stop" onclick="javascript:Jam.stop()">Stop</div>
-          <div class="app-button blue" style="opacity: 0.2;" ; id="app-jam-reset" onclick="javascript:Jam.reset()">Reset</div>
+          <div class="app-button green" style="opacity: 0.2;" ;="" id="app-jam-start" onclick="javascript:Jam.start()">Start</div>
+          <div class="app-button red" style="opacity: 0.2;" ;="" id="app-jam-stop" onclick="javascript:Jam.stop()">Stop</div>
+          <div class="app-button blue" style="opacity: 0.2;" ;="" id="app-jam-reset" onclick="javascript:Jam.reset()">Reset</div>
         </div>
         <div class="app-section" style="margin-bottom:40px">
-          <div style="margin-bottom:1em;" ; class="app-button yellow" onclick="javascript:Jam.refresh()">Refresh</div>
+          <div style="margin-bottom:1em;" ;="" class="app-button yellow" onclick="javascript:Jam.refresh()">Refresh</div>
           <b>JAM World</b>
           <div id="jam-world">&nbsp;</div>
           <br>
@@ -3634,9 +3634,9 @@ module.exports = {
 
     <div class="app-page" data-page="page-agents">
       <div class="app-topbar teal">
-        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-button left" data-back="" data-autotitle=""></div>
         <div class="app-title">Agents</div>
-        <div class="app-button right" data-next data-target="page-agents-manager">Manager</div>
+        <div class="app-button right" data-next="" data-target="page-agents-manager">Manager</div>
       </div>
       <div class="app-content" id="page-agents">
         <div class="app-section">
@@ -3650,9 +3650,9 @@ module.exports = {
 
     <div class="app-page" data-page="page-agents-manager">
       <div class="app-topbar teal">
-        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-button left" data-back="" data-autotitle=""></div>
         <div class="app-title">Agent Manager</div>
-        <div class="app-button right" data-next data-target="page-agents-class">Classes</div>
+        <div class="app-button right" data-next="" data-target="page-agents-class">Classes</div>
       </div>
       <div class="app-content" id="page-agents-manager">
         <div class="app-section">
@@ -3671,7 +3671,7 @@ module.exports = {
 
     <div class="app-page" data-page="page-agents-class">
       <div class="app-topbar teal">
-        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-button left" data-back="" data-autotitle=""></div>
         <div class="app-title">Agent Classes</div>
       </div>
       <div class="app-content" id="page-agents-classes">
@@ -3691,7 +3691,7 @@ module.exports = {
 
     <div class="app-page" data-page="page-info">
       <div class="app-topbar teal">
-        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-button left" data-back="" data-autotitle=""></div>
         <div class="app-title">Information</div>
       </div>
       <div class="app-content">
@@ -3704,13 +3704,13 @@ module.exports = {
     </div>
 
     <div class="app-page" data-page="page-chat" id="chat-bot-page">
-      <div class="app-topbar teal" style>
-        <div class="app-button left" data-back data-autotitle></div>
+      <div class="app-topbar teal" style="">
+        <div class="app-button left" data-back="" data-autotitle=""></div>
         <div class="app-title">Agent Chat Room</div>
         <div class="app-button right" onclick="javascript:chatReset()">Clear</div>
       </div>
       <div class="app-content" id="chat-bot-content">
-        <div class="app-section" style>
+        <div class="app-section" style="">
           <label class="app-input">Chat Dialog</label>
           <div class="botui-app-container" id="chat-bot" style="width:100%;">
             <bot-ui></bot-ui>
@@ -3721,7 +3721,7 @@ module.exports = {
 
     <div class="app-page" data-page="page-setup">
       <div class="app-topbar teal">
-        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-button left" data-back="" data-autotitle=""></div>
         <div class="app-button right" onclick="javascript:cacheReset()">Clear Cache</div>
         <div class="app-title">Setup</div>
       </div>
@@ -3730,35 +3730,35 @@ module.exports = {
           <input class="app-radio" type="checkbox" id="setup-link1-enable">
           <label class="app-radio">Enable Link 1</label><br>
           <label class="app-input">Link 1: IP Address</label>
-          <input class="app-input" id="setup-link1-ip" value>
+          <input class="app-input" id="setup-link1-ip" value="">
           <label class="app-input">Link 1: IP Port</label>
-          <input class="app-input" id="setup-link1-ipport" value>
+          <input class="app-input" id="setup-link1-ipport" value="">
           <label class="app-input">Link 1: Secure Port (Opt.)</label>
-          <input class="app-input" id="setup-link1-secure" value>
+          <input class="app-input" id="setup-link1-secure" value="">
           <input class="app-radio" type="checkbox" id="setup-link2-enable">
           <label class="app-radio">Enable Link 2</label><br>
           <label class="app-input">Link 2: IP Address</label>
-          <input class="app-input" id="setup-link2-ip" value>
+          <input class="app-input" id="setup-link2-ip" value="">
           <label class="app-input">Link 2: IP Port</label>
-          <input class="app-input" id="setup-link2-ipport" value>
+          <input class="app-input" id="setup-link2-ipport" value="">
           <label class="app-input">Link 2: Secure Port (Opt.)</label>
-          <input class="app-input" id="setup-link2-secure" value>
+          <input class="app-input" id="setup-link2-secure" value="">
           <input class="app-radio" type="checkbox" id="setup-link3-enable">
           <label class="app-radio">Enable Link 3</label><br>
           <label class="app-input">Link 3: IP Address</label>
-          <input class="app-input" id="setup-link3-ip" value>
+          <input class="app-input" id="setup-link3-ip" value="">
           <label class="app-input">Link 3: IP Port</label>
-          <input class="app-input" id="setup-link3-ipport" value>
+          <input class="app-input" id="setup-link3-ipport" value="">
           <label class="app-input">Link 3: Secure Port (Opt.)</label>
-          <input class="app-input" id="setup-link3-secure" value>
+          <input class="app-input" id="setup-link3-secure" value="">
           <input class="app-radio" type="checkbox" id="setup-link4-enable">
           <label class="app-radio">Enable Link 4</label><br>
           <label class="app-input">Link 4: IP Address</label>
-          <input class="app-input" id="setup-link4-ip" value>
+          <input class="app-input" id="setup-link4-ip" value="">
           <label class="app-input">Link 4: IP Port</label>
-          <input class="app-input" id="setup-link4-ipport" value>
+          <input class="app-input" id="setup-link4-ipport" value="">
           <label class="app-input">Link 4: Secure Port (Opt.)</label>
-          <input class="app-input" id="setup-link4-secure" value>
+          <input class="app-input" id="setup-link4-secure" value="">
         </div>          
                     
         <div class="app-section">
@@ -10135,7 +10135,10 @@ var io = {
         minute = minute.substring(minute.length-2);
         var second = "0" + now.getSeconds();
         second = second.substring(second.length-2);
-        return hour + ":" + minute + ":" + second;
+        var milli = "0" + now.getMilliseconds();
+        var milli = "0" + Math.floor(now.getMilliseconds()/10);
+        milli = milli.substring(milli.length-2);
+        return hour + ":" + minute + ":" + second+':'+milli;
   },
   /**
   **  Return current date in year-month-day format
@@ -16136,9 +16139,9 @@ BundleModuleCode['com/compat']=function (module,exports,global,process){
  **                 OUTSIDE OF THE SOFTWARE SYSTEM.
  **
  **    $AUTHORS:     Stefan Bosse
- **    $INITIAL:     (C) 2006-2022 bLAB
+ **    $INITIAL:     (C) 2006-2021 bLAB
  **    $CREATED:     30-3-15 by sbosse.
- **    $VERSION:     1.25.1
+ **    $VERSION:     1.24.1
  **
  **    $INFO:
  **
@@ -16409,9 +16412,6 @@ var obj = {
     },
     isString: function (o) {
         return typeof o == "string" || (typeof o == "object" && o.constructor === String);
-    },
-    isTypedArray : function (o) {
-        return o && obj.isObject(o) && o.buffer instanceof ArrayBuffer
     },
     isNumber: function (o) {
         return typeof o == "number" || (typeof o == "object" && o.constructor === Number);
@@ -17521,7 +17521,7 @@ var string = {
  *
  */
 var rnd = Math.random;
-/* Antti Syk�ri's algorithm adapted from Wikipedia MWC
+/* Antti Syk\E4ri's algorithm adapted from Wikipedia MWC
 ** Returns a random generator function [0.0,1.0| with seed initialization
 */
 var seeder = function(s) {
@@ -18008,29 +18008,6 @@ function register_type(name) {
     return typoff;
 }
 
-// Generic deep object copy 
-function copy(o) {
-    // recursively copy objects
-    var _o,p;
-    if (obj.isTypedArray(o)) return o.slice();
-    else if (obj.isArray(o)) {
-      return o.map(function (e) {
-            if (typeof e == 'object') return copy(e);
-              else return e;
-            });
-      
-    } else if (obj.isObject(o)) {
-      if (o instanceof Date) return o;
-      _o={};
-      for(p in o) _o[p]=(typeof o[p]=='object'?copy(o[p]):o[p]);
-      return _o;
-    } 
-    else if (obj.isString(o)) 
-      return o.slice();
-    else return o;
-  
-  }
-
 /**
  *
  * @typedef {{v1:*, v2:*, v3:*, v4:*, v5:*, v6:*, v7:*, v8:*, v9:*  }} tuple
@@ -18045,7 +18022,7 @@ module.exports = {
     assert: assert,
     array:array,
     bit:bit,
-    copy:copy,
+    copy:obj.copy,
     div:pervasives.div,
     filename:filename,
     hashtbl:hashtbl,
@@ -30667,7 +30644,10 @@ var io = {
         minute = minute.substring(minute.length-2);
         var second = "0" + now.getSeconds();
         second = second.substring(second.length-2);
-        return hour + ":" + minute + ":" + second;
+        var milli = "0" + now.getMilliseconds();
+        var milli = "0" + Math.floor(now.getMilliseconds()/10);
+        milli = milli.substring(milli.length-2);
+        return hour + ":" + minute + ":" + second+':'+milli;
   },
   /**
   **  Return current date in year-month-day format
@@ -35336,7 +35316,7 @@ BundleModuleCode['/home/sbosse/proj/jam/js/top/jamlib.js']=function (module,expo
  **    $INITIAL:     (C) 2006-2022 bLAB
  **    $CREATED:     25-12-16 by sbosse.
  **    $RCS:         $Id: jamlib.js,v 1.5 2020/02/03 09:45:01 sbosse Exp sbosse $
- **    $VERSION:     1.34.2
+ **    $VERSION:     1.35.1
  **
  **    $INFO:
  **
@@ -35355,7 +35335,7 @@ var start=false;
 var options = {
   geo:undefined,
   verbose:0,
-  version:'1.34.1'  // public version
+  version:'1.35.1'  // public version
 };
 
 global.config={simulation:false,nonetwork:false};
@@ -35828,14 +35808,16 @@ jam.prototype.createPort = function (dir,options,nodeid) {
             this.getNode(nodeid),
             {
               broker  :   options.broker,
+              keepAlive : options.keepAlive,
               multicast : multicast,
               name  :     options.name,
               on    :     options.on,
               oneway  :   options.oneway,
+              pem    :    options.pem,
               proto :     options.proto||'udp',
               rcv   :     options.from,
               secure :    options.secure,
-              pem    :    options.pem,
+              sharedSocket:options.sharedSocket,
               snd   :     options.to,
               verbose:(options.verbose!=undefined?options.verbose:this.verbose)
             });
@@ -36298,14 +36280,15 @@ jam.prototype.kill = function (id,node) {
  */
  
 jam.prototype.locate = function (nodeid,cb,options) {
-  if (typeof nodeid == 'function') options=cb,cb=nodeid,nodeid=0;
+  if (typeof nodeid == 'function') { options=cb;cb=nodeid;nodeid=0};
+  if (typeof nodeid == 'object') { options=nodeid;cb=null;nodeid=0};
   var node=this.getNode(nodeid);
   if (!node) return;
   return GeoLoc5.locate(function (location,errors) {
     node.location=node.location||{};
     Object.assign(node.location,location);
     if (cb) cb(location,errors);
-  });
+  },options);
 }
 /** Lookup nodes and get connection info (more general as connected and broker support)
  *
@@ -36919,9 +36902,9 @@ BundleModuleCode['com/compat']=function (module,exports,global,process){
  **                 OUTSIDE OF THE SOFTWARE SYSTEM.
  **
  **    $AUTHORS:     Stefan Bosse
- **    $INITIAL:     (C) 2006-2022 bLAB
+ **    $INITIAL:     (C) 2006-2021 bLAB
  **    $CREATED:     30-3-15 by sbosse.
- **    $VERSION:     1.25.1
+ **    $VERSION:     1.24.1
  **
  **    $INFO:
  **
@@ -37192,9 +37175,6 @@ var obj = {
     },
     isString: function (o) {
         return typeof o == "string" || (typeof o == "object" && o.constructor === String);
-    },
-    isTypedArray : function (o) {
-        return o && obj.isObject(o) && o.buffer instanceof ArrayBuffer
     },
     isNumber: function (o) {
         return typeof o == "number" || (typeof o == "object" && o.constructor === Number);
@@ -38304,7 +38284,7 @@ var string = {
  *
  */
 var rnd = Math.random;
-/* Antti Syk�ri's algorithm adapted from Wikipedia MWC
+/* Antti Syk\E4ri's algorithm adapted from Wikipedia MWC
 ** Returns a random generator function [0.0,1.0| with seed initialization
 */
 var seeder = function(s) {
@@ -38791,29 +38771,6 @@ function register_type(name) {
     return typoff;
 }
 
-// Generic deep object copy 
-function copy(o) {
-    // recursively copy objects
-    var _o,p;
-    if (obj.isTypedArray(o)) return o.slice();
-    else if (obj.isArray(o)) {
-      return o.map(function (e) {
-            if (typeof e == 'object') return copy(e);
-              else return e;
-            });
-      
-    } else if (obj.isObject(o)) {
-      if (o instanceof Date) return o;
-      _o={};
-      for(p in o) _o[p]=(typeof o[p]=='object'?copy(o[p]):o[p]);
-      return _o;
-    } 
-    else if (obj.isString(o)) 
-      return o.slice();
-    else return o;
-  
-  }
-
 /**
  *
  * @typedef {{v1:*, v2:*, v3:*, v4:*, v5:*, v6:*, v7:*, v8:*, v9:*  }} tuple
@@ -38828,7 +38785,7 @@ module.exports = {
     assert: assert,
     array:array,
     bit:bit,
-    copy:copy,
+    copy:obj.copy,
     div:pervasives.div,
     filename:filename,
     hashtbl:hashtbl,
@@ -39588,16 +39545,21 @@ var aios1 = {
   contains:aios0.contains,
   copy:aios0.copy,
   copyto:Ts.agent.copyto,
-  // type create = function(ac:string,args:object|[]) -> agentid:string
+  // type create = function(ac:string|object,args:object|[]) -> agentid:string
   create: function(ac,args,level) {
     if (level==undefined || level>1) level=1;
-    var process=none;
+    if (args==undefined) args={};
+    var process=none,code;
     if (!Comp.obj.isArray(args) && !Comp.obj.isObject(args)) {
       current.error='Invalid argument: Agent argument is neither array nor object'; 
       throw 'CREATE';
     };
     current.process.resources.agents++;
-    if (current.world.classes[ac] && current.world.classes[ac][level])
+    if (typeof ac == 'object') {
+      // indeed a forking with modified act/trans/body
+      // { x:this.x, .., act : {}|[], trans:{}, on:[}}
+      process = Code.createFromOn(current.node,current.process,ac,level);
+    } else if (current.world.classes[ac] && current.world.classes[ac][level])
       process = Code.createOn(current.node,current.world.classes[ac][level],args,level,ac);
     else if (current.process.agent.subclass && current.process.agent.subclass[ac]) {
       process = Code.createOn(current.node,current.process.agent.subclass[ac],args,level,ac);    
@@ -39719,12 +39681,18 @@ var aios2 = {
   create: function(ac,args,level) {
     var process=none;
     if (level==undefined || level>2) level=2;
+    if (args==undefined) args={};
     if (!Comp.obj.isArray(args) && !Comp.obj.isObject(args)) {
       current.error='Invalid argument: Agent arguments is neither array nor object'; 
       throw 'CREATE';
     };
     current.process.resources.agents++;
-    if (current.world.classes[ac] && current.world.classes[ac][level])
+    if (typeof ac == 'object') {
+      // indeed a forking with modified act/trans/body
+      // { x:this.x, .., act : {}|[], trans:{}, on:[}}
+      code = Code.forkCode(current.process,ac);
+      process = Code.toCode(code,level);
+    } else if (current.world.classes[ac] && current.world.classes[ac][level])
       process = Code.createOn(current.node,current.world.classes[ac][level],args,level,ac);
     else if (current.process.agent.subclass && current.process.agent.subclass[ac]) {
       process = Code.createOn(current.node,current.process.agent.subclass[ac],args,level,ac);    
@@ -39855,12 +39823,18 @@ var aios3 = {
   create: function(ac,args,level) {
     var process=none;
     if (level==undefined) level=3;
+    if (args==undefined) args={};
     if (!Comp.obj.isArray(args) && !Comp.obj.isObject(args)) {
       current.error='Invalid argument: Agent arguments is neither array nor object'; 
       throw 'CREATE';
     };
     current.process.resources.agents++;
-    if (current.world.classes[ac] && current.world.classes[ac][level])
+    if (typeof ac == 'object') {
+      // indeed a forking with modified act/trans/body
+      // { x:this.x, .., act : {}|[], trans:{}, on:[}}
+      code = Code.forkCode(current.process,ac);
+      process = Code.toCode(code,level);
+    } else if (current.world.classes[ac] && current.world.classes[ac][level])
       process = Code.createOn(current.node,current.world.classes[ac][level],args,level,ac);
     else if (current.process.agent.subclass && current.process.agent.subclass[ac]) {
       process = Code.createOn(current.node,current.process.agent.subclass[ac],args,level,ac);    
@@ -41941,6 +41915,22 @@ function createOn(node,constructor,args,level,className) {
   return process;
 }
 
+// fork an egent from { x:this.x, .., act : {}|[], trans:{}, on:[}}
+function createFromOn(node,_process,subclass,level) {
+  var code,process;
+  code = forkCode(_process,subclass);
+  process = toCode(code,level);
+  process.agent.id=Aios.aidgen();
+  process.init({gid:_process.pid});
+  node.register(process);
+  var agent_=process.agent;
+  if (!subclass.next) try {
+    agent_.next=(typeof agent_.trans[agent_.next] == 'function')?agent_.trans[agent_.next].call(agent_):
+                                                                 agent_.trans[agent_.next];
+  } catch (e) { /*kill agent?*/ process.kill=true; };
+  return process;
+}
+
 /** Create a compiled agent process in a sandbox environment from an 
  *  agent class constructor function on the current node.
  *  Returns JSON+/JSOB representation of agent process snapshot and
@@ -41967,22 +41957,90 @@ function createAndReturn(constructor,ac,args,level) {
 /** Fork an agent object and return JSON+/JSOB text code.
  *  Note: Forking discards current scheduling blocks (in contrast to migration)!!!
  *
+ *  New: subclass: { x:this.x, .., act : {}|[], trans:{}, on:[}}
+ *  Used to subclass parent agent
+ *
  *  Returns cleaned code (w/o CP and internal AIOS properties).
  *
  */
-function forkCode(process) {
+function forkCode(process,subclass) {
   var code='',p;
-  var agent = process.agent;
-  var self = agent.self;
-  // Clean up current agent process
-  agent['process']=undefined;
-  agent['self']=undefined;
-  
+  var agent,self;
+  var agent;
+  if (!subclass) {
+    agent = process.agent;
+    self = agent.self;
+    // Clean up current agent process
+    agent['process']=undefined;
+    agent['self']=undefined;
+  } else if (typeof subclass == 'object') {
+    var agent = { act:{}, trans:{}, next:process.agent.next}
+    console.log(subclass)
+    for (p in subclass) {
+      var o = subclass[p];
+      switch (p) {
+        case 'act':
+          if (Comp.obj.isArray(o)) {
+            for(var q in o) {
+              var v = o[q];
+              if (process.agent.act[v]) 
+                agent.act[v]=process.agent.act[v];
+            }           
+          } else if (Comp.obj.isObject(o)) {
+            for(var q in o) {
+              agent.act[q]=o[q];
+            }           
+          }
+          break;
+        case 'trans':
+          // only updates here
+          if (Comp.obj.isObject(o)) {
+            for(var q in o) {
+              agent.trans[q]=o[q];
+            }           
+          }
+          break;
+        case 'on':
+          agent.on={};
+          if (Comp.obj.isArray(o)) {
+            for(var q in o) {
+              var v = o[q];
+              if (process.agent.on[v])
+                agent.on[v]=process.agent.on[v];
+            }           
+          } else if (Comp.obj.isObject(o)) {
+            for(var q in o) {
+              agent.on[q]=o[q];
+            }           
+          }
+          break;
+        case 'var':
+          if (Comp.obj.isArray(o)) {
+            for(var q in o) {
+              var v = o[q];
+              agent[v]=process.agent[v];
+            } 
+          }
+          break;
+        default:
+          agent[p]=o;
+          break;
+      }
+    }
+    // include all remaining necessary transitions
+    for(var p in agent.act) {
+      if (!agent.trans[p] && process.agent.trans[p])
+        agent.trans[p]=process.agent.trans[p];
+    }
+  } else throw "forkCode: invalid subclass"
+    
   code=Aios.options.json?Json.stringify(agent):toString(agent);
   
-  // Restore current agent process
-  agent.process=process;
-  agent.self=self;
+  if (!subclass) {
+    // Restore current agent process
+    agent.process=process;
+    agent.self=self;
+  }
   
   // Cleanup required?
     
@@ -42433,6 +42491,7 @@ module.exports = {
   copyProcess:copyProcess,
   create:create,
   createAndReturn:createAndReturn,
+  createFromOn:createFromOn,
   createOn:createOn,
   forkCode:forkCode,
   ofCode:ofCode,
@@ -50735,7 +50794,7 @@ BundleModuleCode['jam/ts']=function (module,exports,global,process){
  **    $INITIAL:     (C) 2006-2022 bLAB
  **    $CREATED:     15-1-16 by sbosse.
  **    $RCS:         $Id: ts.js,v 1.4 2020/02/03 09:45:01 sbosse Exp sbosse $
- **    $VERSION:     1.11.1
+ **    $VERSION:     1.11.2
  **
  **    $INFO:
  **
@@ -50763,7 +50822,7 @@ var verbose=false;
 
 var options = {
   debug:{},
-  version:'1.11.1',
+  version:'1.11.2',
   // global lifetime limit of tuples
   timeout : 0,
 }
@@ -51299,15 +51358,27 @@ var ts = {
   },
   try : {
     alt : function (tmo,pats,callback,all) {
+      if (typeof callback == 'boolean') {
+        all=callback;
+        callback=null;
+      }
       return ts.alt(pats,callback,all,tmo);
     },
     evaluate : function (tmo,pat,callback) {
       return ts.evaluate(pat,callback,tmo);
     },
     inp : function (tmo,pat,callback,all) {
+      if (typeof callback == 'boolean') {
+        all=callback;
+        callback=null;
+      }
       return ts.inp(pat,callback,all,tmo);
     },
     rd : function (tmo,pat,callback,all) {
+      if (typeof callback == 'boolean') {
+        all=callback;
+        callback=null;
+      }
       return ts.rd(pat,callback,all,tmo);
     }
   }
@@ -52034,10 +52105,10 @@ BundleModuleCode['jam/chan']=function (module,exports,global,process){
  **                 OUTSIDE OF THE SOFTWARE SYSTEM.
  **
  **    $AUTHORS:     Stefan Bosse
- **    $INITIAL:     (C) 2006-2020 bLAB
+ **    $INITIAL:     (C) 2006-2022 bLAB
  **    $CREATED:     09-02-16 by sbosse.
  **    $RCS:         $Id: chan.js,v 1.4 2020/02/03 09:45:01 sbosse Exp sbosse $
- **    $VERSION:     1.15.6
+ **    $VERSION:     1.16.1
  **
  **    $INFO:
  **
@@ -52221,7 +52292,7 @@ if (global.config.nonetwork) return;
  ** Physical Circuit
  *********************
  *  
- * Using UDP-AMP or process stream connections (TODO)
+ * Using AMP or process stream connections (TODO)
  * typeof options={
  *   broker?:url is UDP hole punching rendezvous broker 
  *   compress?:boolean,
@@ -52236,6 +52307,7 @@ if (global.config.nonetwork) return;
  *   snd?:url is remote endpoint address,
  *   stream?:boolean,
  *   verbose?
+ *   ..
  *  }
  *  with type url = "<name>:<ipport>" | "<ip>:<ipport>" | "<ipport>"
  *  and type ipport = (1-65535) | "*"
@@ -52274,17 +52346,19 @@ var physical= function (node,dir,options) {
   this.amp= Amp.Amp({
       broker:options.broker?url2addr(options.broker,this.ip.address):undefined,
       dir:this.dir,
+      keepAlive : options.keepAlive,
       mode:this.options.mode,
+      multicast:this.options.multicast,
       name:this.options.name,
       node:node,
       nodeid:this.options.nodeid,
       oneway:this.options.oneway,
-      multicast:this.options.multicast,
       proto:this.options.proto,  
       pem:this.options.pem,
       rcv:this.ip,
       secure:this.options.secure,
       snd:options.snd?url2addr(options.snd):undefined,
+      sharedSocket:options.sharedSocket,
       sock:options.sock,
       verbose:options.verbose,
     });
@@ -56175,7 +56249,7 @@ amp.http = function (options) {
   if (options.rcv && options.rcv.address!='*' && options.rcv.port) this.mode |= AMMode.AMO_SERVER;
   else this.mode |= AMMode.AMO_CLIENT;
   
-  this.options.keepalive=true;
+  this.options.keepalive=checkOption(options.keepAlive,true);
   this.secure = this.options.secure;
   
   this.port = options.port||Net.uniqport();     // Connection Link Port (this side)
@@ -56333,6 +56407,7 @@ amp.http.prototype.get = function (snd,path,callback) {
         port: snd.port,
         path:path,
         proto:'http',
+        keepAlive: this.options.keepalive,
         method: 'GET',
         headers: {
         }
@@ -57199,8 +57274,8 @@ var http = Require('http');
 amp.https = function (options) {
   var self=this;
   this.proto = 'http';
-  this.options=checkOptions(options,{});
-  this.verbose=checkOption(this.options.verbose,0);
+  this.options = checkOptions(options,{});
+  this.verbose = checkOption(this.options.verbose,0);
 
 
   if (global.TARGET!= 'browser' && !https) try {
@@ -57224,7 +57299,7 @@ amp.https = function (options) {
     throw "amp.https: no pem certificate and key provided like pem:{key,cert}";
 
 
-  this.options.keepalive=true;
+  this.options.keepalive=checkOption(options.keepAlive,true);
   this.secure = this.options.secure;
   
   this.port = options.port||Net.uniqport();     // Connection Link Port (this side)
@@ -58258,7 +58333,9 @@ function move(dir) {
   else msg=Aios.Code.ofCode(current.process,false);
   
   current.process.move=dir;
-
+  
+  if (options.debug.move) console.log(dest,msg);
+  
   /* NEWCOMM | context is current process !!!! */ 
   chan.send({agent:msg,to:dest,context:current.process});
   // kill or supend ghost agent
@@ -58300,10 +58377,10 @@ BundleModuleCode['jam/watchdog']=function (module,exports,global,process){
  **                 OUTSIDE OF THE SOFTWARE SYSTEM.
  **
  **    $AUTHORS:     Stefan Bosse
- **    $INITIAL:     (C) 2006-2018 bLAB
+ **    $INITIAL:     (C) 2006-2022 bLAB
  **    $CREATED:     6-12-17 by sbosse.
  **    $RCS:         $Id: watchdog.js,v 1.1 2020/02/03 09:45:01 sbosse Exp sbosse $
- **    $VERSION:     1.1.2
+ **    $VERSION:     1.2.1
  **
  **    $INFO:
  **
@@ -58323,7 +58400,8 @@ BundleModuleCode['jam/watchdog']=function (module,exports,global,process){
  **
  **    $ENDOFINFO
  */
-var Fs = Require('fs');
+var version = '1.2.1'
+PATH.push('/opt/jam');
 function search(index,module) {
   if (PATH.length==index) return module;
   var path=PATH[index];
@@ -58333,6 +58411,7 @@ function search(index,module) {
 
 try {
   var watchdog;
+  var Fs = Require('fs');
   try {watchdog = process && process.binding && process.binding && process.binding('watchdog')} catch (e){}; // JX/JX+
   if (!watchdog) watchdog = process && process.watchdog; // JX+
   if (!watchdog && process && process.startWatchdog) watchdog={
@@ -58354,12 +58433,20 @@ try {
     else if (process.version.match(/^v8/)) platformVersion="8.x";
     else if (process.version.match(/^v9/)) platformVersion="9.x";
     if (platformVersion && process.platform && process.arch)
-      nativePath = 'native/'+process.platform+'/'+platformVersion+'/' + process.arch + '/watchdog'; 
-    if (PATH)  
-    if (nativePath) watchdog = require(nativePath);
+      nativePath = 'native/'+process.platform+'/'+platformVersion+'/' + process.arch + '/watchdog.node'; 
+    if (PATH) 
+    if (nativePath) {
+      var _watchdog = require(search(0,nativePath));
+      watchdog = {
+        start : _watchdog.start,
+        stop  : _watchdog.clear,
+        protect : _watchdog.protect,
+        init : function () {},
+      }
+    }
   }
 } catch (e) {
-    
+  // console.log(e)
 }
 
 if (watchdog) {
@@ -58369,7 +58456,8 @@ if (watchdog) {
     init:watchdog.init||watchdog.initWatchdog,
     checkPoint:watchdog.checkPoint,
     tick:watchdog.tick,
-    protect:watchdog.protect
+    protect:watchdog.protect,
+    version : version
   }
 } else module=undefined;
 };
@@ -58483,7 +58571,7 @@ module.exports = { geolocate : geolocate };
 };
 BundleModuleCode['geoip/geoloc5']=function (module,exports,global,process){
 
-var options = {
+var Options = {
   // stage1
   locate : {
     primary   : {http:'ag-0.de:9999',https:'ag-0.de:9998',timeout:1000},
@@ -58498,7 +58586,7 @@ var options = {
     primary : {https:'api.opencagedata.com',path:'/geocode/v1/json?q=LAT+LON&key=8e7c3730678842468d6acf450ecbca16'},
     secondary: {https:'nominatim.openstreetmap.org',path:'/reverse/?format=json&lat=LAT&lon=LON'},
   },
-  
+  verbose : 0
 }
 
 var http=Require("http"),https; /* https on demand */
@@ -58514,7 +58602,7 @@ function stage1 (cb,options,location) {
     e={hostname:ip(options.http),
        path:options.path||'',method:"GET",
        port:port(options.http)};
-
+    if (Options.verbose) console.log('locate.stage1',e);
     r=http.request(e,function(a){
         a.setEncoding("utf8");
         var c="";
@@ -58522,6 +58610,7 @@ function stage1 (cb,options,location) {
         a.on("end",function(){
           try {
             var info=JSON.parse(c);
+            if (Options.verbose) console.log('locate.stage1.res',info);
             Object.assign(location,{
               ip:info.query,
               gps:{lat:info.lat,lon:info.lon},
@@ -58534,9 +58623,11 @@ function stage1 (cb,options,location) {
         })
     });
     r.on("error",function(a)  { 
+      if (Options.verbose) console.log('locate.stage1.err',a);
       return cb(a);
     })
     r.setTimeout(options.timeout,function() {  
+      if (Options.verbose) console.log('locate.stage1.err',"ETIMEOUT");
       return cb(new Error("ETIMEOUT"));
     }) 
     r.end();
@@ -58546,10 +58637,15 @@ function stage1 (cb,options,location) {
     e={uri:proto+'://'+options[proto]+'/'+options.path,
        method:"GET",
        headers:{}};
+    if (Options.verbose) console.log('stage1',e);
     http.request(e,function(err,xhr,body){
-          if (err) return cb(err);
+          if (err) {
+            if (Options.verbose) console.log('locate.stage1.err',err);
+            return cb(err);
+          }
           try {
             var info=JSON.parse(body);
+            if (Options.verbose) console.log('locate.stage1.res',info);
             Object.assign(location,{
               ip:info.query,
               gps:{lat:info.lat,lon:info.lon},
@@ -58557,6 +58653,7 @@ function stage1 (cb,options,location) {
             })
             return cb(location);
           } catch (err) {
+            if (Options.verbose) console.log('locate.stage1.err',err);
             return cb(err); 
           }
     })
@@ -58567,18 +58664,21 @@ function stage1 (cb,options,location) {
 function stage2 (cb,options,location) {
   if (!https || !https.request) return cb(new Error('ENETWORK'));
   if (!https.xhr && https.request) {
-    var req = https.request({
+    var e = {
       hostname: ip(options.https),
       port: port(options.https),
       path: options.path,
       method: 'GET'
-    }, function (res) {
+    }
+    if (Options.verbose) console.log('locate.stage2',e);
+    var req = https.request(e, function (res) {
       res.on('data', function (d){
         try {
           var pos = JSON.parse(d);
+          if (Options.verbose) console.log('locate.stage3.res',pos);
           location.gps5 = { lat: pos.location.lat, lon:pos.location.lng }
           cb(location)
-        } catch (e) { cb(e) };
+        } catch (e) { if (Options.verbose) console.log('locate.stage2.err',e); cb(e) };
       });
     })
 
@@ -58591,13 +58691,19 @@ function stage2 (cb,options,location) {
     e={uri:'https://'+options.https+'/'+options.path,
        method:"GET",
        headers:{}};
+    if (Options.verbose) console.log('locate.stage2',e);
     https.request(e,function(err,xhr,body){
-          if (err) return cb(err);
+          if (err) {
+            if (Options.verbose) console.log('locate.stage2.err',err);
+            return cb(err);
+          }
           try {
             var pos = JSON.parse(body);
+            if (Options.verbose) console.log('locate.stage2.res',pos);
             location.gps5 = { lat: pos.location.lat, lon:pos.location.lng }
             return cb(location);
           } catch (err) {
+            if (Options.verbose) console.log('locate.stage2.err',err);
             return cb(err); 
           }
     })
@@ -58612,16 +58718,19 @@ function stage3 (cb,options,location) {
                   .replace(/LAT/,location.gps5.lat)
                   .replace(/LON/,location.gps5.lon);
   if (!https.xhr && https.request) {
-    var req = https.request({
+    var e = {
       hostname: ip(options.https),
       port: port(options.https),
       path: options.path,
       method: 'GET'
-    }, function (res) {
+    }
+    if (Options.verbose) console.log('locate.stage3',e);
+    var req = https.request(e, function (res) {
       res.on('data', function (d){
         try {
           var res = JSON.parse(d);
           var loc;
+          if (Options.verbose) console.log('locate.stage3.res',res);
           if (res.address) loc=res.address;
           else if (res.results && res.results[0]) loc=res.results[0].components;
           location.geo5 = {
@@ -58632,11 +58741,12 @@ function stage3 (cb,options,location) {
             country:loc.country
           }
           cb(location)
-        } catch (e) { cb(e) };
+        } catch (e) { if (Options.verbose) console.log('locate.stage3.err',e); cb(e) };
       });
     })
 
     req.on('error', function (e) {
+      if (Options.verbose) console.log('locate.stage3.err',e);
       cb(e);
     });
     req.end();
@@ -58645,11 +58755,16 @@ function stage3 (cb,options,location) {
     e={uri:'https://'+options.https+'/'+options.path,
        method:"GET",
        headers:{}};
+    if (Options.verbose) console.log('locate.stage3',e);
     https.request(e,function(err,xhr,body){
-       if (err) return cb(err);
+       if (err) {
+        if (Options.verbose) console.log('locate.stage3.err',err);
+        return cb(err);
+       }
        try {
           var res = JSON.parse(body);
           var loc;
+          if (Options.verbose) console.log('locate.stage3.res',res);
           if (res.address) loc=res.address;
           else if (res.results && res.results[0]) loc=res.results[0].components;
           location.geo5 = {
@@ -58661,6 +58776,7 @@ function stage3 (cb,options,location) {
           }
           return cb(location);
         } catch (err) {
+          if (Options.verbose) console.log('locate.stage3.err',err);
           return cb(err); 
         }
     })
@@ -58675,53 +58791,54 @@ var todo = {
   stage1A: function (cb,errors,location) {
     stage1(function (res) {
       if (res instanceof Error) {
-        errors.push({url:options.locate.primary,error:res});
+        errors.push({url:Options.locate.primary,error:res});
         todo.stage1B(cb,errors,location);
       } else {
         todo.stage2A(cb,errors,location);        
       }
-    },options.locate.primary,location);
+    },Options.locate.primary,location);
   },
   // 1b. w/o proxy
   stage1B: function (cb,errors,location) {
     stage1(function (res) {
       if (res instanceof Error) {
-        errors.push({url:options.locate.secondary,error:res});
+        errors.push({url:Options.locate.secondary,error:res});
         todo.stage2A(cb,errors,location);
       } else {
         todo.stage2A(cb,errors,location);        
       }
-    },options.locate.secondary,location);    
+    },Options.locate.secondary,location);    
   },
   // 2. Get geo position (lat,lon)
   stage2A: function (cb,errors,location) {
     stage2(function (res) {
       if (res instanceof Error) {
-        errors.push({url:options.locate5.secondary,error:res});
+        errors.push({url:Options.locate5.secondary,error:res});
         todo.finalize(cb,errors,location);
       } else  {
         todo.stage2B(cb,errors,location);        
       }
-    },options.locate5.secondary,location);
+    },Options.locate5.secondary,location);
   },
   // 3. Get geo location (country,..)
   stage2B: function (cb,errors,location) {
     stage3(function (res) {
       if (res instanceof Error) {
-        errors.push({url:options.reverse.primary,x:1,error:res});
+        errors.push({url:Options.reverse.primary,x:1,error:res});
         todo.finalize(cb,errors,location);
       } else  {
         todo.finalize(cb,errors,location);
       }
-    },options.reverse.primary,location);
+    },Options.reverse.primary,location);
   },
   finalize : function (cb,errors,location) {
     cb(location,errors);
   }
 }
 
-function locate (cb) {
+function locate (cb,options) {
   var e;
+  if (options) Options=Object.assign(Options,options);
   if (typeof require == 'function' && !https) try {
     https = require('https');
   } catch (e) { /* TODO Browser */ } else  if (http.xhr) https = http;
@@ -58730,7 +58847,7 @@ function locate (cb) {
   return;
 }
 
-module.exports={locate:locate};
+module.exports={locate:locate,options:Options};
 
 };
 BundleModuleCode['os/platform']=function (module,exports,global,process){
@@ -61314,6 +61431,155 @@ Buffer=Require('os/buffer').Buffer;
 process=Require('os/process');
 if (typeof window != 'undefined') window.JAMLIB=JAMLIB = Require('/home/sbosse/proj/jam/js/top/jamlib.js');
 }; JAMLIBinit();
+HackTimer = function () {
+	try {
+		var blob = new Blob (["\
+  var fakeIdToId = {};\
+  onmessage = function (event) {\
+	var data = event.data,\
+		name = data.name,\
+		fakeId = data.fakeId,\
+		time;\
+	if(data.hasOwnProperty('time')) {\
+		time = data.time;\
+	}\
+	switch (name) {\
+		case 'setInterval':\
+			fakeIdToId[fakeId] = setInterval(function () {\
+				postMessage({fakeId: fakeId});\
+			}, time);\
+			break;\
+		case 'clearInterval':\
+			if (fakeIdToId.hasOwnProperty (fakeId)) {\
+				clearInterval(fakeIdToId[fakeId]);\
+				delete fakeIdToId[fakeId];\
+			}\
+			break;\
+		case 'setTimeout':\
+			fakeIdToId[fakeId] = setTimeout(function () {\
+				postMessage({fakeId: fakeId});\
+				if (fakeIdToId.hasOwnProperty (fakeId)) {\
+					delete fakeIdToId[fakeId];\
+				}\
+			}, time);\
+			break;\
+		case 'clearTimeout':\
+			if (fakeIdToId.hasOwnProperty (fakeId)) {\
+				clearTimeout(fakeIdToId[fakeId]);\
+				delete fakeIdToId[fakeId];\
+			}\
+			break;\
+	}\
+}\
+"]);
+		// Obtain a blob URL reference to our worker 'file'.
+		workerScript = window.URL.createObjectURL(blob);
+	} catch (error) {
+		/* Blob is not supported, use external script instead */
+		console.log(logPrefix + 'Initialisation failed: Blob is not supported!')
+		return; 
+	}
+	var worker,
+		fakeIdToCallback = {},
+		lastFakeId = 0,
+		maxFakeId = 0x7FFFFFFF, // 2 ^ 31 - 1, 31 bit, positive values of signed 32 bit integer
+		logPrefix = 'HackTimer.js by turuslan: ';
+	if (typeof (Worker) !== 'undefined') {
+		function getFakeId () {
+			do {
+				if (lastFakeId == maxFakeId) {
+					lastFakeId = 0;
+				} else {
+					lastFakeId ++;
+				}
+			} while (fakeIdToCallback.hasOwnProperty (lastFakeId));
+			return lastFakeId;
+		}
+		try {
+			worker = new Worker (workerScript);
+			window.setInterval = function (callback, time /* , parameters */) {
+				var fakeId = getFakeId ();
+				fakeIdToCallback[fakeId] = {
+					callback: callback,
+					parameters: Array.prototype.slice.call(arguments, 2)
+				};
+				worker.postMessage ({
+					name: 'setInterval',
+					fakeId: fakeId,
+					time: time
+				});
+				return fakeId;
+			};
+			window.clearInterval = function (fakeId) {
+				if (fakeIdToCallback.hasOwnProperty(fakeId)) {
+					delete fakeIdToCallback[fakeId];
+					worker.postMessage ({
+						name: 'clearInterval',
+						fakeId: fakeId
+					});
+				}
+			};
+			window.setTimeout = function (callback, time /* , parameters */) {
+				var fakeId = getFakeId ();
+				fakeIdToCallback[fakeId] = {
+					callback: callback,
+					parameters: Array.prototype.slice.call(arguments, 2),
+					isTimeout: true
+				};
+				worker.postMessage ({
+					name: 'setTimeout',
+					fakeId: fakeId,
+					time: time
+				});
+				return fakeId;
+			};
+			window.clearTimeout = function (fakeId) {
+				if (fakeIdToCallback.hasOwnProperty(fakeId)) {
+					delete fakeIdToCallback[fakeId];
+					worker.postMessage ({
+						name: 'clearTimeout',
+						fakeId: fakeId
+					});
+				}
+			};
+			worker.onmessage = function (event) {
+				var data = event.data,
+					fakeId = data.fakeId,
+					request,
+					parameters,
+					callback;
+				if (fakeIdToCallback.hasOwnProperty(fakeId)) {
+					request = fakeIdToCallback[fakeId];
+					callback = request.callback;
+					parameters = request.parameters;
+					if (request.hasOwnProperty ('isTimeout') && request.isTimeout) {
+						delete fakeIdToCallback[fakeId];
+					}
+				}
+				if (typeof (callback) === 'string') {
+					try {
+						callback = new Function (callback);
+					} catch (error) {
+						console.log (logPrefix + 'Error parsing callback code string: ', error);
+					}
+				}
+				if (typeof (callback) === 'function') {
+					callback.apply (window, parameters);
+				}
+			};
+			worker.onerror = function (event) {
+				console.log (event);
+			};
+			console.log (logPrefix + 'Initialisation succeeded');
+		} catch (error) {
+			console.log (logPrefix + 'Initialisation failed');
+			console.error (error);
+		}
+	} else {
+		console.log (logPrefix + 'Initialisation failed - HTML5 Web Worker is not supported');
+	}
+};
+HackTimer();
 </script>
     <script>function loadjs(url,cb) {
   var script = document.createElement('script');
