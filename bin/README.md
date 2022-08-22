@@ -1,4 +1,4 @@
-# Distribution
+# Software
 
 This directory contains compiled ready-to-use shell programs and Web applications.
 
