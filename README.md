@@ -9,7 +9,7 @@ JavaScript Agent Machine Software Framework - Mobile Agents for the Web and IoT
 
 **From now on, any updates are only availble here**:
 
-http://www.edu-9.de:8080/sbosse/jam
+http://git.edu-9.de/sbosse/jam
 
 ---
 
