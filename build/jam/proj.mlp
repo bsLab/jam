@@ -1,0 +1,133 @@
+FILES:
+
+
+--- COM ---
+
+@ + js/com/compat.js
+@ + js/com/evalx.js
+@ + js/com/err.js
+@ + js/com/io.js
+@ + js/com/io.browser.js
+@ + js/com/io.js
+@ + js/com/nav.js
+@ + js/com/path.js
+@ + js/com/sprintf.js
+
+
+--- JAM ---
+
+@ + js/jam/aios.js
+@ + js/jam/chan.js
+@ + js/jam/code.js
+@ + js/jam/conf.js
+@ + js/jam/mobi.js
+@ + js/jam/node.js
+@ + js/jam/proc.js
+@ + js/jam/sig.js
+@ + js/jam/ts.js
+@ + js/jam/world.js
+@ + js/jam/jsonfn.js
+@ + js/jam/sandbox.js
+
+--- ML ----
+
+@ + js/ml/dt.js
+@ + js/ml/dti.js
+@ + js/ml/ml.js
+
+--- DB ----
+
+@ + js/db/db.js
+
+--- SIMU ----
+
+@ + js/simu/simu.js
+
+
+--- OS ----
+
+@ + js/os/base64.js
+@ + js/os/getenv.js
+@ + js/os/lz-string.js
+
+--- TOP ---
+
+@ + js/top/loader.js
+@ + js/top/module.js
+@ + js/top/makeapp
+@ + js/top/makeAPP
+@ + js/top/makeweb
+@ + js/top/jam.js
+@ + js/top/jamc.js
+@ + js/top/jamdos.js
+@ + js/top/runapp
+
+
+------------
+--- DOS ----
+------------
+
+--- TOP ---
+@ + js/dos/appl/afs.js
+@ + js/dos/appl/broker.js
+@ + js/dos/appl/dns.js
+@ + js/dos/appl/node.js
+@ + js/dos/appl/shell.js
+@ + js/dos/appl/std.js
+
+--- SHELL ---
+@ + js/dos/ash.js
+
+
+--- SCHED ---
+@ + js/dos/scheduler.js
+
+
+--- RPC ---
+
+@ + js/dos/connection.js
+@ + js/dos/buf.js
+@ + js/dos/des48.js
+@ + js/dos/network.js
+@ + js/dos/router.js
+@ + js/dos/rpc.js
+
+--- CLIENT ---
+@ + js/dos/afs.js
+@ + js/dos/dns.js
+@ + js/dos/std.js
+
+--- SRV ---
+@ + js/dos/afs_srv.js
+@ + js/dos/afs_srv_common.js
+@ + js/dos/afs_srv_emb.js
+@ + js/dos/afs_srv_rpc.js
+@ + js/dos/cache.js
+@ + js/dos/connsrv.js
+@ + js/dos/dns_srv.js
+@ + js/dos/dns_srv_common.js
+@ + js/dos/dns_srv_emb.js
+@ + js/dos/dns_srv_rpc.js
+@ + js/dos/fcache.js
+@ + js/dos/freelist.js
+@ + js/dos/host.js
+
+
+@ bug-report
+
+
+
+PROJECT:
+  PROJ_PATH $HOME/proj/jam/
+  SRC_PATH $PROJ_PATH/
+  OBJ_PATH $PROJ_PATH/build
+  VUM_PATH
+  
+COMMANDS:
+  OPEN ALL
+  CLOSE ALL
+  BUILD ALL
+  BUILD CLEAN
+  BUILD INSTALL
+  BUILD VERSION
+
