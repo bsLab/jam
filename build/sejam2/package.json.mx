@@ -1,0 +1,17 @@
+{
+  "name": "SEJAM",
+  "version": "0.0.1",
+  "description": "Window",
+  "main": "../../js/ui/mxgraph/editors/sejam.html",
+  "window": {
+    "toolbar": false,
+    "width": 800,
+    "height": 600,
+    "position": "mouse"
+ },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT"
+}
