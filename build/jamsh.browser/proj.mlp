@@ -1,0 +1,128 @@
+FILES:
+
+
+--- COM ---
+
+@ + js/com/compat.js
+@ + js/com/evalx.js
+@ + js/com/err.js
+@ + js/com/getenv.js
+@ + js/com/io.js
+@ + js/com/io.app.js
+@ + js/com/nav.js
+@ + js/com/path.js
+@ + js/com/pwgen.js
+@ + js/com/readline.js
+@ + js/com/sprintf.js
+
+--- OS ---
+@ + js/os/assert.js
+@ + js/os/crypto.rand.js
+@ + js/os/events.js
+@ + js/os/getenv.js
+@ + js/os/http.js
+@ + js/os/http.browser.js
+@ + js/os/string_decoder.js
+@ + js/os/platform.js
+@ + js/os/process.js
+@ + js/os/util.js
+
+--- JAM ---
+
+@ + js/jam/aios.js
+@ + js/jam/amp.js
+@ + js/jam/ampCOM.js
+@ + js/jam/ampMAN.js
+@ + js/jam/ampStream.js
+@ + js/jam/ampUDP.js
+@ + js/jam/ampTCP.js
+@ + js/jam/ampHTTP.js
+@ + js/jam/analyzer.js
+@ + js/jam/chan.js
+@ + js/jam/code.js
+@ + js/jam/conf.js
+@ + js/jam/mobi.js
+@ + js/jam/node.js
+@ + js/jam/proc.js
+@ + js/jam/sandbox.js
+@ + js/jam/sig.js
+@ + js/jam/ts.js
+@ + js/jam/watchdog.js
+@ + js/jam/world.js
+@ + js/jam/jsonfn.js
+
+
+
+@ + js/dos/ext/satelize.js
+
+--- SHELL ---
+
+@ + js/shell/shell.js
+@ + js/shell/shell.browser.js
+
+--- ML ----
+
+@ + js/ml/dt.js
+@ + js/ml/dti.js
+@ + js/ml/ml.js
+
+@ + js/nn/nn.js
+
+--- SAT ----
+
+@ + js/logic/sat.js
+
+--- CSP ----
+
+@ + js/csp/csp.js
+@ + js/csp/cspS.js
+
+
+--- DOC ----
+
+@ + js/doc/marked.js
+
+
+
+@ + js/top/rendezvous.js
+
+
+--- WEB ---
+@ js/web/jquery.css
+@ js/web/jquery.js
+@ js/web/jsconsole.js
+@ js/web/utils.js
+@ js/web/app.js
+@ js/web/ui.js
+
+
+
+--- TOP ---
+
+@ + js/top/makeweblib
+@ + js/top/jamsh.js
+@ + js/top/jamsh.html
+@ + js/top/jamlib.js
+@ + js/top/loader.js
+@ + js/top/module.js
+@ + js/top/runapp
+
+
+@ bug-report
+
+
+
+PROJECT:
+  PROJ_PATH $HOME/proj/jam/
+  SRC_PATH $PROJ_PATH/
+  OBJ_PATH $PROJ_PATH/build
+  VUM_PATH
+  
+COMMANDS:
+  OPEN ALL
+  CLOSE ALL
+  BUILD ALL
+  BUILD CLEAN
+  BUILD INSTALL
+  BUILD VERSION
+
