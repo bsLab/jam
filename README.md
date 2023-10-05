@@ -14,6 +14,25 @@ http://git.edu-9.de/sbosse/jam
 <a href="https://www.battleforlibraries.com/">Fight For the Future</a>
 ---
 
+The JavaScript Agent Machine (JAM) is a multi-agent system framework. The agent processing platform satisfies the following constraints from a software design perspective:
+
+1. Portability with low hardware and operating system dependencies;
+2. Possibility for deployment on low-resource platforms;
+3. Embeddable in any software application, including Web pages;
+4. Scalability with respect to agent number and computational agent complexity.
+
+JAM is entirely programmed in JavaScript and satisfies the first and third constraints immediately. The satisfaction of the second and fourth constraints depends on the underlying JavaScript Virtual Machine (JVM). But even the node.js JVM can be deployed on embedded and mobile systems like smartphones (typically requiring at least 1000 MIPS CPU power and 50 MB main memory for satisfying responsiveness and scalability).
+
+
+## The Software
+
+1. The JAM shell `jamsh` can be used from the command line (requiring node.js, jx, or pl3 JavScript VM)
+2. The JAM Web laboratory `jamweb.html` can be used in any browser
+3. The JAM library `jamlib.js` and `jamlib.browser.js` can be embedded in any node.js or Web Browser program.
+4. The Simulation Environment for JAM `sejam2` is a standalone application using nw.js or can be run in a Web browser.
+
+The software can be found in the *dist* folder.
+
 **New Book**
 
 [Crowdsourcing and Simulation with Mobile Agents and the JavaScript Agent Machine](https://leanpub.com/jamabx)
