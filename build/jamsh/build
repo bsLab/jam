@@ -1,0 +1,95 @@
+#!/bin/bash
+
+TOP=/home/sbosse/proj/jam
+APP=jamsh
+APP2=libjamsh
+MAIN=$TOP/js/top/jamsh.js
+MAIN2=$TOP/js/shell/shell.js
+
+SYS=`uname`
+INSTALLDIR=/opt/jam
+MAKEAPP=$TOP/tools/makeapp
+MAKELIB=$TOP/tools/makelib
+JSMIN=$TOP/tools/$SYS/jsmin
+CP=cp
+MV=mv
+RM=rm
+CHMOD=chmod
+CAT=cat
+ECHO=echo
+CC=gcc
+INSTALL=$TOP/tools/install.sh
+
+if [ $# = 0 ]
+then
+    echo "Usage: build <targets>"
+    echo "Targets: all app clean install"
+    exit 1
+fi
+
+check ()
+{
+    if [ $? != 0 ]
+    then
+        echo "Abort due to errors building target."
+        exit 1
+    fi
+}
+
+makeapp()
+{
+  $MAKEAPP $MAIN -h
+  check
+  $ECHO Creating $APP
+  $CAT bundle.js > $APP
+  $ECHO Creating $APP.min
+  $CAT $APP | $JSMIN > $APP.min
+  check
+  $CHMOD a+x $APP.min
+  $MV $APP $APP.debug
+  $MV $APP.min $APP
+  $RM bundle.js             
+}
+
+makelib()
+{
+  $MAKELIB $MAIN2
+  check
+  $ECHO Creating $APP2
+  $CAT bundle.js > $APP2
+  $ECHO Creating $APP2.min
+  $CAT $APP2 | $JSMIN > $APP2.min
+  check
+  $MV $APP2 $APP2.debug.js
+  $MV $APP2.min $APP2.js
+  $RM bundle.js             
+}
+
+for TARGET in $@
+do
+    echo "Building target [$TARGET] ..."
+    case $TARGET in
+        all)
+            makeapp
+            ;;
+        app)
+            makeapp
+            ;;
+        lib)
+            makelib
+            ;;
+        clean)  
+            $RM -f $APP header bundle.js
+            ;;
+        install)
+            $INSTALL -d $INSTALLDIR
+            $INSTALL -d $INSTALLDIR/bin
+            $INSTALL -d $INSTALLDIR/lib
+            $INSTALL -d $INSTALLDIR/jam.app
+            $INSTALL -C $APP $INSTALLDIR/bin
+            $INSTALL -C lib$APP.js $INSTALLDIR/lib
+            check
+            ;;
+		
+    esac
+done
