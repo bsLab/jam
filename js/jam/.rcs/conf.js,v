@@ -1,0 +1,123 @@
+head	1.2;
+access;
+symbols;
+locks
+	sbosse:1.2; strict;
+comment	@# @;
+
+
+1.2
+date	2017.05.23.07.00.43;	author sbosse;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2017.05.20.15.56.53;	author sbosse;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@*** empty log message ***
+@
+text
+@/**
+ **      ==============================
+ **       O           O      O   OOOO
+ **       O           O     O O  O   O
+ **       O           O     O O  O   O
+ **       OOOO   OOOO O     OOO  OOOO
+ **       O   O       O    O   O O   O
+ **       O   O       O    O   O O   O
+ **       OOOO        OOOO O   O OOOO
+ **      ==============================
+ **      Dr. Stefan Bosse http://www.bsslab.de
+ **
+ **      COPYRIGHT: THIS SOFTWARE, EXECUTABLE AND SOURCE CODE IS OWNED
+ **                 BY THE AUTHOR(S).
+ **                 THIS SOURCE CODE MAY NOT BE COPIED, EXTRACTED,
+ **                 MODIFIED, OR OTHERWISE USED IN A CONTEXT
+ **                 OUTSIDE OF THE SOFTWARE SYSTEM.
+ **
+ **    $AUTHORS:     Stefan Bosse
+ **    $INITIAL:     (C) 2006-2017 bLAB
+ **    $CREATED:     15-1-16 by sbosse.
+ **    $RCS:         $Id: conf.js,v 1.1 2017/05/20 15:56:53 sbosse Exp $
+ **    $VERSION:     1.1.5
+ **
+ **    $INFO:
+ **
+ **  JavaScript AIOS Agent Reconfiguration Sub-System
+ **
+ **    $ENDOFINFO
+ */
+
+var Json = Require('jam/jsonfn');
+var Comp = Require('com/compat');
+var current=none;
+var Aios = none;
+
+var act = {
+  add: function (act,code) {
+    current.process.agent.act[act]=code;
+    // Add the new activity to the mask environment of the agent for further referencing.
+    current.process.mask[act]=act;
+  },
+  delete: function (act) {
+    if(Comp.obj.isArray(act)) Comp.array.iter(act,function (a) {current.process.agent.act[a]=undefined});
+    else current.process.agent.act[act]=undefined
+  },
+  update: function (act,code) {
+    current.process.agent.act[act]=code;
+  }
+};
+
+var trans = {
+  add: function (from,cond) {
+    if (current.process.agent.trans[from]) {
+      var regex1= /"function[\s]*\([\s]*\)[\s]*\{([^\}]+)\}"/;
+      var regex2= /\\n/g;
+      var old=Json.stringify(current.process.agent.trans[from]).replace(regex1,"$1").replace(regex2,"");
+      var next=Json.stringify(cond).replace(regex1,"$1").replace(regex2,"");
+      var merged='(function () {'+old+next+'})';
+      //console.log(merged)
+      with(current.process.mask) {
+        current.process.agent.trans[from]=eval(merged);
+      }
+    } else current.process.agent.trans[from]=cond;
+  },
+  delete: function (trans) {
+    if(Comp.obj.isArray(trans)) Comp.array.iter(trans,function (t) {current.process.agent.trans[t]=undefined});
+    else current.process.agent.trans[trans]=undefined
+    },
+  update: function (from,cond) {
+    current.process.agent.trans[from]=cond;
+    }  
+}
+
+
+module.exports = {
+  agent:{
+    act:act,
+    trans:trans
+  },
+  current:function (module) { current=module.current; Aios=module; }
+}
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d22 1
+a22 1
+ **    $RCS:         $Id: aios.js,v 1.2 2017/05/19 05:13:27 sbosse Exp $
+d40 1
+@
