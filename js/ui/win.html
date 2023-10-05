@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="webix/webix.css" type="text/css" media="screen" charset="utf-8">
+	<script src="webix/webix.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" type="text/css" href="webix/common/win.css">
+	<title>Galaxy - DOS/JAM World</title>
+	<style>
+		html, body{
+			height: 100%;
+			padding:0;
+			margin:0;
+		}
+	</style>
+</head>
+<body>
+
+<script type="text/javascript" charset="utf-8">
+    var util = require('util');
+    var proc = require('child_process');
+    var loader = require('../top/loader');
+    var logtext= '';
+    function log (data) {
+      var view = $$('DOS');
+      var log = $$('logDOS');
+      var scroll = view.getBody();
+      logtext += data + '\n';
+      log.removeView('logDOSText');
+      log.addView({template:'<pre>'+logtext+'</pre>', autoheight:true, borderless:true, id:'logDOSText'});
+      scroll.scrollTo(0,1000000)
+      view.show();    
+    }
+    function clear () {
+      var view = $$('DOS');
+      var log = $$('logDOS');
+      var scroll = view.getBody();
+      logtext = '';
+      log.removeView('logDOSText');
+      log.addView({template:'<pre>'+logtext+'</pre>', autoheight:true, borderless:true, id:'logDOSText'});
+      scroll.scrollTo(0,1000000)
+      view.show();    
+    }
+	webix.ui({
+        id:'JAM 1',
+		view:"window",
+		height:250,
+		width:300,
+		left:50, top:50,
+		move:true,
+		resize: true,
+		head:"JAM 1",
+		body:{
+			// view:'textarea', value:'Ready.', id:'JAM1text'
+            id : 'JAM1text',
+            view : 'scrollview',
+            scroll : 'y',
+            body : {
+               id:'log1',
+               rows : [
+                  {template:'<tt>Ready.</tt>',height:24, borderless:true},
+                ]
+            }
+		}
+	}).show();
+	webix.ui({
+        id:'DOS',
+		view:"window",
+		height:350,
+		width:600,
+		left:50, top:50,
+		move:true,
+		resize: true,
+        head: {
+            view:"toolbar",
+            id:"myToolbar",
+            cols:[
+             { view:"button", tooltip:"Close", label:"Close", width:80, click:("$$('DOS').close();")},
+             { view:"button", label:"Clear", width:80, click:("clear();")},
+             { view:"button", label:"Run", width:80, click:function () {
+                var m = loader.load('../broker/broker.debug',{console:{log:log,warn:log}});
+                m.main(['','','-v','-H','+T']);
+                }},
+             { view:"label", label:"DOS", align:'right'}
+            ]
+        },
+		body:{
+			// view:'textarea', value:'Ready.', id:'DOStext'
+            id : 'DOStext',
+            view : 'scrollview',
+            scroll : 'y',
+            body : {
+               id:'logDOS',
+               rows : [
+                  {template:'<tt>Ready.</tt>',height:24, borderless:true},
+                ]
+            }
+		}
+	}).show();
+</script>
+</body>
+</html>
