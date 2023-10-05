@@ -1,0 +1,79 @@
+#!/bin/bash
+
+TOP=/home/sbosse/proj/jam
+SRC=$TOP/js
+
+LIB=libjamsh.browser
+MAIN=$TOP/js/shell/shell.browser.js
+
+INSTALLDIR=/opt/jam
+MAKELIB=$TOP/tools/makeweblib
+JSMIN=$TOP/tools/`uname`/jsmin
+CP=cp
+MV=mv
+RM=rm
+CHMOD=chmod
+CAT=cat
+ECHO=echo
+CC=gcc
+INSTALL=$TOP/tools/install.sh
+INLINER=/usr/bin/inliner
+
+if [ $# = 0 ]
+then
+    echo "Usage: build <targets>"
+    echo "Targets: all app clean install"
+    exit 1
+fi
+
+check ()
+{
+    if [ $? != 0 ]
+    then
+        echo "Abort due to errors building target."
+        exit 1
+    fi
+}
+makeapp()
+{
+  $INLINER -n $SRC/top/jamsh.html > jamsh.html
+} 
+
+makelib()
+{
+  $MAKELIB $MAIN
+  check
+  $ECHO Creating $LIB
+  $CAT bundle.js > $LIB
+  $ECHO Creating $LIB.min
+  $CAT $LIB | $JSMIN > $LIB.min
+  check
+  $MV $LIB $LIB.debug.js
+  $MV $LIB.min $LIB.js
+  $RM bundle.js             
+}
+
+for TARGET in $@
+do
+    echo "Building target [$TARGET] ..."
+    case $TARGET in
+        all)
+            makelib
+            check
+            ;;
+        shell)
+            makeapp
+            check
+            ;;
+        clean)  
+            $RM -f $LIB.js header bundle.js
+            ;;
+        install)
+            $INSTALL -d $INSTALLDIR
+            $INSTALL -d $INSTALLDIR/lib
+            $INSTALL -C $LIB.js $INSTALLDIR/lib
+            check
+            ;;
+		
+    esac
+done
