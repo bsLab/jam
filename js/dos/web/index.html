@@ -1,0 +1,211 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>JAVM</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="../ext/respond.js"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <script src="../ext/respond.js"></script>
+    <link rel="stylesheet" href="../ext/jquery-ui.css">
+    <script src="../ext/jquery.js"></script>
+    <script src="../ext/jquery-ui.js"></script>
+    <script src="../ext/underscore-min.js"></script>
+    <script>Josh = {Debug: false };</script>
+    <script src="killring.js"></script>
+    <script src="history.js"></script>
+    <script src="readline.js"></script>
+    <script src="shell.js"></script>
+    <script src="pathhandler.js"></script>
+    <style type="text/css">
+        #shell-panel {
+            height: 300px;
+            width: 100%;
+            background-color: #002f05;
+            color: #00fe00;
+            padding: 20px 20px 20px 20px;
+            font-family: 'Source Code Pro', Bitstream Vera Sans Mono, Lucida Console, Terminal, Courier;
+            font-size: 10pt;
+            overflow: scroll;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            border: 1px dashed #E6EBE0;
+        }
+
+        #shell-cli .prompt {
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        var handleFileLoadCallback=function(){};
+        var Shell = {
+            shell:undefined,
+            stdout:undefined,
+            args:[],
+            env:undefined,
+            connect: function(uri) {
+                var bport,buri;
+                var args=uri.split(':');
+                if (args && args.length==2) {
+                    Shell.args = ['browser', 'bash', '-bip', args[0], '-bport', args[1]];
+                    loadjs('bash.min.js');
+                } else stdout('Can\'t connect to broker with URI '+uri+' (invalid)');
+            },
+            interpreter:function(){},
+            prompt:function () {return ' >';},
+            set:function (xname,xvalue) {
+                document.getElementById(xname).value=xvalue;
+            },
+            status: function (xname,set) {
+                if (set) document.getElementById(xname).style.backgroundColor = 'green';
+                else document.getElementById(xname).style.backgroundColor = 'red';
+            },
+            update: function(xname,xvalue) {
+                stdout(xname+':'+xvalue);
+            },
+            download: function(filename,size,data) {
+                var element = document.createElement('a');
+                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + escape(data));
+                element.setAttribute('download', filename);
+                element.style.display = 'none';
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
+            },
+            upload: function (callback) {
+                handleFileLoadCallback=callback;
+                document.getElementById('loadfile').click();
+            }
+        };
+        function format(str) {
+            // Replace all spaces with &nbsp; ?
+            var strht=$('<div>').text(str).html();
+            var strsp=strht.replace(/  /g,' &nbsp;');
+            var strnl=strsp.replace(/\n/g,'<br>');
+            return strnl;
+        }
+        function stdout(str) {
+            Shell.shell.renderOutput(format(str));
+        }
+
+        function handleFileLoad(evt) {
+            var files = evt.target.files; // FileList object
+            // Loop through the FileList and render image files as thumbnails.
+            for (var i = 0, f; f = files[i]; i++) {
+                var reader = new FileReader();
+                var file=f;
+                // Closure to capture the file information.
+                reader.onload = (function(theFile) {
+                    return function(e) {
+                        var contents = e.target.result;
+                        handleFileLoadCallback(file.name,file.size,contents);
+                    };
+                })(f);
+
+                // Read in the image file as a data URL.
+                reader.readAsBinaryString(f);
+            }
+        }
+
+
+
+        Shell.stdout=stdout;
+
+        function loadjs(filename) {
+            var fileref = document.createElement('script');
+            fileref.setAttribute("type", "text/javascript");
+            fileref.setAttribute("src", filename);
+            if (typeof fileref != "undefined")
+                document.getElementsByTagName("head")[0].appendChild(fileref)
+        }
+
+        $(document).ready(function() {
+            var history = new Josh.History({ key: 'josh.helloworld'});
+            var shell = Josh.Shell({history: history});
+            var $consolePanel = $('#shell-panel');
+            document.getElementById('loadfile').addEventListener('change', handleFileLoad, false);
+
+            shell.onNewPrompt(function(callback) {
+                callback(Shell.prompt());
+            });
+            shell.setCommandHandler('*', {
+                exec: function(cmd, args, callback) {
+                    var arg = args[0] || '';
+                    Shell.interpreter(cmd,args,function (str) { callback(format(str)) });
+                },
+                completion: function(cmd, arg, line, callback) {
+                    if (Shell.env!=undefined) callback(shell.bestMatch(arg, Shell.env.workrows));
+                    else callback(shell.bestMatch(arg, ['dir', 'cd', 'mkdir']));
+                }
+            });
+            $consolePanel.resizable({ handles: "w, e, s"});
+            shell.activate();
+            Shell.shell=shell;
+            Shell.set('afscap','');
+            // Test 
+
+        });
+    </script>
+</head>
+<body>
+<div><br></div>
+
+<div class="wrapper">
+    Drag right or bottom side of shell to change size.
+    <div onfocus="Shell.shell.activate();" id="shell-panel" tabindex="0">
+        <div style="font-weight: bold">JS Distributed Amoeba Virtual Machine Shell</div>
+        <div>Type <code>help</code> or hit <code>TAB</code> for a list of commands.
+        </div>
+        <div id="shell-view"></div>
+    </div>
+    <br>
+    <form>
+        <table>
+            <tr style="height:50px">
+                <td>Broker Server URI:</td>
+                <td><input onfocus="Shell.shell.deactivate();" size="50" type="text" id="brokeruri" value="localhost:3001"></td>
+                <td><button class="indicator" id="brokerstatus"></button></td>
+                <td><a onmouseover="" style="cursor: pointer;" title="Connect" onclick="Shell.connect(document.getElementById('brokeruri').value);"><img style="width:24px" src="connect.png"></a></td>
+                <td></td>
+            </tr>
+            <tr style="height:50px">
+                <td>Host Port:</td>
+                <td><input onfocus="Shell.shell.deactivate();" size="50" type="text" id="hostport"></td>
+                <td><button class="indicator" id="hoststatus"></button></td>
+                <td><a onmouseover="" style="cursor: pointer;" title="Update Home" onclick="Shell.update('hostport',document.getElementById('hostport').value);"><img style="width:24px" src="home.png"></a></td>
+                <td><a onmouseover="" style="cursor: pointer;" title="Add" onclick="Shell.update('hostport+',document.getElementById('hostport').value);"><img style="width:24px" src="add.png"></a></td>
+                </td>
+            </tr>
+            <tr style="height:50px">
+                <td>DNS Root Capability:</td>
+                <td><input onfocus="Shell.shell.deactivate();" size="50" type="text" id="rootcap"></td>
+                <td><button class="indicator" id="rootstatus"></button></td>
+                <td><a onmouseover="" style="cursor: pointer;" title="Update Home" onclick="Shell.update('rootcap',document.getElementById('rootcap').value);"><img style="width:24px" src="home.png"></a></td>
+                <td><a onmouseover="" style="cursor: pointer;" title="Add" onclick="Shell.update('rootcap+',document.getElementById('rootcap').value);"><img style="width:24px" src="add.png"></a></td>
+            </tr>
+            <tr style="height:50px">
+                <td>AFS DEF Capability:</td>
+                <td><input onfocus="Shell.shell.deactivate();" size="50" type="text" id="afscap"></td>
+                <td><button class="indicator" id="afsstatus"></button></td>
+                <td><a onmouseover="" style="cursor: pointer;" title="Update Home" onclick="Shell.update('afscap',document.getElementById('afscap').value);"><img style="width:24px" src="home.png"></a></td>
+                <td><a onmouseover="" style="cursor: pointer;" title="Add" onclick="Shell.update('afscap+',document.getElementById('afscap').value);"><img style="width:24px" src="add.png"></a></td>
+            </tr>
+        </table>
+
+    </form>
+    <script>
+        var form = document.querySelector("form");
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+        });
+    </script>
+    <input type="file" id="loadfile" name="files[]" multiple style="display:none">
+</div>
+</body>
