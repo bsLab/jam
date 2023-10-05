@@ -1,0 +1,68 @@
+type widget;
+class UI = {
+  options:{},
+  page:number,
+  pages:{
+    hide: function,
+    on: function,
+    show: function,
+  },
+  screen:object,
+  styles:{},
+
+  
+  button: method (@options) -> widget
+    with @options:{
+    
+    },
+  checkbox: method (@options) -> widget
+    with @options:{
+    
+    },
+  dialog: method (@options) -> widget
+    with @options:{
+    
+    },
+  fileManager: method (@options) -> widget
+    with @options:{
+    
+    },
+  getStyle: method(string) -> string|number,
+  info: method (@options) -> widget
+    with @options:{
+    
+    },
+  init: method ()
+  input: method (@options) -> widget
+    with @options:{
+    
+    },
+  keyboard: method (@options) -> widget
+    with @options:{
+    
+    },
+  label: method (@options) -> widget
+    with @options:{
+    
+    },
+  list: method (@options) -> widget
+    with @options:{
+    
+    },
+  log: method (@options) -> widget
+    with @options:{
+    
+    },
+  radiobutton: method (@options) -> widget
+    with @options:{
+    
+    },
+  start: method (@options) -> widget,
+  tree: method (@options) -> widget
+    with @options:{
+    
+    },  
+};
+
+constructor UI(@options) -> UI;
+
