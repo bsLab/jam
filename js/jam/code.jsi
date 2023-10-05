@@ -1,0 +1,4 @@
+open jam/proc as Proc;
+function ofCode(Proc.process,clean:boolean) -> string;
+
+
