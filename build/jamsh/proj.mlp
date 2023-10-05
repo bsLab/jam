@@ -1,0 +1,237 @@
+FILES:
+
+
+--- COM ---
+
+@ + js/com/compat.js
+@ + js/com/evalx.js
+@ + js/com/err.js
+@ + js/com/getenv.js
+@ + js/com/io.js
+@ + js/com/io.app.js
+@ + js/com/nav.js
+@ + js/com/path.js
+@ + js/com/pwgen.js
+@ + js/com/readline.js
+@ + js/com/sprintf.js
+
+--- OS ---
+@ + js/os/assert.js
+@ + js/os/crypto.rand.js
+@ + js/os/events.js
+@ + js/os/getenv.js
+@ + js/os/http.js
+@ + js/os/http.browser.js
+@ + js/os/osutils.js
+@ + js/os/polyfill.js
+@ + js/os/platform.js
+@ + js/os/string_decoder.js
+@ + js/os/util.js
+
+--- JAM ---
+
+@ + js/jam/aios.js
+@ + js/jam/amp.js
+@ + js/jam/ampCOM.js
+@ + js/jam/ampRPC.js
+@ + js/jam/ampMAN.js
+@ + js/jam/ampStream.js
+@ + js/jam/ampUDP.js
+@ + js/jam/ampTCP.js
+@ + js/jam/ampHTTP.js
+@ + js/jam/ampHTTPS.js
+@ + js/jam/analyzer.js
+@ + js/jam/chan.js
+@ + js/jam/checkpoint.js
+@ + js/jam/code.js
+@ + js/jam/conf.js
+@ + js/jam/jsonfn.js
+@ + js/jam/jsonfo.js
+@ + js/jam/mobi.js
+@ + js/jam/node.js
+@ + js/jam/proc.js
+@ + js/jam/sandbox.js
+@ + js/jam/security.js
+@ + js/jam/sig.js
+@ + js/jam/ts.js
+@ + js/jam/watchdog.js
+@ + js/jam/world.js
+
+
+--- NETWORK ---
+@ + js/geoip/geoip.js
+@ + js/geoip/gps5.js
+@ + js/geoip/geoloc5.js
+@ + js/dos/ext/satelize.js
+@ + js/dos/buf.js
+@ + js/dos/network.js
+
+--- SHELL ---
+
+@ + js/shell/cluster.js
+@ + js/shell/shell.js
+@ + js/shell/shell.browser.js
+
+--- ML ----
+
+@ + js/ml/ann.js
+@ + js/ml/C45.js
+@ + js/ml/cnn.js
+@ + js/ml/convnet.js
+@ + js/ml/dt.js
+@ + js/ml/dti.js
+@ + js/ml/id3.js
+@ + js/ml/ice.js
+@ + js/ml/kmeans.js
+@ + js/ml/knn.js
+@ + js/ml/ml.js
+@ + js/ml/mlp.js
+@ + js/ml/rf.js
+@ + js/ml/rl.js
+@ + js/ml/stats.js
+@ + js/ml/svm.js
+@ + js/ml/text.js
+
+@ + js/nn/nn.js
+
+--- NLP ---
+
+@ + js/nlp/compromise.js
+@ + js/nlp/compromise-adjectives.js
+@ + js/nlp/compromise-dates.js
+@ + js/nlp/compromise-numebersjs
+@ + js/nlp/compromise-sentencesjs
+@ + js/nlp/efrt.js
+@ + js/nlp/nlp.js
+
+--- LOGIC ---
+
+@ + js/logic/prolog.js
+
+--- SAT ----
+
+@ + js/logic/logic-solver.js
+@ + js/logic/sat.js
+
+--- CSP ----
+
+@ + js/csp/csp.js
+@ + js/csp/cspS.js
+
+--- CSV ---
+@ + js/parser/papaparse.js
+
+--- DB ----
+
+@ + js/db/db.js
+@ + js/db/dbS.js
+@ + js/db/db.sql.js
+
+--- DOC ----
+
+@ + js/doc/doc.js
+@ + js/doc/table.js
+
+--- HTTPS ---
+@ + js/http/https.js
+
+
+@ + js/top/rendezvous.js
+
+--- UI ---
+
+@ + js/ui/app/app.js
+
+--- TERM-UI ---
+
+@ + js/term/alias.js
+@ + js/term/blessed.js
+@ + js/term/colors.js
+@ + js/term/events.js
+@ + js/term/helpers.js
+@ + js/term/keys.js
+@ + js/term/program.js
+@ + js/term/tng.js
+@ + js/term/tput.js
+@ + js/term/unicode.js
+@ + js/term/widget.js
+@ + js/term/widgets/ansiimage.js
+@ + js/term/widgets/bigtext.js
+@ + js/term/widgets/box.js
+@ + js/term/widgets/button.js
+@ + js/term/widgets/chat.js
+@ + js/term/widgets/checkbox.js
+@ + js/term/widgets/element.js
+@ + js/term/widgets/filemanager.js
+@ + js/term/widgets/form.js
+@ + js/term/widgets/image.js
+@ + js/term/widgets/input.js
+@ + js/term/widgets/layout.js
+@ + js/term/widgets/line.js
+@ + js/term/widgets/list.js
+@ + js/term/widgets/listbar.js
+@ + js/term/widgets/listtable.js
+@ + js/term/widgets/loading.js
+@ + js/term/widgets/log.js
+@ + js/term/widgets/message.js
+@ + js/term/widgets/node.js
+@ + js/term/widgets/overlayimage.js
+@ + js/term/widgets/progressbar.js
+@ + js/term/widgets/prompt.js
+@ + js/term/widgets/question.js
+@ + js/term/widgets/radiobutton.js
+@ + js/term/widgets/radioset.js
+@ + js/term/widgets/screen.js
+@ + js/term/widgets/scrollablebox.js
+@ + js/term/widgets/scrollabletext.js
+@ + js/term/widgets/scrollbar.js
+@ + js/term/widgets/table.js
+@ + js/term/widgets/terminal.js
+@ + js/term/widgets/term.js
+@ + js/term/widgets/text.js
+@ + js/term/widgets/textarea.js
+@ + js/term/widgets/textbox.js
+@ + js/term/widgets/tree.js
+@ + js/term/widgets/video.js
+
+
+--- RPC ---
+@ + js/rpc/async.js
+@ + js/rpc/udp_rpc.js
+@ + js/rpc/rpc.js
+
+
+--- TOP ---
+
+@ + js/top/jamsh.js
+@ + js/top/jamlib.js
+
+@ + js/top/makeapp
+@ + js/top/makeApp
+@ + js/top/makelib
+@ + js/top/loader.js
+@ + js/top/module.js
+@ + js/top/runapp
+
+
+--- DEMO ---
+@ + scripts/cluster4.js
+
+@ bug-report
+
+
+
+PROJECT:
+  PROJ_PATH $HOME/proj/jam/
+  SRC_PATH $PROJ_PATH/
+  OBJ_PATH $PROJ_PATH/build
+  VUM_PATH
+  
+COMMANDS:
+  OPEN ALL
+  CLOSE ALL
+  BUILD ALL
+  BUILD CLEAN
+  BUILD INSTALL
+  BUILD VERSION
+
