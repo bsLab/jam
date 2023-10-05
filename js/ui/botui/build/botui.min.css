@@ -1,0 +1,122 @@
+/*
+ * botui 0.3.4
+ * A JS library to build the UI for your bot
+ * https://botui.org
+ *
+ * Copyright 2018, Moin Uddin
+ * Released under the MIT license.
+*/
+
+a.botui-message-content-link:focus
+{
+  outline:thin dotted;
+}
+
+a.botui-message-content-link:focus:active,a.botui-message-content-link:focus:hover
+{
+  outline:0;
+}
+
+form.botui-actions-text
+{
+  margin:0;
+}
+
+button.botui-actions-buttons-button,input.botui-actions-text-input
+{
+  font-size:100%;
+  line-height:normal;
+  vertical-align:baseline;
+  margin:0;
+}
+
+button.botui-actions-buttons-button::-moz-focus-inner,input.botui-actions-text-input::-moz-focus-inner
+{
+  border:0;
+  padding:0;
+}
+
+button.botui-actions-buttons-button
+{
+  cursor:pointer;
+  -webkit-appearance:button;
+  margin-top:10px;
+  margin-bottom:10px;
+}
+
+.botui-app-container
+{
+  width:100%;
+  height:100%;
+  line-height:1;
+}
+
+.botui-container
+{
+  width:100%;
+  height:100%;
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+
+.botui-message
+{
+  min-height:20px;
+  margin:10px 0;
+}
+
+.botui-message:after
+{
+  display:block;
+  content:"";
+  clear:both;
+}
+
+.botui-message-content
+{
+  width:auto;
+  max-width:85%;
+  display:inline-block;
+}
+
+.botui-message-content.human
+{
+  float:right;
+}
+
+.botui-message-content iframe
+{
+  width:100%;
+}
+
+.botui-message-content-image
+{
+  display:block;
+  max-width:200px;
+  max-height:200px;
+  margin:5px 0;
+}
+
+.botui-message-content-link
+{
+  text-decoration:underline;
+}
+
+button.botui-actions-buttons-button:not(:last-child)
+{
+  margin-right:10px;
+}
+
+@media min-width400px {
+  .botui-app-container
+  {
+    width:400px;
+    height:500px;
+    margin:0 auto;
+  }
+  
+  .botui-actions-text-submit
+  {
+    display:none;
+  }
+}
