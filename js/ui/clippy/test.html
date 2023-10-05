@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<!-- Add the stylesheet to the head -->
+<link rel="stylesheet" type="text/css" href="clippy.css" media="all">
+
+...
+
+<!-- Add these scripts to  the bottom of the page -->
+<!-- jQuery 1.7+ -->
+<script src="../../web/jquery.min.js"></script>
+
+<!-- Clippy.js -->
+<script src="agent.js"></script>
+<script src="load.js"></script>
+<script src="queue.js"></script>
+<script src="balloon.js"></script>
+<script src="animator.js"></script>
+</head>
+<body>
+
+<!-- Init script -->
+<script type="text/javascript">
+  var Avatar;
+  clippy.load('Merlin', function(agent){
+        // do anything with the loaded agent
+        Avatar=agent;
+        agent.show();+
+        agent.moveTo(100,100);
+    });
+  setInterval(function () {
+    Avatar.play('Searching');
+  },5000)
+</script>
+</body>
+</html>
