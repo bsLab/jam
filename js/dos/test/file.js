@@ -1,0 +1,12 @@
+var Fs = require('fs');
+var part_inode='/tmp/afs.inode';
+var overwrite=true;
+var pfd1=Fs.openSync(part_inode,overwrite?'w+':'r+');
+var str='1c3a';
+Fs.writeSync(pfd1,str);
+Fs.closeSync(pfd1);
+var pfd1=Fs.openSync(part_inode,'r+');
+var buf=new Buffer(2);
+Fs.readSync(pfd1,buf,0,2,2);
+console.log(buf.toString());
+Fs.closeSync(pfd1);
