@@ -1,0 +1,53 @@
+#!/usr/bin/node
+global.TOP='/home/sbosse/proj/jam/js';
+global.MODE='run';
+global.TARGET='node';
+global.DEBUG=false;
+
+require(TOP+'/top/module')([process.cwd(),TOP]);
+
+function out(str) {console.log(str);};
+function dump() {
+        var e = new Error('dummy');
+        var stack = e.stack.replace(/^[^\(]+?[\n$]/gm, '')
+            .replace(/^\s+at\s+/gm, '')
+            .replace(/^Object.<anonymous>\s*\(/gm, '{anonymous}()@')
+            .split('\n');
+        out('Stack Trace');
+        out('--------------------------------');
+        for(var i in stack) {
+            if (i>0) {
+                var line = stack[i];
+                if(line.indexOf('Module.',0)>=0) break;
+                out(line);
+            }
+        }
+        out('--------------------------------');
+};
+
+function usage () {
+  console.log('usage: run [-d] <javascript main file>');
+  console.log('       -d: Dump a stack trace on uncaught exceptions');
+  console.log('       TOP='+TOP);
+  process.exit ();
+}
+var exec;
+
+var Compat = Require('com/compat');
+
+Compat.args.parse(process.argv,[
+  ['-d',0,function (arg) {global.DEBUG=true;}],
+  ['-h',0,function (arg) {usage ()}],
+  [function (arg) {
+    if (!exec) exec=arg;
+  }]
+],2);
+
+if (!exec) usage();
+if (global.DEBUG)
+    Require(exec);
+else try {
+    Require(exec);
+} catch (e) {
+    out(e);
+}
