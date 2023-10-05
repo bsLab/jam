@@ -1,0 +1,1196 @@
+head	1.4;
+access;
+symbols;
+locks
+	sbosse:1.4; strict;
+comment	@# @;
+
+
+1.4
+date	2020.02.03.09.45.01;	author sbosse;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	2017.06.19.17.18.39;	author sbosse;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2017.05.27.18.20.36;	author sbosse;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2017.05.20.15.56.53;	author sbosse;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.4
+log
+@.
+@
+text
+@/**
+ **      ==============================
+ **       O           O      O   OOOO
+ **       O           O     O O  O   O
+ **       O           O     O O  O   O
+ **       OOOO   OOOO O     OOO  OOOO
+ **       O   O       O    O   O O   O
+ **       O   O       O    O   O O   O
+ **       OOOO        OOOO O   O OOOO
+ **      ==============================
+ **      Dr. Stefan Bosse http://www.bsslab.de
+ **
+ **      COPYRIGHT: THIS SOFTWARE, EXECUTABLE AND SOURCE CODE IS OWNED
+ **                 BY THE AUTHOR(S).
+ **                 THIS SOURCE CODE MAY NOT BE COPIED, EXTRACTED,
+ **                 MODIFIED, OR OTHERWISE USED IN A CONTEXT
+ **                 OUTSIDE OF THE SOFTWARE SYSTEM.
+ **
+ **    $AUTHORS:     Stefan Bosse
+ **    $INITIAL:     (C) 2006-2020 bLAB
+ **    $CREATED:     15-1-16 by sbosse.
+ **    $RCS:         $Id: ts.js,v 1.3 2017/06/19 17:18:39 sbosse Exp sbosse $
+ **    $VERSION:     1.10.2
+ **
+ **    $INFO:
+ **
+ **  JavaScript Agent Tuple-Space Sub-System
+ **
+ **  New: Global lifetime limit of all tuples
+ **  New: xx.try function synonyms (inp.try, rd.try,..) and try functions now fire callback on timeout
+ **  New: testandset
+ **  New: eval/listen
+ **  New: Patterns can contain regular expression! (p_i instanceof RegExp)
+ **  New: A rd/inp operation can return all matching tuples
+ **  New: alt operation supporting listening on multiple patterns
+ **  New: Distributed TS with collect, copyto, store
+ **
+ **  Exeception: 'TS' 
+ **
+ **    $ENDOFINFO
+ */
+var Io = Require('com/io');
+var Comp = Require('com/compat');
+var current=none;
+var Aios = none;
+var verbose=false;
+
+var options = {
+  version:'1.10.2',
+  // global lifetime limit of tuples
+  timeout : 0,
+}
+
+function aid(process) { return process.agent.id+':'+process.pid }
+function log(tsi,process,msg) {
+  if (verbose && process) Aios.aios.log('[TS'+(tsi.i)+':'+current.node.ts.id+'] Ag '
+                                          + aid(process)+ ' '+msg);
+  else if (verbose) Io.log('[TS'+(tsi.i)+':'+current.node.ts.id+'] SYS'+msg);
+}
+function min0(a,b) { return a==0?b:(b==0?a:Comp.pervasives.min(a,b)) };
+
+/*******************************************
+** Waiter management
+*******************************************/
+
+/** Add a waiter to a tuple space data base
+ *
+ */
+var addwaiter = function (tsi,waiter) {
+  var index,key;
+  if (tsi.waiters.free.length==0) {
+    index=tsi.waiters.length;
+    tsi.waiters.push(waiter);
+  } else {
+    index=tsi.waiters.free[0];
+    tsi.waiters[index]=waiter;
+    tsi.waiters.free.shift();
+  }
+  if (typeof (key=waiter.pat[0]) == 'string') switch (waiter.op) {
+    case 'listen': 
+      tsi.waiters.hash[key]=index; break;
+  }
+}
+
+/** Check for waiting agent processes and try to match the provided tuple.
+ *  Readers can read multiple copies of the tuple, whereby consumers can only read the tuple one time.
+ *  Consumers (in-op) can be in a waiting list (next/prev). If one waiter in a list consumes
+ *  a tuple, all waiters must be removed. The other waiters (the same process, but different patterns; alt-op)
+ *  can be in different tuple data bases!
+ *
+ */
+var checkwaiter = function (tsi,tuple,callback) {
+  var res,consumed=false,
+      i,waiter;
+   // Create agent callback   
+  function cb(waiter,res) {
+    Aios.CB(waiter.pro,function () {waiter.cb.call(waiter.pro.agent,res)});
+  }
+  for(i=0;i<tsi.waiters.length;i++) {
+    if (!tsi.waiters[i]) continue;
+    waiter=tsi.waiters[i];
+    if (!consumed) switch (waiter.op) {
+      case 'rd':
+      case 'rd-all':
+        res=match(tuple,waiter.pat);
+        log(tsi,current.process,' rd waiter? '+res);
+        if (res!=none) {
+          cb(waiter,(waiter.op=='rd'?res:[res])),
+          waiter.pro.wakeup();
+          removewaiter(tsi,i);
+        }
+        break;
+      case 'in':
+      case 'in-all':
+        res=match(tuple,waiter.pat);
+        log(tsi,current.process,' in waiter? '+res);
+        if (res!=none) {
+          cb(waiter,(waiter.op=='in'?res:[res])),
+          waiter.pro.wakeup();
+          consumed=true;
+          removewaiter(tsi,i);
+        }
+        break;
+      case 'listen':
+        res=match(tuple,waiter.pat);
+        log(tsi,current.process,' listen waiter? '+res);
+        if (res!=none) {
+          res=waiter.pro.callback(waiter.cb,[res]);
+          if (callback) callback.apply(current.process.agent,[res]);
+          consumed=true;
+        }
+        break;    
+    } else break;
+  }
+  
+  if (!consumed && current.node.ts.consumers.length>0) {
+    consumed = Comp.array.findmap(current.node.ts.consumers,function (consumer) {
+      return consumer(tuple);
+    });
+  }
+  return consumed;
+}
+
+var findwaiter = function (tsi,waiter) {
+  var i;
+  for(i=0;i<tsi.waiters.length;i++) {
+    if (!tsi.waiters[i]) continue;
+    if (tsi.waiters[i].pro.pid!=waiter.pro.pid) continue;
+    if (equal(tsi.waiters[i].pat,waiter.pat)) return i;
+  }
+  return;
+}
+
+var removewaiter = function (tsi,index) {
+  var waiter=tsi.waiters[index],_tsi,_index;
+  tsi.waiters[index]=undefined;
+  tsi.waiters.free.push(index);
+  // Waiter in a chained waiter list?
+  if (waiter.prev) {
+    waiter.prev.next=undefined;    
+    _tsi=current.node.ts.db[waiter.prev.pat.length];
+    _index=findwaiter(_tsi,waiter.prev);
+    if (_index != undefined) removewaiter(_tsi,_index);
+  };
+  if (waiter.next) {
+    waiter.next.prev=undefined;    
+    _tsi=current.node.ts.db[waiter.next.pat.length];
+    _index=findwaiter(_tsi,waiter.next);
+    if (_index != undefined) removewaiter(_tsi,_index);
+  };
+}
+
+var count = function (tsi) {
+  var data=tsi.data,i,n=0;  
+  for (i in data) {if (data[i] != undefined) n++};
+  return n;
+}
+
+/** Find one/all matching tuple(s) in the database based on pattern matching
+ *
+ */
+var lookup = function (pat,all) {
+  var tsi,nary=pat.length,res=none;
+  if (nary>current.node.ts.n || nary==0) return;
+  tsi=current.node.ts.db[nary];
+  if (!all && Comp.isString(pat[0]) && tsi.hash[pat[0]]!=undefined) {
+    // Speedup trial with hash key
+    res=match(tsi.data[tsi.hash[pat[0]]],pat);
+  }
+  if (res==none) {
+    res = (all?Comp.array.filtermap:Comp.array.findmap)(tsi.data,function (tuple) {
+      if (tuple==_) return none;
+      else return match(tuple,pat);
+    });
+    if (res && res.length==0) res=none;
+    if (res == none && current.node.ts.providers.length>0) {
+      res = Comp.array.findmap(current.node.ts.providers,function (provider) {
+        return provider(pat);
+      });
+    }
+  }
+  return res;
+}
+
+/*******************************************
+** Tuple management
+*******************************************/
+
+/**
+ * Compare two values, check equiality
+ */
+var equal = function(x,y) {
+  var i;
+  if(x==y) return true;
+  if (Comp.obj.isArray(x) && Comp.obj.isArray(y)) {
+    if (x.length!=y.length) return false;
+    for(i in x) {
+      if (x[i] != y[i]) return false;
+    }
+    return true;
+  }
+  return false;  
+}
+
+/** Match a tuple element with a template pattern element y.
+ *
+ */
+var match1 = function (x,y) {
+  if (y==any) return true;
+  if (x==y)   return true;
+  if ((x instanceof Array) && (y instanceof Array)) return match(x,y)!=none;
+  if (y instanceof RegExp && typeof x == 'string' && y.test(x)) return true; 
+  return false;
+}
+
+/** Match a tuple with a template and return none or the original tuple (equivalence result?)
+ *
+ */
+var match = function (tuple,templ) {
+  var i;
+  if (tuple.length != templ.length) return none;
+  for(i in tuple) {
+    if (!match1(tuple[i],templ[i])) return none;
+  };
+  return tuple;
+}
+
+
+/** Find and remove one/all matching tuple(s) from the database based on pattern matching
+ *
+ */
+var remove = function (pat,all) {
+  var tsi,nary=pat.length,res=none,removed=false,hashed=_;
+  if (nary>current.node.ts.n || nary==0) return;
+  tsi=current.node.ts.db[nary];
+  if (!all && Comp.isString(pat[0])) hashed=tsi.hash[pat[0]];
+  if (hashed != _) {
+    // Speedup trial with hash key
+    res=match(tsi.data[hashed],pat);
+    if (res) {
+      // invalidate matching tuple in data list
+      removed=true;
+      tsi.data[hashed]=_;
+      tsi.tmo[hashed]=0;
+      // remember the free slot in the data list
+      if (tsi.free==none) tsi.free=hashed;
+      // invalidate hash entry - tuple is consumed
+      delete tsi.hash[pat[0]];
+    }
+  }
+  if (res==none || removed==false) {    
+    res = (all?Comp.array.filtermap:Comp.array.findmap)(tsi.data,function (tuple,i) {
+        if (tuple==_) return none;
+        var res_=match(tuple,pat);
+        if (res_!=none) {
+          if (Comp.isString(pat[0]) && tsi.hash[pat[0]]==i) {
+            // Invalidate hash - tuple is consumed
+            delete tsi.hash[pat[0]];            
+          } 
+          tsi.data[i]=_;
+          tsi.tmo[i]=0;
+          if (tsi.free==none) tsi.free=i;
+          return res_;
+        } else return none;
+    });
+    if (res && res.length==0) res=none;
+  }
+  return res;
+}
+
+
+/*******************************************
+** Tuple Space Agent/Client API
+*******************************************/
+
+var ts = {
+  // consuming - tmo <> 0 => try_alt
+  alt: function (pats,callback,all,tmo) {
+    var tsi,nary,res,
+        i,p,pat,waiters=none,last=none;
+    for(i in pats) {
+      pat=pats[i];
+      nary=pat.length;
+      if (nary>current.node.ts.n || nary==0) return none;
+      res = remove(pat,all);
+      if (res && res.length) current.node.stats.tsin += (all?res.length:1);
+      if (res && callback) {
+        callback.call(current.process.agent,res);
+        return;
+      } 
+      else if (res) return res;  
+    }
+    if (callback && tmo==0) return callback();
+    if (tmo==0) return;
+     
+    // No matching tuple found - go to sleep
+    
+    for(i in pats) {
+      pat=pats[i];
+      nary=pat.length;
+      if (callback  && (tmo==undefined||tmo>0))  {
+        if (waiters==none) 
+          waiters={pat:pat,
+                   pro:current.process,
+                   cb:callback,
+                   op:'in'+(all?'-all':''),
+                   tmo:tmo>0?Aios.time()-current.world.lag+tmo:0
+                  },last=waiters;
+        else {
+          last.next={pat:pat,
+                   pro:current.process,
+                   cb:callback,
+                   op:'in'+(all?'-all':''),
+                   tmo:tmo>0?Aios.time()-current.world.lag+tmo:0,
+                   prev:last
+                  },last=last.next;
+        }
+      }
+    }
+    if (waiters!=none) {
+      p=waiters;
+      while(p) {
+        tsi=current.node.ts.db[p.pat.length];
+        addwaiter(tsi,p);
+        p=p.next;
+      }
+      log(tsi,current.process,' +waiter');
+      current.process.suspend(tmo>0?Aios.time()-current.world.lag+tmo:0,_,'ts');
+    }
+  },
+  
+  // The collect primitive moves tuples from this source TS that match template 
+  // pattern into destination TS specified by path 'to' (a node destination).
+  collect: function (to,pat) {
+    var tsi,nary=pat.length,res;
+    if (nary>current.node.ts.n || nary==0) return none;
+    tsi=current.node.ts.db[nary];
+    res = remove(pat,true);    
+    if (res.length>0) {
+      current.node.stats.tsin += res.length;
+      Aios.Sig.agent.sendto(to,'TS.SIG',res);
+    }
+    return res.length;
+  },
+  // Copy all matching tuples form this source TS to a remote destination TS
+  // specified by path 'to' (a node destination).
+  copyto: function (to,pat) {
+    var tsi,nary=pat.length,res;
+    if (nary>current.node.ts.n || nary==0) return 0;
+    tsi=current.node.ts.db[nary];
+    res = lookup(pat,true);    
+    if (res.length>0) {
+      Aios.Sig.agent.sendto(to,'TS.SIG',res);
+    }
+    return res.length;
+  },
+
+  // Access a tuple evaluator - non-blocking: no listener -> callback(null)
+  // TODO blocking/tmo
+  evaluate: function (pat,callback,tmo) {
+    var tsi,nary=pat.length,res;
+    if (nary>current.node.ts.n || nary==0) return none;
+    tsi=current.node.ts.db[nary];
+    consumed=checkwaiter(tsi,pat,callback);
+    if (!consumed && callback) callback.call(current.process.agent,null); 
+  },  
+  
+  // Test tuple existence
+  exists: function (pat) {
+    var tsi,nary=pat.length,res;
+    if (nary>current.node.ts.n || nary==0) return none;
+    tsi=current.node.ts.db[nary];
+    res = lookup(pat);
+    return res!=none;  
+  },
+  
+  // consuming - tmo <> 0 => try_in
+  inp: function (pat,callback,all,tmo) {
+    var tsi,nary=pat.length,res;
+    if (nary>current.node.ts.n || nary==0 || typeof pat != 'object') throw 'TS';
+    tsi=current.node.ts.db[nary];
+    res = remove(pat,all);
+    log(tsi,current.process,' in? '+res+' []='+count(tsi));
+    if (res && res.length) current.node.stats.tsin += (all?res.length:1);
+    if (res==none && callback && (tmo==undefined||tmo>0)) {
+      addwaiter(tsi,{pat:pat,
+                     pro:current.process,
+                     cb:callback,
+                     op:'in'+(all?'-all':''),
+                     tmo:tmo>0?Aios.time()-current.world.lag+tmo:0
+                     });
+      log(tsi,current.process,' +waiter');
+      current.process.suspend(tmo>0?Aios.time()-current.world.lag+tmo:0,_,'ts');
+      return none;
+    } else if (callback) callback.call(current.process.agent,res); else return res;
+  },
+
+  // Provide a tuple evaluator
+  listen: function (pat,callback) {
+    var tsi,nary=pat.length,res;
+    if (nary>current.node.ts.n || nary==0 || typeof pat != 'object') throw 'TS';
+    tsi=current.node.ts.db[nary];
+    addwaiter(tsi,{pat:pat,
+                     pro:current.process,
+                     cb:callback,
+                     op:'listen',
+                     tmo:0
+                     });    
+  },  
+  
+  // Store time-limited tuples
+  mark: function (tuple,tmo) {
+    var p,tsi,nary=tuple.length,consumed=false;
+    if (nary>current.node.ts.n || nary==0 || typeof tuple != 'object') throw 'TS';
+    tsi=current.node.ts.db[nary];
+    current.node.stats.tsout++;
+    // Check waiters
+    consumed=checkwaiter(tsi,tuple);
+    if (!consumed) {
+      if (tsi.free==none) {
+        loop: for (var i in tsi.data) {
+          if (tsi.data[i]==_) {tsi.free=i; break loop}
+        }
+      }
+      if (options.timeout) tmo=min0(options.timeout,tmo);
+      tmo=Aios.time()-current.world.lag+tmo;
+      if (tsi.free!=none) {
+        tsi.data[tsi.free]=tuple;
+        tsi.tmo[tsi.free]=tmo;
+        current.node.ts.timeout=min0(current.node.ts.timeout,tsi.tmo[tsi.free]);
+        if (Comp.obj.isString(tuple[0]))
+          tsi.hash[tuple[0]]=tsi.free;
+        tsi.free=none;
+      } else {
+        tsi.data.push(tuple);
+        tsi.tmo.push(tmo);
+        // hash is only a first guess to find a tuple
+        if (Comp.obj.isString(tuple[0]))
+          tsi.hash[tuple[0]]=tsi.data.length-1;
+      }
+    } else current.node.stats.tsin++;
+  },
+  // Store a tuple in this TS
+  out: function (tuple) {
+    var tsi,tmo=0,nary=tuple.length,consumed=false,res;
+    if (nary>current.node.ts.n || nary==0 || typeof tuple != 'object') throw 'TS';
+    tsi=current.node.ts.db[nary];
+    current.node.stats.tsout++;
+    // Check waiters
+    consumed=checkwaiter(tsi,tuple);
+    if (!consumed) {
+      if (tsi.free==none) {
+        loop: for (var i in tsi.data) {
+          if (tsi.data[i]==_) {tsi.free=i; break loop}
+        }
+      }
+      if (options.timeout) tmo=Aios.time()-current.world.lag+options.timeout;
+      if (tmo)  current.node.ts.timeout=min0(current.node.ts.timeout,tmo);
+
+      if (tsi.free!=none) {
+        tsi.data[tsi.free]=tuple;
+        tsi.tmo[tsi.free]=tmo;
+        if (Comp.obj.isString(tuple[0]))
+          tsi.hash[tuple[0]]=tsi.free;
+        tsi.free=none;
+      }
+      else {
+        tsi.data.push(tuple);
+        tsi.tmo.push(tmo);
+        // hash is only a first guess to find a tuple
+        if (Comp.obj.isString(tuple[0]))
+          tsi.hash[tuple[0]]=tsi.data.length-1;
+      }
+    } else current.node.stats.tsin++;
+    log(tsi,current.process,' out '+tuple+'  ['+nary+'] consumed='+consumed+' []='+count(tsi));
+  },
+  
+  // not consuming - tmo <> undefined => try_rd [0: immed.]
+  rd: function (pat,callback,all,tmo) {
+    var tsi,nary=pat.length,res;
+    if (nary>current.node.ts.n || nary==0 || typeof pat != 'object') throw 'TS';
+    tsi=current.node.ts.db[nary];
+    res = lookup(pat,all);
+
+    if (res==none && callback && (tmo==_||tmo>0)) {
+      addwaiter(tsi,{pat:pat,
+                     pro:current.process,
+                     cb:callback,
+                     op:'rd'+(all?'-all':''),
+                     tmo:tmo>0?Aios.time()-current.world.lag+tmo:0
+                    });
+      current.process.suspend(tmo>0?Aios.time()-current.world.lag+tmo:0,_,'ts');
+      return none;
+    } else if (callback) callback.call(current.process.agent,res); else return res;
+  },
+  
+  // consuming 
+  rm: function (pat,all) {
+    var tsi,nary=pat.length,res;
+    if (nary>current.node.ts.n || nary==0 || typeof pat != 'object') throw 'TS';
+    tsi=current.node.ts.db[nary];
+    res = remove(pat,all);
+    if (res && res.length) current.node.stats.tsin += (all?res.length:1);
+    return (res!=none);
+  },
+
+  // Remote tuple storage
+  store: function (to,tuple) {
+    Aios.Sig.agent.sendto(to,'TS.SIG',[tuple]);
+    return 1;
+  },
+  
+  // Test and Set: Atomic modification of a tuple - non blocking
+  // typeof @@callback: function (tuple) -> tuple
+  ts: function (pat,callback) {
+    var tsi,nary=pat.length,res,ret;
+    if (nary>current.node.ts.n || nary==0 || !Comp.obj.isArray(pat)) throw 'TS';
+    tsi=current.node.ts.db[nary];
+    res = lookup(pat,false);
+    log(tsi,current.process,' test? '+res+' []='+count(tsi));
+    if (res) current.node.stats.tsin += 1;
+    if (callback) {
+      if (current.process)
+        ret=callback.call(current.process.agent,res);
+      else
+        ret=callback(res);
+      // update the modified tuple
+      if (ret && ret.length==res.length) Comp.array.copy(ret,res);
+      res=ret;
+    } else if (res) {
+      // restore the originally consumed tuple
+      ts.out(res);
+    }
+    return res;
+  },
+  try : {
+    alt : function (tmo,pats,callback,all) {
+      return ts.alt(pats,callback,all,tmo);
+    },
+    evaluate : function (tmo,pat,callback) {
+      return ts.evaluate(pat,callback,tmo);
+    },
+    inp : function (tmo,pat,callback,all) {
+      return ts.inp(pat,callback,all,tmo);
+    },
+    rd : function (tmo,pat,callback,all) {
+      return ts.rd(pat,callback,all,tmo);
+    }
+  }
+}
+
+// Synonyms
+ts.alt.try = ts.try.alt
+ts.evaluate.try = ts.try.evaluate
+ts.inp.try = ts.try.inp
+ts.rd.try = ts.try.rd
+
+/*******************************************
+** Tuple Space Data Base
+*******************************************/
+
+var tsd = function (options) {
+  var self=this;
+  if (!options) options={};
+  this.n=options.maxn||8;
+  this.id=options.id||'TS';
+  this.timeout=0;
+  this.db=Comp.array.init(this.n+1,function (i) {
+    var tsi;
+    if (i==0) return none;
+    tsi = {
+        i:i,
+        hash:[],
+        // number|none
+        free:none,
+        // [*] [] 
+        data:[],
+        // number []
+        tmo:[],
+        // [pattern,agent,callback,kind]
+        waiters:[]
+    };
+    tsi.waiters.free=[];
+    tsi.waiters.hash={}; // Hash tuple key for consuming waiter
+    return tsi;
+  });
+  /*
+  ** Additional external tuple providers implementing a match function.
+  */
+  this.providers=[];
+  /*
+  ** Additional external tuple consumers implementing a match function.
+  */
+  this.consumers=[];
+  this.node=options.node;
+
+  // External API w/o blocking and callbacks (i.e., try_ versions with tmo=0)
+  // Can be called from any context
+  this.extern = {
+    exists: function (pat,callback) { 
+      var res,_node=current.node;
+      current.node=self.node||_node;
+      res=ts.exists(pat,callback);
+      current.node=_node;
+      return res;
+    },    
+    inp: function (pat,all) {
+      var res,tsi,nary=pat.length,_node=current.node;
+      current.node=self.node||_node;
+      if (nary>current.node.ts.n || nary==0) return none;
+      tsi=current.node.ts.db[nary];
+      res = remove(pat,all);
+      if (res && res.length) current.node.stats.tsin += (all?res.length:1);
+      current.node=_node;
+      return res;
+    },
+    mark: function (pat,tmo) { 
+      var res,_node=current.node;
+      current.node=self.node||_node;
+      res = ts.mark(pat,tmo);
+      current.node=_node;
+      return res;
+    },
+    out: function (pat) { 
+      var res,_node=current.node;
+      current.node=self.node||_node;
+      res = ts.out(pat)
+      current.node=_node;
+      return res;
+    },
+    rd: function (pat,all) {
+      var res,tsi,nary=pat.length,_node=current.node;
+      current.node=self.node||_node;
+      if (nary>current.node.ts.n || nary==0) return none;
+      tsi=current.node.ts.db[nary];
+      res = lookup(pat,all);
+      if (res && res.length) current.node.stats.tsin += (all?res.length:1);
+      current.node=_node;
+      return res;
+    },
+    rm: function (pat,all) { 
+      var res,_node=current.node;
+      current.node=self.node||_node;
+      res=ts.rm(pat,all);
+      current.node=_node;
+      return res;
+    },
+    ts: function (pat,callback) { 
+      var res,_node=current.node;
+      current.node=self.node||_node;
+      res=ts.ts(pat,callback);
+      current.node=_node;
+      return res;
+    },
+  }
+
+}
+
+var create = function (options) {
+  return new tsd(options);
+}
+
+tsd.prototype.checkwaiter = function (tuple) {
+  var tsi,nary=tuple.length;
+  if (nary>this.n || nary==0) return none;
+  tsi=current.node.ts.db[nary];
+  return checkwaiter(tsi,tuple);
+}
+
+/** Remove an agent process from waiter queues.
+ * If doCallback is set, a pending operation callback handler is executed here (e.g., on timeout or interruption).
+ *
+ */
+tsd.prototype.cleanup = function (process,doCallback) {
+  var i,j,tsi,p,waiter,node=process.node;
+  function cb(waiter) {
+    Aios.CB(waiter.pro,function () {waiter.cb.call(waiter.pro.agent,null)});
+  }
+  for (i in node.ts.db) {
+    if (i==0) continue;
+    tsi=node.ts.db[i];
+    for(j=0;j<tsi.waiters.length;j++) {
+      if (!tsi.waiters[j]) continue;
+      waiter=tsi.waiters[j];
+      if (waiter.pro.pid==process.pid) {
+        if (doCallback && waiter.cb) cb(waiter);
+        removewaiter(tsi,j);
+      }
+    }
+  }
+} 
+
+
+/**
+ * Register an external tuple provider (function).
+ * The provider can immediately return a matching tuple,
+ * or can deliver it later on calling the checkwaiter loop 
+ * which delivers the tuple to the agent.
+ *
+ * type of func  : provider|consumer
+ * type provider : function ('pat) -> 'tuple
+ * type consumer : function ('pat) -> boolean
+ */
+tsd.prototype.register = function (func,consumer) {
+  if (consumer) this.consumers.push(func)
+  else this.providers.push(func);
+};
+
+
+tsd.prototype.print = function (summary) {
+  var i,tsi,num,str='',sep='';
+  if (summary) {
+    str += '[';
+    for (i in current.node.ts.db) {
+      if (i==0) continue;
+      tsi=current.node.ts.db[i];
+      num = count(tsi);
+      if (num>0) {
+        str += sep+'TS'+(int(i)+1)+'='+num;
+        sep=' ';
+      }
+    }
+    str += ']'+NL;
+  }    
+  else for (i in current.node.ts.db) {
+    if (i==0) continue;
+    tsi=current.node.ts.db[i];
+    str += '['+Comp.printf.sprintf('%2d',tsi.i)+
+           ' free='+(tsi.free?Comp.printf.sprintf('%4d',tsi.free):'none')+
+           ' data='+Comp.printf.sprintf('%4d(%4d)',count(tsi),tsi.data.length)+
+           ' waiters='+Comp.printf.sprintf('%4d',tsi.waiters.length)+']'+NL;
+  }  
+  return str;  
+}
+
+
+/** Tuple Space Garbage Collection and Timeout Service
+ *
+ */
+tsd.prototype.service = function (curtime) {
+  var i,hashed,tsi,nexttime=0;
+  
+  // TODO: if (curtime<this.timeout) return;
+  for (i in this.db) {
+    tsi=this.db[i];
+    hashed;
+    if (tsi==_) continue;
+    Comp.array.iter(tsi.tmo,function (tmo,i) {
+      var tuple=tsi.data[i];
+      if (tuple && tmo) {
+        if (tmo < curtime) {
+          if (Comp.isString(tuple[0])) hashed=tsi.hash[tuple[0]];
+          if (hashed != _ && hashed==i) delete tsi.hash[tuple[0]];
+          tsi.data[i]=_;
+          tsi.tmo[i]=0;
+          if (tsi.free==none) tsi.free=i;        
+        } else nexttime=min0(nexttime,tmo);
+      }
+    });
+  }
+  this.timeout=nexttime;
+}
+
+module.exports = {
+  agent:ts,
+  count:count,
+  create: create,
+  current:function (module) { current=module.current; Aios=module; },
+  match:match,
+  options:options
+}
+@
+
+
+1.3
+log
+@.
+@
+text
+@d20 1
+a20 1
+ **    $INITIAL:     (C) 2006-2017 bLAB
+d22 2
+a23 2
+ **    $RCS:         $Id: ts.js,v 1.2 2017/05/27 18:20:36 sbosse Exp $
+ **    $VERSION:     1.4.1
+d28 5
+d36 3
+d48 6
+d57 1
+a57 1
+                                          + (process!=null?aid(process):'-')+ ' '+msg);
+d70 13
+a82 2
+  if (tsi.waiters.free.length==0) tsi.waiters.push(waiter);
+  else tsi.waiters[tsi.waiters.free[0]]=waiter,tsi.waiters.free.shift();
+d92 1
+a92 1
+var checkwaiter = function (tsi,tuple) {
+d94 7
+a100 4
+      i,waiter,
+      _process=current.process;
+  for(i in tsi.waiters) {
+    if (i=='free' || !tsi.waiters[i]) continue;
+d105 1
+a105 1
+        res=match1(tuple,waiter.pat);
+d108 1
+a108 1
+          Aios.CB(waiter.pro,function () {waiter.cb.call(waiter.pro.agent,(waiter.op=='rd'?res:[res]))}),
+d115 1
+a115 1
+        res=match1(tuple,waiter.pat);
+d118 1
+a118 1
+          Aios.CB(waiter.pro,function () {waiter.cb.call(waiter.pro.agent,(waiter.op=='in'?res:[res]))}),
+d124 9
+d146 2
+a147 2
+  for(i in tsi.waiters) {
+    if (i=='free' || !tsi.waiters[i]) continue;
+d209 3
+d213 1
+d225 1
+a225 1
+/** Match a tuple x against a pattern y.
+d229 5
+a233 8
+  if (y==any) return x;
+  if (x==y) return x;
+  if (Comp.obj.isArray(x) && Comp.obj.isArray(y)) {
+     var res = match(x,y);
+     return res;
+  }
+  if (y instanceof RegExp && Comp.obj.isString(x)) return y.test(x)?x:none; 
+  return none;
+d236 1
+a236 1
+/** Match a tuple with a template and return equivalence result.
+d240 1
+a240 1
+  var map=none;
+d242 4
+a245 16
+  try { 
+    map = Comp.array.map2(tuple,templ,function (x,y) {
+      if (y==any) return x;
+      if (x==y) return x;
+      if (Comp.obj.isArray(x) && Comp.obj.isArray(y)) {
+         var res = match(x,y);
+         if (res==none) throw none;
+         return res;
+      }
+      if (y instanceof RegExp && Comp.obj.isString(x)) return y.test(x)?x:none; 
+      throw none;
+    });
+  } catch(e) {
+    return none;
+  }
+  return map;
+d299 1
+a299 1
+    var tsi,nary,
+d306 1
+d310 12
+a321 1
+      } else if (callback  && (tmo==undefined||tmo>0))  {
+d348 1
+a348 1
+      current.process.suspend(tmo>0?Aios.time()-current.world.lag+tmo:0);
+d352 37
+d400 1
+a400 1
+    if (nary>current.node.ts.n || nary==0) return none;
+d404 1
+d413 1
+a413 1
+      current.process.suspend(tmo>0?Aios.time()-current.world.lag+tmo:0);
+d417 13
+d431 1
+d434 1
+a434 1
+    if (nary>current.node.ts.n || nary==0) return;
+d436 1
+d445 2
+d449 1
+a449 1
+        tsi.tmo[tsi.free]=Aios.time()-current.world.lag+tmo;
+d456 1
+a456 1
+        tsi.tmo.push(Aios.time()-current.world.lag+tmo);
+d461 1
+a461 1
+    }
+d463 1
+a463 1
+  
+d465 2
+a466 2
+    var tsi,nary=tuple.length,consumed=false,res;
+    if (nary>current.node.ts.n || nary==0) return;
+d468 1
+d477 3
+d482 1
+a482 1
+        tsi.tmo[tsi.free]=0;
+d489 1
+a489 1
+        tsi.tmo.push(0);
+d494 1
+a494 1
+    }
+d501 1
+a501 1
+    if (nary>current.node.ts.n || nary==0) return none;
+d504 1
+d512 1
+a512 1
+      current.process.suspend(tmo>0?Aios.time()-current.world.lag+tmo:0);
+d520 1
+a520 1
+    if (nary>current.node.ts.n || nary==0) return none;
+d522 2
+a523 1
+    res = remove(pat);
+d526 6
+d533 23
+d560 3
+d572 6
+d604 1
+d620 7
+d633 15
+d657 1
+d668 1
+a668 1
+    out: function (pat) { 
+d671 1
+a671 1
+      res = ts.out(pat)
+a674 7
+    mark: function (pat,tmo) { 
+      var res,_node=current.node;
+      current.node=self.node||_node;
+      res = ts.mark(pat,tmo);
+      current.node=_node;
+      return res;
+    }
+d691 1
+d694 6
+a699 3
+tsd.prototype.cleanup = function (process) {
+  var i,j,tsi,p,waiter;
+  for (i in current.node.ts.db) {
+d701 3
+a703 3
+    tsi=current.node.ts.db[i];
+    for(j in tsi.waiters) {
+      if (j=='free' || !tsi.waiters[j]) continue;
+d705 4
+a708 1
+      if (waiter.pro.pid==process.pid) removewaiter(tsi,j);
+d731 1
+a731 1
+  var str='',sep='';
+d734 1
+a734 1
+    for (var i in current.node.ts.db) {
+d736 2
+a737 2
+      var tsi=current.node.ts.db[i];
+      var num = count(tsi);
+d745 1
+a745 1
+  else for (var i in current.node.ts.db) {
+d747 1
+a747 1
+    var tsi=current.node.ts.db[i];
+d789 2
+a790 1
+  match:match
+@
+
+
+1.2
+log
+@*** empty log message ***
+@
+text
+@d22 2
+a23 2
+ **    $RCS:         $Id: ts.js,v 1.1 2017/05/20 15:56:53 sbosse Exp $
+ **    $VERSION:     1.3.3
+d30 1
+d48 12
+d61 4
+d68 2
+a69 1
+  var res,consumed=false,found,
+d71 12
+a82 31
+  if (tsi.waiters.length>0)  {
+    tsi.waiters=Comp.array.filter(tsi.waiters,function (waiter) {
+        var pat=waiter[0],
+            process=waiter[1],
+            agent=process.agent,
+            cb=waiter[2],
+            op=waiter[3];
+
+        found=false;
+        if (!consumed) switch (op) {
+          case 'rd':
+          case 'rd-all':
+            res=match1(tuple,pat);
+            log(tsi,current.process,' rd waiter? '+res);
+            if (res!=none) {
+              Aios.CB(process,function () {cb.call(agent,(op=='rd'?res:[res]))}),
+              process.wakeup();
+              found=true;
+            }
+            break;
+          case 'in':
+          case 'in-all':
+            res=match1(tuple,pat);
+            log(tsi,current.process,' in waiter? '+res);
+            if (res!=none) {
+              Aios.CB(process,function () {cb.call(agent,(op=='in'?res:[res]))}),
+              process.wakeup();
+              consumed=true;
+              found=true;
+            }
+            break;
+d84 13
+a96 2
+        return !found;
+      });
+d98 1
+a98 1
+
+d107 28
+d137 2
+a138 3
+  var data=tsi.data;
+  var n=0;
+  for (var i in data) {if (data[i] != undefined) n++};
+d168 16
+d266 4
+a269 3
+/** Agent Client API
+ *
+ */
+d271 43
+d315 1
+a315 1
+    var tsi,nary=pat.length;
+d318 1
+a318 1
+    var res = lookup(pat);
+d321 2
+a322 1
+  // tmo <> 0 => try_in
+d324 1
+a324 1
+    var tsi,nary=pat.length;
+d327 1
+a327 1
+    var res = remove(pat,all);
+d330 6
+a335 1
+      tsi.waiters.push([pat,current.process,callback,'in'+(all?'-all':''),tmo>0?Aios.time()-current.world.lag+tmo:0]);
+d401 1
+a401 1
+  // tmo <> undefined => try_rd [0: immed.]
+d403 1
+a403 1
+    var tsi,nary=pat.length;
+d406 1
+a406 1
+    var res = lookup(pat,all);
+d408 6
+a413 1
+      tsi.waiters.push([pat,current.process,callback,'rd'+(all?'-all':''),tmo>0?Aios.time()-current.world.lag+tmo:0]);
+d418 2
+a419 1
+
+d421 1
+a421 1
+    var tsi,nary=pat.length;
+d424 1
+a424 1
+    var res = remove(pat);
+d429 3
+d441 4
+d452 3
+a454 2
+      if (i==0) return none;
+      else return {
+d465 4
+a468 2
+      }
+    });
+d540 2
+a541 1
+  for (var i in current.node.ts.db) {
+d543 6
+a548 6
+    var tsi=current.node.ts.db[i];
+    if (tsi.waiters.length>0) 
+      tsi.waiters=Comp.array.filter(tsi.waiters,function (waiter) {
+        if (waiter[1].pid==process.pid) return false;
+        else return true;
+      });
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d22 2
+a23 2
+ **    $RCS:         $Id: aios.js,v 1.2 2017/05/19 05:13:27 sbosse Exp $
+ **    $VERSION:     1.3.2
+d254 1
+d334 1
+d479 7
+a485 6
+tsd.prototype.service = function () {
+  var nexttime=0;
+  var curtime=Aios.time()-current.world.lag;
+  for (var i in this.db) {
+    var tsi=this.db[i];
+    var hashed;
+d500 1
+a500 1
+  return nexttime;
+@
