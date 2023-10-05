@@ -1,0 +1,2 @@
+Terminal node.js/jxcore APP based on terminal/curses blessed UI.
+Requires only a JSVM and a color terminal.
