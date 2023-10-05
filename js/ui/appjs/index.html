@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="dist/app.css">
+    <style>
+      ::-webkit-scrollbar
+      {
+        width: 12px;  /* for vertical scrollbars */
+        height: 12px; /* for horizontal scrollbars */
+      }
+
+      ::-webkit-scrollbar-track
+      {
+        background: rgba(0, 0, 0, 0.1);
+      }
+
+      ::-webkit-scrollbar-thumb
+      {
+        background: rgba(0, 0, 0, 0.5);
+      }
+      /* TODO */
+     .demo {
+	     position: relative;
+	     height: 100%;
+	     width: 100%;
+         margin: auto;
+	     // background-image: url(phone.png);
+	     background-position: center;
+	     background-repeat: no-repeat;
+	     background-size: 100%;
+	     overflow: hidden;
+     }
+     .demo iframe {
+	     position: relative;
+	     display: block;
+	     margin: 5% auto 5%;
+	     height: 90%;
+	     width: 90%;
+	     background: #DDD;
+	     border: 1px solid #DDD;
+	     outline: none;
+	     border-radius: 6px;
+     }    </style>
+  </head>
+
+  <body>
+  <div style="text-align: center" class="demo">
+    <iframe src="app.html"></iframe>
+  </div>  
+</body>
+</html>
