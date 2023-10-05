@@ -1,0 +1,159 @@
+#!/bin/bash
+
+TOP=/home/sbosse/proj/jam
+SRC=$TOP/js
+
+APP=app.html
+INSTALLDIR=/opt/jam
+MAKEAPP=$TOP/tools/makeweb
+
+JSMIN=$TOP/tools/jsmin
+MV=mv
+RM=rm
+CP=cp
+CHMOD=chmod
+CAT=cat
+ECHO=echo
+CC=gcc
+SED=sed
+INSTALL=$TOP/tools/install.sh
+
+
+CSS="ui/cordova/www/css/app.css ui/botui/build/botui.css ui/botui/build/botui-theme-default.css ui/dialog/css/prompt-boxes.css"
+CSS="$CSS "
+
+JS="ui/cordova/www/js/app.js ui/appjs/dist/zepto.js"
+JS="$JS ui/cordova/www/js/jamui.js ui/cordova/www/js/jamutils.js ui/appjs/Logger.js"
+JS="$JS ui/botui/vue.js ui/botui/build/botui.js  ui/cordova/www/js/prompt-boxes.js"
+JS="$JS ../build/lib.browser/jamlib.browser.debug.js ../demo/agents/chat.js"
+JS="$JS ../build/appNW/config.js os/polyfill.js os/promise-polyfill.js"
+JS="$JS ui/cordova/www/js/app0.js"
+
+IMG="ui/appjs/images"
+
+CONFIG="config.js"
+
+MAIN="ui/cordova/www/$APP"
+CORDOVA="ui/cordova/wrapper/cordova.js"
+LIB="../lib.browser/jamlib.browser.debug.js"
+
+
+if [ $# = 0 ]
+then
+    echo "Usage: build <targets>"
+    echo "Targets: all app init clean install"
+    exit 1
+fi
+
+check ()
+{
+    if [ $? != 0 ]
+    then
+        echo "Abort due to errors building target."
+        exit 1
+    fi
+}
+
+
+
+makeapp()
+{
+  $INSTALL -d app
+  $INSTALL -d app/js
+  $INSTALL -d app/css
+  $INSTALL -d app/img
+  
+  for file in $JS
+  do
+    echo $CP $SRC/$file app/js
+    if [ -d $SRC/$file ]
+    then
+      $CP -r $SRC/$file app/js      
+    else
+      $CP $SRC/$file app/js
+    fi
+  done 
+  for file in $CSS
+  do
+    echo $CP $SRC/$file app/css
+    if [ -d $SRC/$file ]
+    then
+      $CP -r $SRC/$file app/css     
+    else
+      $CP $SRC/$file app/css
+    fi
+  done 
+  for file in $IMG
+  do
+    echo $CP $SRC/$file app/img
+    if [ -d $SRC/$file ]
+    then
+      $CP $SRC/$file/* app/img     
+    else
+      $CP $SRC/$file app/img
+    fi
+  done 
+
+  # Fix app.html
+  $SED -e "s/ontouchstart/onclick/g" $SRC/$MAIN > app/$APP
+  # $INSTALL -C $SRC/$MAIN app/
+  $INSTALL -C $SRC/$CORDOVA app/
+}
+
+install_dir() {
+    for i in "$1"/*;do
+        if [ -L "$i" ];then
+          if [ ! -d "$i" ];then
+            $CP -RP $i $INSTALLDIR/appNW/$i
+          fi
+        elif [ -d "$i" ];then
+            echo "dir: $i"
+            $INSTALL -d $INSTALLDIR/appNW/$i
+            check
+            install_dir "$i"
+        elif [ -f "$i" ]; then
+            echo "file: $i"
+            $INSTALL -C $i $INSTALLDIR/appNW/${i%/*}
+            check
+        fi
+    done
+}
+
+
+update () {
+  $INSTALL -d app
+  $INSTALL -d app/js
+  $INSTALL -d app/css
+  $INSTALL -d app/img
+  $INSTALL -d app/data
+  $INSTALL -C $LIB app/js/
+}
+
+for TARGET in $@
+do
+    echo "Building target [$TARGET] ..."
+    case $TARGET in
+        all)
+            update
+            check
+            makeapp
+            check
+            ;;
+        app)
+            update
+            check
+            makeapp
+            check
+            ;;
+        clean)  
+            ;;
+        install)
+            $INSTALL -d $INSTALLDIR
+            $INSTALL -d $INSTALLDIR/appNW
+            $SED -e "s/app\///" package.json > $INSTALLDIR/appNW/package.json
+            cd app; install_dir .
+            check
+            ;;
+		
+    esac
+done
