@@ -1,0 +1,226 @@
+
+
+.marked dt {
+  font-weight:bold;
+}
+.marked dd {
+  margin-left:10px;
+}
+.marked code {
+    border: 1px solid #e7eaed;
+    background-color: #f8f8f8;
+    border-radius: 3px;
+    padding: 0;
+    padding: 2px 4px 0px 4px;
+    font-size: 0.9em;  
+}
+.marked pre code {
+    border: 0px;
+    background-color: inherit;
+    border-radius: 0px;
+    padding: 0;
+    font-size: 0.9em;
+    line-height: 1.5;
+    margin:0;
+}
+.marked pre {
+    background-color: #f8f8f8;
+}
+
+.marked blockquote {
+    border-left: 4px solid #dfe2e5;
+    padding: 0 15px;
+    color: #777777;
+    margin: 0.8em 0;
+}
+
+.normalOutput {
+    word-break:break-all;
+}
+
+.marked h1,h2,h3,h4 {
+  color:#3498db;
+}
+
+.error {
+    color:red;
+    word-break:break-all;
+    font-size: 1em;
+    font-family: monospace;
+}
+
+.warning {
+    color:green;
+    word-break:break-all;
+    font-size: 1em;
+    font-family: monospace;
+}
+
+.normalOutput {
+    color:blue;
+    word-break:break-all;
+    font-size: 1em;
+    font-family: monospace;
+}
+
+.input {
+    word-break:break-all;
+    font-size: 1em;
+    font-family: monospace;
+}
+
+.webix_el_label {
+    font-size:20px !important;
+}
+
+
+/* Spoiler */
+input[id^="spoiler"] + label::after {
+  content: " \25BE";
+  font-size:1.5em;    
+  color: blue;
+}
+input[id^="spoiler"]:checked + label::after {
+  content: " \25B4";
+  font-size:1.5em;    
+  color: blue;
+}
+
+input[id^="spoiler"]{
+  display: none;
+}
+input[id^="spoiler"] + label {
+  display: block;
+  // width: 100px;
+  width: 95%;
+  margin: 0px auto;
+  padding: 0;
+  background: #fff;
+  color: #111;
+  text-align: left;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all .2s;
+}
+input[id^="spoiler"]:checked + label {
+  color: #333;
+}
+
+input[id^="spoiler"] ~ .spoiler {
+  width: 95%;
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  margin: 0px auto 0; 
+  padding: 0px; 
+  background: #eee;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: all .2s;
+}
+input[id^="spoiler"]:checked + label + .spoiler{
+  height: auto;
+  opacity: 1;
+  padding: 10px;
+}
+
+/* Navigation */
+.nav-list-container {
+  height:90%;
+  overflow-y:auto;
+}
+.nav-list {
+  overflow-x:hidden;
+  /*padding-top:50px;*/
+}
+.nav-entry {
+  margin: 0;
+  padding:0;
+  padding-left:10px;
+  margin-top:5px;
+  margin-bottom:5px;
+  height: auto;
+  cursor:pointer;
+  font-family:"Sans";
+}
+.nav-entry-selected {
+  font-weight:bold;
+}
+.nav-entry-document::before {
+  font-family: "FontAwesome"; content: "\f0f6";
+  padding-right:5px;
+}
+.nav-entry-directory::before {
+  font-family: "FontAwesome"; content: "\f07b";
+  padding-right:5px;
+}
+.nav-entry-file::before {
+  font-family: "FontAwesome"; content: "\f0c5";
+  padding-right:5px;
+}
+.nav-entry-compact {
+  margin: 0 !important;
+  padding:0;
+}
+.nav-entry a {
+  text-decoration: none !important;
+}
+.nav-entry-compact a {
+  text-decoration: none !important;
+}
+
+.nav-selected {
+  color: blue;
+  border: 1px solid #888;
+  border-radius:5px;
+}
+
+/* Console */
+div.console { 
+  word-wrap: break-word; 
+  overflow-y:auto; 
+  height:inherit; 
+  font-family: droidsansmonow01 , monospace !important; 
+  font-size: inherit;
+  background: white;
+  color:black; 
+}
+div.console div.jquery-console-prompt-box { 
+  font-family: droidsansmonow01 , monospace !important; 
+}
+div.console div.jquery-console-message { 
+  font-family: droidsansmonow01 , monospace !important; 
+}
+/* First console */
+div.console div.jquery-console-inner
+ { width:auto; height:auto;  background:#eee; padding:0.5em;
+   overflow:auto }
+div.console div.jquery-console-prompt-box
+ { color:black; font-family:monospace; }
+div.console div.jquery-console-focus span.jquery-console-cursor
+ { background:black; color:white; font-weight:bold }
+div.console div.jquery-console-message-error
+ { color:red; font-family:sans-serif; font-weight:bold;
+   padding:0.1em; }
+div.console div.jquery-console-message-value
+ { color:blue; font-family:monospace;
+   padding:0.1em; }
+div.console div.jquery-console-message-type
+ { color:green; font-family:monospace;
+   padding:0.1em; }
+div.console span.jquery-console-prompt-label { 
+  font-weight:bold }
+
+div.term_cell div.console div.jquery-console-inner {
+  background: white;
+}
+
+/* Codemirror */
+.CodeMirror {
+  line-height:1.2em !important;
+  font-family:droidsansmonow01 !important;
+  color:black;
+}
+
+
