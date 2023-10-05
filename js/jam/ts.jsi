@@ -1,0 +1,20 @@
+type tuple = * []
+type pattern = *|none []
+
+agent: object {
+  alt: function (pattern [],callback:function,all:boolean,tmo?:number)
+  collect: function (to:path,pattern) -> number
+  copyto: function (to:path,pattern) -> number
+  exists: function (pattern) -> boolean
+  inp: function (pattern,callback:function,all:boolean,tmo?:number) -> tuple|tuple []|none
+  mark: function (tuple,tmo:number) 
+  out: function (tuple)
+  rd: function (pattern,callback:function,all:boolean,tmo?:number) -> tuple|tuple []|none
+  rm: function (pattern,all:boolean) -> boolean
+  store: function (to:path,tuple) -> number
+  try: object {
+    alt : function (tmo:number,pattern [],callback:function,all:boolean)
+    inp : function (tmo:number,pattern,callback:function,all:boolean)
+    rd : function (tmo:number,pattern,callback:function,all:boolean)
+  }
+}
