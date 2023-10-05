@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+	<link rel="stylesheet" href="webix.css" type="text/css" media="screen" charset="utf-8">
+	<script src="HackTimer.js" type="text/javascript" charset="utf-8"></script>
+    <script src="zepto.js" type="text/javascript" charset="utf-8"></script>
+	<script src="webix.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+		webix.require.disabled = true;
+		webix.codebase = "./";
+	</script>
+    <script src="codemirror/codemirror.js"></script>
+    <script src="codemirror/codemirror/lib/codemirror.js"></script>
+    <script src="codemirror/codemirror/mode/javascript/javascript.js"></script>
+    <script src="codemirror/codemirror/mode/xml/xml.js"></script>
+
+    <script src="graphics.js"></script>
+    <script src="Chart.js"></script>
+    <script src="Chart-matrix.js"></script>
+    <script src="canvas2svg.js"></script>
+
+    <script src="cannon/cannon.js"></script>
+    <script src="cannon/cannon.gui.js"></script>
+    <script src="cannon/dat.gui.js"></script>
+    <script src="cannon/three.js"></script>
+    <script src="cannon/TrackballControls.js"></script>
+    <script src="cannon/Detector.js"></script>
+    <script src="cannon/smoothie.js"></script>
+
+    <script src="vue.js"></script>    
+    <script src="botui.js"></script>
+
+    <script src="jquery.js"></script>
+    <script src="jquery-ui.js"></script>
+
+    <script src="popupmodal.js"></script>
+    
+    <link rel="stylesheet" href="popupmodal.css" />
+    <link rel="stylesheet" href="Chart.css" />    
+    <link rel="stylesheet" href="botui.css" />
+    <link rel="stylesheet" href="botui-theme-default.css" />
+    <link rel="stylesheet" type="text/css" href="codemirror/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" type="text/css" href="win.css" charset="utf-8">
+	  <title>SEJAM2 Simulation Environment for JAM (C) Dr. Stefan Bosse, 2015-2019</title>
+  	<style>
+		html, body{
+			height: 100%;
+			padding:0;
+			margin:0;
+           -webkit-touch-callout: none;
+           -webkit-user-select: none;
+           -khtml-user-select: none;
+           -moz-user-select: none;
+           -ms-user-select: none;
+           user-select: none;
+        }
+        .webix_el_textarea textarea
+        {
+          border:1px solid #ddd;
+          height:100%;
+          margin:0;
+          padding:5px 10px;
+          color:#666;
+          resize:none;
+          font-size:12px;
+          font-family:"DejaVu Sans Mono",Tahoma;
+        } 
+        .webix_layout_toolbar.webix_toolbar .webix_el_label {
+          font-style: italic;
+          font-size:16px;
+        }
+        
+        .webix_badge{
+          background-color:#A0A0A0;
+        }
+        tt {
+          font-family: "DejaVu Sans Mono",Tahoma;
+          font-size:12px;
+        }
+        input {
+          color:#666;        
+        }
+        .line-error {
+            background: #FBC2C4 !important;
+            color: #8a1f11 !important;
+        }
+        .line-normal {
+            background: white;
+        }
+        @media screen and (-webkit-min-device-pixel-ratio:0) { 
+          input
+          {
+            margin: 0;
+            padding: 0;
+            float: middle;
+            border: 0;
+            border-radius: 0;
+          }
+          .webix_tree_plus2{margin-left:4px}
+          .webix_tree_plus3{margin-left:4px}
+          .webix_tree_plus4{margin-left:4px}
+          .webix_tree_minus2{margin-left:4px}
+          .webix_tree_minus3{margin-left:4px}
+          .webix_tree_minus4{margin-left:4px}
+          .webix_tree_img{width:18px}
+        }
+        
+        .myhover{
+          background: #F0DCB6;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted black;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        /* Navigation */
+        .nav-list-container {
+          height:90%;
+          overflow-y:auto;
+        }
+        .nav-list {
+          overflow-x:hidden;
+          /*padding-top:50px;*/
+        }
+        .nav-entry {
+          margin: 0;
+          padding:0;
+          padding-left:10px;
+          margin-top:5px;
+          margin-bottom:5px;
+          height: auto;
+          cursor:pointer;
+          font-family:"Sans";
+        }
+        .nav-entry-selected {
+          font-weight:bold;
+        }
+        .nav-entry-document::before {
+          font-family: "FontAwesome"; content: "\f0f6";
+          padding-right:5px;
+        }
+        .nav-entry-directory::before {
+          font-family: "FontAwesome"; content: "\f07b";
+          padding-right:5px;
+        }
+        .nav-entry-file::before {
+          font-family: "FontAwesome"; content: "\f0c5";
+          padding-right:5px;
+        }
+        .nav-entry-compact {
+          margin: 0 !important;
+          padding:0;
+        }
+        .nav-entry a {
+          text-decoration: none !important;
+        }
+        .nav-entry-compact a {
+          text-decoration: none !important;
+        }
+
+        .nav-selected {
+          color: blue;
+          border: 1px solid #888;
+          border-radius:5px;
+        }
+</style>
+</head>
+<body>
+<script src="./webutils.js"></script>
+<script src="./utils.js"></script>
+<script src="./file.js"></script>
+<script src="./sejam2-app.debug.js"></script>
+<script>
+  Chart.defaults.global.animation.duration = 0
+  Chart.plugins.register({
+      afterRender: function(c) {
+          console.log("afterRender called");
+          var ctx = c.chart.ctx;
+          ctx.save();
+          // This line is apparently essential to getting the
+          // fill to go behind the drawn graph, not on top of it.
+          // Technique is taken from:
+          // https://stackoverflow.com/a/50126796/165164
+          ctx.globalCompositeOperation = 'destination-over';
+          ctx.fillStyle = 'white';
+          ctx.fillRect(0, 0, c.chart.width, c.chart.height);
+          ctx.restore();
+      }
+  });
+  var UI= $$;
+  
+  global.document = window.document;
+  webix.codebase = "./";
+  sejam2=window.SEJAM2;
+
+  if (typeof process=='undefined') process={};
+  process.memoryUsage = function () { return {rss:0,heapUsed:0} }
+  process.platform = "WEB browser"
+  process.version = undefined
+  process.versions = []
+  process.exit = function () { return }
+  
+  // Create the GUI
+  var gui = sejam2.Gui({nwgui:nwgui,webix:webix,CANNON:CANNON,acgraph:acgraph,UI:$$,utils:{Image:Image}});
+  gui.init();
+
+  // Parse the URL parameter
+  function parseQueryString( url ) {
+      var queryString = url.substring( url.indexOf('?') + 1 );
+      if (queryString == url) return [];
+      var params = {}, queries, temp, i, l;
+
+      // Split into key/value pairs
+      queries = queryString.split("&");
+
+      // Convert the array of strings into an object
+      for ( i = 0, l = queries.length; i < l; i++ ) {
+          temp = queries[i].split('=');
+          if (temp[1]==undefined) temp[1]='true';
+          params[temp[0]] = temp[1].replace('%20',' ');
+      }
+
+      return params;
+  }
+  var params = parseQueryString(window.location.href)
+  if (params.auto) {
+    gui.loadSimulation(params.auto);
+    gui.createSimulation()
+    gui.startSimulation()
+  }
+  if (params.workdir) {
+    gui.workdir=params.workdir;
+  }
+</script>
+</body>
+</html>
