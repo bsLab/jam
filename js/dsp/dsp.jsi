@@ -1,0 +1,78 @@
+object DSP;
+enum DSP = {
+  // Channels
+  LEFT,
+  RIGHT,
+  MIX,
+
+  // Waveforms
+  SINE,
+  TRIANGLE,
+  SAW,
+  SQUARE,
+
+  // Filters
+  LOWPASS,
+  HIGHPASS,
+  BANDPASS,
+  NOTCH,
+
+  // Window functions
+  BARTLETT,
+  BARTLETTHANN,
+  BLACKMAN,
+  COSINE,
+  GAUSS,
+  HAMMING,
+  HANN,
+  LANCZOS,
+  RECTANGULAR,
+  TRIANGULAR,
+
+  // Mean Filter
+  ARITH,         
+  EXP,          
+  PEAK,
+
+  // Loop modes
+  OFF,
+  FW,
+  BW,
+  FWBW,
+
+  // Math
+  TWO_PI 
+} 
+
+// Discrete Fourier Transform
+constructor function DFT(bufferSize:number, sampleRate?:number) -> dft;
+type dft = {
+  forward: method (@signal,spectrum:boolean) -> []|{real:[],imag:[]}
+  spectrum: []
+}
+
+// Fast Fourier Transform
+constructor function FFT(bufferSize:number, sampleRate?:number) -> fft;
+type fft = {
+  forward: method (@signal,spectrum:boolean) -> []|{real:[],imag:[]}
+  spectrum: {}
+}
+
+// Signal Generator
+constructor function Oscillator(waveform:DSP, frequency:number, 
+                                amplitude:number, @bufferSize, @sampleRate?)
+  -> oscillator;
+  
+type oscillator = {
+  generate: method,
+  signal: []
+}
+
+// ...
+
+
+DSP.Features = function(signal:[]) -> {min:number,max:number,mean:number,deviation:number}
+DSP.Histogram = function(signal:[],intervals:number) -> []
+DSP.Normalize = function(signal:[]) -> []
+DSP.Reduce = function(signal:[],segments:number,filter:DSP) -> []
+DSP.Resample = function(signal:[],divider:number,filter:DSP) -> []
