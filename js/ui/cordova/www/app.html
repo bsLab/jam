@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Javascript Agent Machine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="css/app.css">
+    <style>
+      /* TODO */
+    </style>
+    <script>
+      if (typeof global=='undefined') global={};
+    </script>
+    <link rel="stylesheet" href="css/prompt-boxes.css" />
+    <link rel="stylesheet" href="css/botui.css" />
+    <link rel="stylesheet" href="css/botui-theme-default.css" />
+    <script type="text/javascript" src="cordova.js"></script>
+    <script src="js/polyfill.js"></script>
+    <script src="js/promise-polyfill.js"></script>
+    <script type="text/javascript" src="js/Logger.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/botui.js"></script>
+    <script src="js/prompt-boxes.js"></script>
+   </head>
+
+  <body>
+
+    <div class="app-page" data-page="home">
+      <div class="app-topbar teal">
+        <div class="app-button left" poweroff ontouchstart="javascript:appCordova.startstop()"></div>
+        <div class="app-title">Menu</div>
+        <div class="app-button right" close ontouchstart="javascript:appCordova.exit()" style="margin-right:20px"></div>
+        <div class="app-button right" setup data-target="page-setup"></div>
+      </div>
+      <div class="app-content">
+        <div class="app-section">
+          <h2>JavaScript Agent Machine</h2>
+          <div class="app-spacer small"></div>
+          <div class="app-button red" data-target="page-network">Network</div>
+          <div class="app-spacer small"></div>
+          <div class="app-button blue" data-target="page-jam">JAM</div>
+          <div class="app-spacer small"></div>
+          <div class="app-button blue" data-target="page-agents">Agents</div>
+          <div class="app-spacer small"></div>
+          <div class="app-button green" data-target="page-info">Information</div>
+          <div class="app-spacer small"></div>
+          <div class="app-button orange" data-target="page-chat">Bot Chat</div>
+          <div id="deviceready" class="blink">
+            <p class="event listening">Connecting to Device</p>
+            <p class="event received">Device is Ready</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-page" data-page="page-network">
+      <div class="app-topbar teal">
+        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-title">Network</div>
+      </div>
+      <div class="app-content">
+        <div class="app-section">
+          <div class="app-button green" style="opacity: 0.2;"; ontouchstart="javascript:Network.start()" id="app-net-start";>Connect</div>
+          <div class="app-button red"   style="opacity: 0.2;"; ontouchstart="javascript:Network.stop()"  id="app-net-stop";>Disconnect</div>
+        </div>
+        <div class="app-section">
+          <b>Status</b><br>
+          <div class="app-status black">
+            <img id="status-network-init" style="vertical-align:middle; visibility:hidden" height="24" src="img/Communication-2.png">
+            <img id="status-network-connected"  style="vertical-align:middle; visibility:hidden" height="24" src="img/Communication-3.png">
+            <img id="status-network-not-connected" style="vertical-align:middle; visibility:hidden" height="24" src="img/Communication-7.png">
+            <img id="status-network-published" style="vertical-align:middle; visibility:hidden" height="24" src="img/Communication-9.png">
+            <img id="status-jam-active" style="vertical-align:middle; visibility:hidden" height="24" src="img/Setting-10.png">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-page" data-page="page-jam">
+      <div class="app-topbar teal">
+        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-title">JAM</div>
+      </div>
+      <div class="app-content">
+        <div class="app-section">
+          <div class="app-button green" style="opacity: 0.2;"; id="app-jam-start"; ontouchstart="javascript:Jam.start()">Start</div>
+          <div class="app-button red"   style="opacity: 0.2;"; id="app-jam-stop";  ontouchstart="javascript:Jam.stop()">Stop</div>
+          <div class="app-button blue"  style="opacity: 0.2;"; id="app-jam-reset"; ontouchstart="javascript:Jam.reset()">Reset</div>
+        </div>
+        <div class="app-section">
+          <div style="margin-bottom:1em;"; class="app-button yellow" ontouchstart="javascript:Jam.refresh()">Refresh</div>
+          <b>JAM World</b>
+          <div id="jam-world">&nbsp;</div>
+          <br>
+          <b>JAM Node</b>
+          <div id="jam-node">&nbsp;</div>
+          <br>
+          <b>Domain</b>
+          <div id="jam-domain">&nbsp;</div>
+          <br>
+          <b>Statistics</b>
+          <table width="100%">
+          <tr>
+          <td width="25%">cpu [ms]</td><td width="25%" id="statistics-cpu"></td>
+          <td width="25%">create</td><td width="25%" id="statistics-create"></td>
+          </tr>
+          <tr>
+          <td width="25%">fastcopy</td><td width="25%" id="statistics-fastcopy"></td>
+          <td width="25%">fork</td><td width="25%" id="statistics-fork"></td>
+          </tr>
+          <tr>
+          <td width="25%">received</td><td width="25%" id="statistics-received"></td>
+          <td width="25%">handled</td><td width="25%" id="statistics-handled"></td>
+          </tr>
+          <tr>
+          <td width="25%">migrate</td><td width="25%" id="statistics-migrate"></td>
+          <td width="25%">signal</td><td width="25%" id="statistics-signal"></td>
+          </tr>
+          <tr>
+          <td width="25%">error</td><td width="25%" id="statistics-error"></td>
+          <td width="25%">agents</td><td width="25%" id="statistics-agents"></td>
+          </tr>
+          <tr>
+          <td width="25%">tsout</td><td width="25%" id="statistics-tsin"></td>
+          <td width="25%">tsin</td><td width="25%" id="statistics-tsout"></td>
+          </tr>
+          </table>
+          <br>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-page" data-page="page-agents">
+      <div class="app-topbar teal">
+        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-title">Agents</div>
+        <div class="app-button right" data-next data-target="page-agents-manager">Manager</div>
+      </div>
+      <div class="app-content" id="page-agents">
+        <div class="app-section">
+          <label class="app-input">Messages</label>
+          <div class="app-button green" ontouchstart="javascript:log2Update(true)">Clear</div>
+          <div class="app-message" id="app-agent-messages">
+         </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-page" data-page="page-agents-manager">
+      <div class="app-topbar teal">
+        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-title">Agent Manager</div>
+        <div class="app-button right" data-next data-target="page-agents-class">Classes</div>
+      </div>
+      <div class="app-content" id="page-agents-manager">
+        <div class="app-section">
+          <label class="app-input">Control</label>
+          <div class="app-button red" ontouchstart="javascript:killAgent()">Kill</div>
+          <div class="app-button yellow" ontouchstart="javascript:infoAgent()">Info</div>
+          <div class="app-button orange" ontouchstart="javascript:runUpdate()">Refresh</div>
+        </div>
+        <div class="app-section">
+          <label class="app-input">Running Agents</label>
+          <ul class="app-list" id="app-list-agent-running">
+          </ul>        
+        </div>
+      </div>
+    </div>
+
+    <div class="app-page" data-page="page-agents-class">
+      <div class="app-topbar teal">
+        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-title">Agent Classes</div>
+      </div>
+      <div class="app-content" id="page-agents-classes">
+        <div class="app-section">
+          <label class="app-input">Classes</label>
+          <div class="app-button green"  ontouchstart="javascript:fmsetup(loadClassFromFileObj,'Load Class',false)">Load</div>
+          <div class="app-button orange" ontouchstart="javascript:fmsetup(saveClassToFile,'Save Class',true)">Save</div>
+          <div class="app-button blue"   ontouchstart="javascript:createAgent()">Create Agent</div>
+        </div>
+        <div class="app-section">
+          <label class="app-input">Loaded</label>
+          <ul class="app-list" id="app-list-classes">
+          </ul>        
+        </div>
+      </div>
+    </div>
+
+    <div class="app-page" data-page="page-info">
+      <div class="app-topbar teal">
+        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-title">Information</div>
+      </div>
+      <div class="app-content">
+        <div class="app-section">
+          <label class="app-input">Sensors</label>
+          <ul class="app-list" id="app-list-sensors">
+          </ul>        
+         </div>
+      </div>
+    </div>
+
+    <div class="app-page" data-page="page-chat">
+      <div class="app-topbar teal" style="position:absolute;">
+        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-title">Agent Bot Chat</div>
+        <div class="app-button right" ontouchstart="javascript:chatReset()">Clear</div>
+      </div>
+      <div class="app-content" id="chat-bot-content" style="padding-top:44px">
+        <div class="app-section" style="padding-top:22px">
+        <div class="botui-app-container" id="chat-bot" style="width:100%;">
+          <bot-ui></bot-ui>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-page" data-page="page-setup">
+      <div class="app-topbar teal">
+        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-title">Setup</div>
+      </div>
+      <div class="app-content">
+        <div class="app-section">
+        
+          <input class="app-radio" type="checkbox" id="setup-link1-enable">
+          <label class="app-radio">Enable Link 1</label><br>
+          <label class="app-input">Link 1: IP Address</label>
+          <input class="app-input" id="setup-link1-ip" value="">
+          <label class="app-input">Link 1: IP Port</label>
+          <input class="app-input" id="setup-link1-ipport" value="">
+          <input class="app-radio" type="checkbox" id="setup-link2-enable">
+          <label class="app-radio">Enable Link 2</label><br>
+          <label class="app-input">Link 2: IP Address</label>
+          <input class="app-input" id="setup-link2-ip" value="">
+          <label class="app-input">Link 2: IP Port</label>
+          <input class="app-input" id="setup-link2-ipport" value="">
+          <input class="app-radio" type="checkbox" id="setup-link3-enable">
+          <label class="app-radio">Enable Link 3</label><br>
+          <label class="app-input">Link 3: IP Address</label>
+          <input class="app-input" id="setup-link3-ip" value="">
+          <label class="app-input">Link 3: IP Port</label>
+          <input class="app-input" id="setup-link3-ipport" value="">
+          <input class="app-radio" type="checkbox" id="setup-link4-enable">
+          <label class="app-radio">Enable Link 4</label><br>
+          <label class="app-input">Link 4: IP Address</label>
+          <input class="app-input" id="setup-link4-ip" value="">
+          <label class="app-input">Link 4: IP Port</label>
+          <input class="app-input" id="setup-link4-ipport" value="">
+        </div>          
+          
+        <div class="app-section"> 
+          <label class="app-input">Capability 1</label>
+          <input class="app-input" id="setup-cap1" value="">
+          <label class="app-input">Capability 2</label>
+          <input class="app-input" id="setup-cap2" value="">
+          <label class="app-input">Capability 3</label>
+          <input class="app-input" id="setup-cap3" value="">
+          <label class="app-input">Capability 4</label>
+          <input class="app-input" id="setup-cap4" value="">
+        </div>          
+          
+        <div class="app-section">
+          <label class="app-input">Message Flags</label>
+          <input class="app-radio" type="checkbox" id="setup-msg-agent">
+          <label class="app-radio">Agent ID</label><br>
+          <input class="app-radio" type="checkbox" id="setup-msg-parent">
+          <label class="app-radio">Parent ID</label><br>
+          <input class="app-radio" type="checkbox" id="setup-msg-time">
+          <label class="app-radio">time [ms]</label>
+          <input class="app-radio" type="checkbox" id="setup-msg-Time">
+          <label class="app-radio">Time</label>
+          <input class="app-radio" type="checkbox" id="setup-msg-class">
+          <label class="app-radio">Class</label>
+          <div></div>
+        </div>
+
+        <div class="app-section">
+          <label class="app-input">TBD</label>
+          <input class="app-radio" type="radio" name="setup-xxx" id="setup-xxx-a">
+          <label class="app-radio">tbd</label><br>
+        </div>          
+  
+        <div style="margin:1em;">&nbsp;</div>
+     </div>
+    </div>
+    <div class="app-page" data-page="page-filemanager">
+      <div class="app-topbar teal">
+        <div class="app-button left" data-back></div>
+        <div class="app-title">File Manager</div>
+        <div class="app-button right" ontouchstart="javascript:fmexec()">Action</div>
+      </div>
+      <div class="app-content" id="page-filemanager-content">
+        <div class="app-section">
+          <label class="app-input" id="page-filemanager-label">Directory</label>
+          <ul class="app-list" id="page-filemanager-list">
+          </ul>        
+        </div>
+      </div>
+    </div>
+
+    <script src="js/zepto.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/jamlib.browser.debug.js"></script>
+    <script type="text/javascript">
+      global.TARGET=window.TARGET="cordova";
+    </script>
+    <script src="js/config.js"></script>
+    <script src="js/jamutils.js"></script>
+    <script src="js/app0.js"></script>
+    <script src="js/jamui.js"></script>
+  </body>
+</html>
