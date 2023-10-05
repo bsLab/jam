@@ -1,0 +1,18 @@
+/**
+ * AIOS Mobility API signature
+ */
+enum DIR = {
+  NORTH , SOUTH , WEST , EAST ,
+  LEFT , RIGHT , UP , DOWN,
+  ORIGIN ,
+  NW , NE , SW , SE ,            
+  PATH    {tag='DIR.PATH',path:string} ,
+  IP      {tag='DIR.IP',ip:string} ,            
+  CAP     {tag='DIR.CAP',cap:string}
+} : dir
+
+DIR.isDir: function (dir) -> boolean
+DIR.opposite: function (dir,next:boolean) -> dir
+DIR.print: function (dir) -> string
+
+
