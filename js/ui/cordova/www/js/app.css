@@ -1,0 +1,953 @@
+/**
+ * App.js v3.0.8
+ * Instant mobile web app creation
+ * Copyright (c) 2012 Kik Interactive, http://kik.com
+ * Released under the MIT license
+ *
+ * iScroll v4.1.6
+ * Copyright (c) 2011 Matteo Spinelli, http://cubiq.org
+ * Released under the MIT license
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+/* Resets */
+
+html, body, div, form, p, ul, li, span, label, img {
+	margin: 0;
+	padding: 0;
+	outline: none;
+}
+html {
+	height: 100%;
+	width: 100%;
+}
+
+body {
+	position: relative;
+	font-family: -apple-system-font, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-webkit-text-size-adjust: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+	overflow: hidden;
+    margin-top:1%;
+    margin-bottom:auto;
+    height:96%;
+}
+
+
+.app-android {
+	font-family: "Roboto", sans-serif;
+}
+.app-no-scrollbar ::-webkit-scrollbar {
+	height: 0 !important;
+	width: 0 !important;
+}
+* {
+	-webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+	tap-highlight-color: rgba(0,0,0,0) !important;
+}
+.clear {
+	clear: both;
+}
+
+.app-android .app-ios-only,
+.app-ios .app-android-only {
+	display: none;
+}
+
+.app-button {
+  font-weight:bold;
+}
+
+
+
+/* Page */
+
+.app-clickblocker {
+	z-index: 9000;
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background-color: #FFF;
+	opacity: 0;
+}
+
+.app-page {
+	display: none;
+	position: relative;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+    z-index:1;
+}
+.app-loaded .app-page {
+	display: block;
+}
+.app-ios-7 .app-page,
+.app-ios-8 .app-page {
+	box-shadow: 0 0 12px rgba(0,0,0,0.2);
+}
+
+
+/* Topbar */
+
+.app-topbar {
+	z-index: 3000;
+	position: relative;
+	height: 44px;
+	width: 100%;
+	background-color: #000;
+	color: #FFF;
+	-webkit-box-shadow: inset 0 0 1px rgba(0,0,0,0.15);
+	box-shadow: inset 0 0 1px rgba(0,0,0,0.15);
+}
+.app-android .app-topbar {
+	height: 56px;
+	-webkit-box-shadow: 0 1px 5px rgba(0,0,0,0.3);
+	box-shadow: 0 1px 5px rgba(0,0,0,0.3);
+}
+.app-topbar .app-button {
+	position: absolute;
+	bottom: 0;
+	padding: 0 16px;
+	height: 100%;
+	line-height: 44px;
+    font-weight:bold !important;
+}
+.app-android .app-topbar .app-button {
+	line-height: 56px;
+}
+.app-topbar .app-button.left {
+	left: 0;
+}
+.app-topbar .app-button.right {
+	right: 0;
+}
+.app-topbar .app-title {
+	margin: 0 auto;
+	height: 100%;
+	width: 100%;
+	line-height: 44px;
+	text-align: center;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+    font-weight:bold !important;
+}
+.app-android .app-topbar .app-title {
+	line-height: 56px;
+}
+.app-ios-statusbar .app-topbar {
+	padding-top: 20px;
+}
+.app-android-statusbar .app-topbar {
+	padding-top: 24px;
+}
+.app-android-statusbar .app-topbar:before {
+	position: absolute;
+	top: 0;
+	height: 24px;
+	width: 100%;
+	background-color: rgba(0,0,0,0.3);
+	content: "";
+}
+.app-ios-statusbar .app-topbar .app-button {
+	height: 44px;
+}
+.app-android-statusbar .app-topbar .app-button {
+	height: 56px;
+}
+
+
+
+/* Content */
+
+.app-content {
+	z-index: 2000;
+	position: relative;
+	background-color: #FFF;
+	overflow: auto;
+	-webkit-box-shadow: 0 0 12px rgba(0,0,0,0.2);
+	box-shadow: 0 0 12px rgba(0,0,0,0.2);
+}
+.app-android-2 .app-content {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+.app-scrollhack > * {
+	/*
+		terrible hack to make elements render
+		properly in scrollable regions
+	*/
+	-webkit-transform: translate3d(0,0,0);
+	-moz-transform: translate3d(0,0,0);
+	-ms-transform: translate3d(0,0,0);
+	-o-transform: translate3d(0,0,0);
+	transform: translate3d(0,0,0);
+}
+.app-section {
+	position: relative;
+	margin: 8px;
+	border: 1px solid #AAA;
+}
+
+.app-spacer {
+  height:1em;
+}
+
+.app-spacer.small {
+  height:.5em;
+}
+
+/* Lists */
+
+.app-list {
+	list-style: none;
+}
+.app-list > li,
+.app-list > li.app-button {
+	padding-left: 20px;
+	padding-right: 8px;
+	height: 43px;
+	border-bottom: 1px solid #AAA;
+	line-height: 43px;
+	overflow: hidden;
+	text-align: left;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.app-android .app-list > li,
+.app-android .app-list > li.app-button {
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+.app-section .app-list > li:last-child,
+.app-section .app-list > li.app-button:last-child {
+	border-bottom: none;
+}
+.app-list > label {
+	display: block;
+	padding-left: 12px;
+	height: 24px;
+	background-color: #000;
+	color: #FFF;
+	line-height: 24px;
+}
+.app-list > li + label {
+	margin-top: -1px;
+}
+
+
+
+/* Buttons */
+
+.app-content .app-button {
+	margin: 0 auto;
+	height: 40px;
+	border-bottom: 1px solid #AAA;
+	line-height: 40px;
+	overflow: hidden;
+	text-align: center;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.app-button:last-child {
+	border-bottom: none;
+    cursor:pointer;
+}
+
+.app-content .app-button.green {
+	background-color: #7F7;
+}
+.app-content .app-button.red {
+	background-color: #F77;
+}
+.app-content .app-button.blue {
+	background-color: #77F;
+}
+
+
+
+/* Inputs */
+
+.app-input {
+	position: relative;
+	display: block;
+	padding: 10px 12px;
+    //padding:0;
+    //margin:0;
+	width: 100%;
+	background-color: transparent;
+	border: none;
+	border-bottom: 1px solid #AAA;
+	outline: none;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	line-height: 20px;
+	-webkit-appearance: none;
+}
+.app-section .app-input:last-child {
+	border-bottom: none;
+}
+.app-input,
+.app-input * {
+	color: inherit;
+	font-family: inherit;
+	font-size: inherit;
+}
+input.app-input {
+	height: 40px;
+	outline: 2px dotted #DDD;
+}
+
+textarea.app-input {
+	height: 80px;
+	resize: none;
+}
+.app-input input,
+.app-input textarea {
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	background-color: none;
+	border: none;
+	outline: none;
+	line-height: inherit;
+	resize: none;
+	-webkit-appearance: none;
+}
+.app-input input {
+	height: 20px;
+}
+.app-input textarea {
+	height: 60px;
+}
+
+label.app-input {
+    font-weight: bold;
+	margin: 0;
+	padding: 0;
+}
+
+input.app-radio {
+  position: relative;
+  width: 40px;
+  cursor:pointer;
+}
+
+label.app-radio {
+	position: relative;
+	display: inline-block;
+	padding: 4px;
+}
+
+.app-message {
+	position: relative;
+	display: block;
+	padding: 5px 5px;
+	background-color: transparent;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	line-height: 20px;
+	-webkit-appearance: none;
+    text-align: left;
+    white-space: normal;
+    width: 100%;
+    border: none;
+    outline: 2px dotted #DDD;
+	color: blue;
+    font-family: "Inconsolata","Lucida Console", Monaco, monospace; 
+	font-size: smaller;
+}
+
+
+
+/* Dialogs */
+
+.app-dialog-container {
+	position: absolute;
+	z-index: 5000;
+	top: 0;
+	left: 0;
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;
+	background-color: rgba(0,0,0,0);
+	overflow: hidden;
+	-webkit-transition: background-color 0.225s cubic-bezier(0.4,0.6,0.05,1);
+	transition: background-color 0.225s cubic-bezier(0.4,0.6,0.05,1);
+}
+.app-android-2 .app-dialog-container,
+.app-android-4 .app-dialog-container {
+	position: fixed;
+	background-color: rgba(0,0,0,0.8);
+	opacity: 0.01;
+	-webkit-transition: opacity 0.182s ease-in-out;
+	transition: opacity 0.182s ease-in-out;
+}
+.app-android-5 .app-dialog-container {
+	-webkit-transition: none;
+	transition: none;
+}
+.app-dialog-container.enabled {
+	background-color: rgba(0,0,0,0.8);
+}
+.app-android-2 .app-dialog-container.enabled,
+.app-android-4 .app-dialog-container.enabled {
+	opacity: 1;
+}
+.app-android-5 .app-dialog-container.enabled {
+	background-color: rgba(0,0,0,0.25);
+}
+.app-dialog {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	margin: 0 10%;
+	padding: 0;
+	width: 80%;
+	background-color: #FFF;
+	border-top: 1px solid #FFF;
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+	-webkit-box-shadow: 0 0 8px rgba(0,0,0,0.5);
+	box-shadow: 0 0 8px rgba(0,0,0,0.5);
+	color: #777;
+	overflow: hidden;
+	-webkit-transform: translate3d(0,380px,0);
+	transform: translate3d(0,380px,0);
+	-webkit-transition: -webkit-transform 0.225s cubic-bezier(0.4,0.6,0.05,1);
+	transition: transform 0.225s cubic-bezier(0.4,0.6,0.05,1);
+}
+@media (min-width: 360px) {
+	.app-dialog {
+		margin: 0 15%;
+		width: 70%;
+	}
+}
+.app-android .app-dialog {
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+}
+.app-android-2 .app-dialog {
+	-webkit-border-radius: 0;
+	border-radius: 0;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+.app-android-2 .app-dialog,
+.app-android-4 .app-dialog {
+	top: auto;
+	bottom: 50%;
+	-webkit-transform: translate3d(0,50%,0);
+	transform: translate3d(0,50%,0);
+	-webkit-transition: none;
+	transition: none;
+}
+.app-android-5 .app-dialog {
+	-webkit-transition-easing: ease-in-out;
+	transition-easing: ease-in-out;
+}
+.app-dialog-container.enabled .app-dialog {
+	-webkit-transform: translate3d(0,-50%,0);
+	transform: translate3d(0,-50%,0);
+}
+.app-android-2 .app-dialog-container.enabled .app-dialog,
+.app-android-4 .app-dialog-container.enabled .app-dialog {
+	-webkit-transform: translate3d(0,50%,0);
+	transform: translate3d(0,50%,0);
+}
+.app-dialog-container.closing.closing-success .app-dialog {
+	-webkit-transform: translate3d(0,-664px,0);
+	transform: translate3d(0,-664px,0);
+}
+.app-android-2 .app-dialog-container.closing.closing-success .app-dialog,
+.app-android-4 .app-dialog-container.closing.closing-success .app-dialog {
+	-webkit-transform: translate3d(0,50%,0);
+	transform: translate3d(0,50%,0);
+}
+
+.app-dialog .title {
+	position: relative;
+	margin-bottom: 8px;
+	padding: 16px 20px 0;
+	font-size: 18px;
+	font-weight: 300;
+	text-align: center;
+}
+.app-dialog .text {
+	margin: 20px 0;
+	padding: 0 20px 8px;
+	font-size: 16px;
+	font-weight: 400;
+	text-align: center;
+}
+.app-dialog .button {
+	float: right;
+	height: 44px;
+	width: 50%;
+	font-size: 20px;
+	font-weight: 300;
+	line-height: 44px;
+	text-align: center;
+	-webkit-transition: opacity 0.15s ease-out;
+	transition: opacity 0.15s ease-out;
+    cursor:pointer;
+}
+.app-dialog .button.cancel {
+	background-color: rgb(227,228,231);
+	color: #000;
+}
+.app-dialog .button.ok {
+	background-color: #2B9;
+	color: #FFF;
+}
+.app-dialog .button.first:before {
+	clear: left;
+}
+.app-dialog .button.last:after {
+	clear: right;
+}
+.app-dialog .button.first.last {
+	width: 100%;
+}
+.app-ios .app-dialog .button.first {
+	-webkit-border-radius: 0 0 0 8px;
+	border-radius: 0 0 0 8px;
+}
+.app-ios .app-dialog .button.last {
+	-webkit-border-radius: 0 0 8px 0;
+	border-radius: 0 0 8px 0;
+}
+.app-ios .app-dialog .button.first.last {
+	width: 100%;
+	-webkit-border-radius: 0 0 8px 8px;
+	border-radius: 0 0 8px 8px;
+}
+.app-dialog .button.active {
+	opacity: 0.7;
+}
+.app-dialog .button.active,
+.app-android-2 .app-dialog .button,
+.app-android-2 .app-dialog .button {
+	-webkit-transition: none;
+	transition: none;
+}
+/* Page */
+
+.app-page {}
+
+
+
+/* Topbar */
+
+.app-topbar.teal {
+	background-color: #2B9;
+	color: #F3F4F5;
+}
+.app-topbar.green {
+	background-color: #3C7;
+	color: #F3F4F5;
+}
+.app-topbar.yellow {
+	background-color: #EC1;
+	color: #F3F4F5;
+}
+.app-topbar.orange {
+	background-color: #E82;
+	color: #F3F4F5;
+}
+.app-topbar.red {
+	background-color: #DD4539;
+	color: #F3F4F5;
+}
+.app-topbar.blue {
+	background-color: #4486F0;
+	color: #F3F4F5;
+}
+.app-topbar.dark-blue {
+	background-color: #345;
+	color: #F3F4F5;
+}
+
+.app-topbar .app-title {
+	font-size: 17px;
+	font-weight: 500;
+}
+.app-android .app-topbar .app-title {
+	float: left;
+	padding-left: 15px;
+	padding-right: 8px;
+	width: auto;
+    font-size: 19px;
+    font-weight: 700;
+	text-align: left;
+}
+.app-android .app-topbar .app-button.left ~ .app-title {
+	padding-left: 60px;
+}
+.app-topbar .app-button {
+	font-weight: 300;
+    -webkit-transition: opacity 0.15s ease-out;
+    transition: opacity 0.15s ease-out;
+    cursor:pointer;
+}
+.app-android .app-topbar .app-button {
+	padding: 0 13px;
+	font-weight: 400;
+    -webkit-transition: background-color 0.15s ease-out;
+    transition: background-color 0.15s ease-out;
+}
+.app-topbar .app-button.active {
+	opacity: 0.65;
+}
+.app-android .app-topbar .app-button.active {
+	opacity: 1;
+	background-color: rgba(0,0,0,0.2);
+}
+.app-topbar .app-button.active,
+.app-android .app-topbar .app-button.active,
+.app-android-2 .app-topbar .app-button,
+.app-android-4 .app-topbar .app-button {
+	-webkit-transition: none;
+	transition: none;
+}
+.app-topbar .app-button[data-back].left {
+	padding: 15px 0 15px 27px;
+	height: 14px;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAoCAYAAADkDTpVAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAxJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6RUQxQ0FCN0VGMjJGMTFFMjg0REFDNDBBRUVBRjJBNDkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6RUQxQ0FCN0RGMjJGMTFFMjg0REFDNDBBRUVBRjJBNDkiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiBNYWNpbnRvc2giPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0iNTNBQzg4QkE2OTc3M0MxNDg4ODc1M0VDNzc3ODcwMDUiIHN0UmVmOmRvY3VtZW50SUQ9IjUzQUM4OEJBNjk3NzNDMTQ4ODg3NTNFQzc3Nzg3MDA1Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+dT5F6gAAAcNJREFUeNqslz8sA1Ecx+9UKi1ispkwMAgbs5XYTCJhlLB3uxrETsLGUgMbutaqJg0Jg5pqqqVCm1TaPt+X3ONp7n53fb/3kk/Su8v7fq/v3u/Pc4UQjsWRAQNg9/eONLDEtvgbnrpvS3wDdMT/4dkyWAUtETy8PuaaL4EcSIQ8T3HefBHURfg4Bq6p+Dz4JMTPQML0G8yCGiF+BZKmu2gKVAnxG5DW5/QiPg4qhPgdGOmeF1d8DJQJ8UcwGjQ3jric+ESIl/0XcEwM5F++J8TfwCSlQYkPgltC/B3MRK1A2IMUKBDiH34sOCYGcg9fE+INP4odEwMZfeeE+DdY6SV29AsXnBDibbDWa+TrFweCHlsmeUv92IsQz5hm3bj1wLxwx1yiDneJ1Ec+JUxa3I+stukFYdLkbFM90PKESZ0TaIp0RKqocVKFYggUCZMqJ9np6bpEmFQ46VovOM+EyQun4Ogl85UweeCUTMVERNEvcoq+YjqibSlw2hbFXETjdclpvBQL4IswyXFaR735bRAmR5zmV7Hs56ewsc89H+TBOmiHPG/aOkJtBhyhsjbPaJKdbnFJv8Uj7CEYBkmQVTd/BBgAAQDbZCXVLesAAAAASUVORK5CYII=);
+	background-repeat: no-repeat;
+	-webkit-background-size: 12px 20px;
+	background-size: 12px 20px;
+	background-position: 8px center;
+	line-height: 14px;
+}
+.app-android .app-topbar .app-button[data-back].left {
+	padding: 0 16px;
+	height: 56px;
+	width: 24px;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAALEwAACxMBAJqcGAAABCRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDUuNC4wIj4KICAgPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICAgICAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgICAgICAgICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmV4aWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvIgogICAgICAgICAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgICAgICAgICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyI+CiAgICAgICAgIDx0aWZmOlJlc29sdXRpb25Vbml0PjI8L3RpZmY6UmVzb2x1dGlvblVuaXQ+CiAgICAgICAgIDx0aWZmOkNvbXByZXNzaW9uPjU8L3RpZmY6Q29tcHJlc3Npb24+CiAgICAgICAgIDx0aWZmOlhSZXNvbHV0aW9uPjcyPC90aWZmOlhSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICAgICA8dGlmZjpZUmVzb2x1dGlvbj43MjwvdGlmZjpZUmVzb2x1dGlvbj4KICAgICAgICAgPGV4aWY6UGl4ZWxYRGltZW5zaW9uPjcyPC9leGlmOlBpeGVsWERpbWVuc2lvbj4KICAgICAgICAgPGV4aWY6Q29sb3JTcGFjZT4xPC9leGlmOkNvbG9yU3BhY2U+CiAgICAgICAgIDxleGlmOlBpeGVsWURpbWVuc2lvbj43MjwvZXhpZjpQaXhlbFlEaW1lbnNpb24+CiAgICAgICAgIDxkYzpzdWJqZWN0PgogICAgICAgICAgICA8cmRmOkJhZy8+CiAgICAgICAgIDwvZGM6c3ViamVjdD4KICAgICAgICAgPHhtcDpNb2RpZnlEYXRlPjIwMTU6MDI6MTMgMjI6MDI6MzU8L3htcDpNb2RpZnlEYXRlPgogICAgICAgICA8eG1wOkNyZWF0b3JUb29sPlBpeGVsbWF0b3IgMy4zLjE8L3htcDpDcmVhdG9yVG9vbD4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+ChTTdgYAAAF3SURBVHgB7dtBCsIwFIRh69o7eAhdiQdw53U9gFsP4dqt4LK+QANF6Dgp1FbyCyXCG2nz8aKQ1tWKFwIIIIAAAggggAACCCCAQNUCbdte0lE1wtDkO5xnjOkAqQ/1gQOSgbMYpHX/Yn/9vltKR3HeXWS2oj55aTYgA+cVsz83TXOfXGFpJxj4zsnLKo2POA5Lu+6fXA84ghkccISAKNE54AgBUaJzwBECokTngCMERInOAUcIiBKdA44QEKUaOqcR85elhBMBtdklPz9XMfaXNiXnHrVh9q84JTA5WwxUE05CKgbKsrWMxUCxhk+BcwVICNSGJCh0qYafeS1gVEECyRAwInQSSIaAEaGTQDIEjAidBJIhYEToJJAMASNCJ4FkCBgROgkkQ8CI/Esnjb6rYRh8jSSkCKk7I+lJ1/2cT7oWb7l+nXVBwNiZvM2JUzCVaaMDy43/a/TZP5DA6ePk9x0SOBmEEQEEEEAAAQQQQAABBBCoVOANecdGRmb5/CMAAAAASUVORK5CYII=);
+	-webkit-background-size: 24px 24px;
+	background-size: 24px 24px;
+	background-position: center;
+	color: transparent;
+}
+
+.app-topbar .app-button[data-next].right {
+    margin-right:10px;
+	padding: 15px 20px 15px 27px;
+	height: 14px;
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAoCAYAAADkDTpVAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+IGCA42JRUqpV4AAAGvSURBVEjHtZc9LANxGMafqkh8JJ1snTAwCBuzldhMImGUsNvaRZhJ2FhqYENXVkyEhEFNTLUQNGmDn+XfaMS9jXvPk1wuueH53b3/e79SgBqUk1SVtKqkBNSvHN9aaHjuun4zB/gEZpMC/DSv6x2Y8gJaJLVHRC8tqSBp3HsGKWCTaL0BY94zSAM7BuQFGPEABLQBBwbkCRjyAAR0AMcGpAz0ewACMsCZAbkHejwAAd3AlQEpAVkPQMGgZECuw4vEBgjoAx4MyHkIaWyAgEHg0YCcAJ0egEIOPBuQI6DdA1DI5ooBOQy5FBsgYBKoGZDdUBViAwRMAx8GZCvUt9gAAfPYWvMCBCw1gSzX+0HsSv/XnvzXEH3+V4imQzuN0rbnkCeBqmG+5/lNx0L7jFLRk2gjoaNZpaLDU+zKhvkp0OUp1/eG+YWnXGeBW8P8xtNwuoFLw/zO0zIzIa5W0+/1jC1HTcaWAc/gtd9k8Br2jI4Fw/wVGI07OqaADcO84h1+VwzzKjDh3Q+qEZX8Q9KMpGISO1r+lxVqLskd7SdkMaklsLXhY/LhXpO0ntQW+wUU9d1LXHBCxwAAAABJRU5ErkJggg==');
+	background-repeat: no-repeat;
+	-webkit-background-size: 12px 20px;
+	background-size: 12px 20px;
+	background-position: right center;
+	line-height: 14px;
+}
+
+.app-android .app-topbar > :last-child:after {
+	content: "";
+	clear: both;
+}
+
+.app-topbar .app-button[poweroff].left {
+	padding: 15px 10px 15px 27px;
+	height: 14px;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAA3XQAAN10BGYBGXQAAAAd0SU1FB+ALCA0CNp2gzJQAAAaFSURBVHja7Zt/iFRVFMe/571xVrNZM912nHlvdnWF0MUoCowsqYyQiJXCv4QQpX+q7QdqUP7I1HT7oX9oJURhEChlUaxIECGlGBa0/aGtBq26vvve21lWi2VJd2fmvdMfO4uhu+/e2fn1bL0w/8y93HvO55177jn3BzEzJnLRMMHLTQATHUCkGoP29vZOzWZz25m5BaAYgGO+H1nX0FB/vtKyUBWcYEQI9wTA913zf7/n6Xc3Nsa7/9dTQAjn2VGUB4Bpuu69PQF8AC8OqFw8AQBQIqBy1s1V4EYG0NfXd6tt23eVU+Curr9qQwegs7Mzatv2i0NDmbO+j6fLCaCm5kqXEM5zAPRQALAs97Ha2ml/MNMeZtxRAautA7BXCPukZTlLqgkgIoSznYi/A2h2FZzpfCJ8L4SzrRhrGFckaNt2EqCDAB6osg8jABsty1nk+9kVjY2N6bJbgOu6JjMdZa668lcpEB7R9UknXNdNlRWA67opz/OPAmgK4YrW6Hn+j67rmmUB0N3dHfc8Plqd+a5sC7M9j38QQiRKDUDX9egXABpvgNimCaDPVR2jEgDLstskMfx/5iP1h8ASHhLCebMkACzLeZKIXlVMdD40zeTu8jo82qPYdP2FC86jRQHo7OyMErHSgMxYb5pGKwC/nAAMI/EygB0qH1fT8FFHR8ekcQOorZ3+koLT85ixMpVKtlXKwE0zuYEZ6xWazq2ri78wLgCO48wAeIOCSb6XSiU/q/QsT6WSbcz8rkKM8IZlWdMLBsBMrQBuk/R/sr//783VcnUDA/2bAPwuaTadSF9TKAACeJWk4wwRP9Pc3JypFoDm5uaM79NKADlJ01Vj6aqNkeEtYUaDpNNthmGcrPaC19CQ+I2ZZU4xadv248oAiCD7+ley2aH3wxL5RCLaO8wYCF6laLUqAAJ4qWTML+fMmdMfFgCJROIyER+ULNNLR9NXuz7md+8EcLuE5sdhi3+ZtU8lq0HMsqx5UgCRCBZJxjqTSiWOhw1AKpX4CcCfwRAiC6UAmH1Znv9tePMgbg8GwHIARNQo6eRCkUK6AZU9xfWtnZf4gTkKFoAZQZ34vtZdZDpzLKDyWHF+gC0JgJkqq8CM4AzDL8oCTDP5CUC/jlLV73n6a0V9fy3YOomu161gAJlMpsgpgFw0qj9MhN0AnwdwEcDXvh+5p9iT4UwmY0maXGcBo+0Ke0E9xGIxr1hXVV9f/w+AV/K/kpVYLOYNDgZG5p6KBbgSygmEtCjI5qoA6JE4mtACUJCtRwFA4DIFAKEFIJeNVSyAJBZA94bXAmSykdwCmCEk47SE2AJaJHGAkALQND4iGWSuZaXnh03zvExzJXHCESkAwzBOATgXHFB4T4UNgIJM5/K6yTdEALRLhmvt7e2dGhblh2WhVkmz9gJ2hFgCgOPZrLc2LACGZeG4JIkbVaexLkrqQji9QWExMwaiUb0pHo/3VVP5dDpdl8l4Z4kQC2h2yTST9aqR4EjIuFu2w5LLeXsxfEmhalM/l/P2SpRHXhdPeQoAgK7TLnlUiOVCOFuqpb0QzhZmLJdFf3ldUBCA/EajyqHHJtu2V1Ra+fyYm+SrA29OJBKXx6yXXJbWhXBOAZgnGWeIiFcbhnGgUsoz0z4ANZKmZ0wzuSAow5Udj3tEvE5Bphpm2i+Es7XMPoGEcLYy034F5ZGXPTB9V7ouL4SzA8DragEJvopE9OdLvTqk0+m6XM7bqzDnR0qbaSalJ8iq7wU023bamfGkWlKCAU2jnZMm6bvymx9FBTnZrLfW93mdgrcf+QiHDSO5DAp3FZQfTFy8eDF25crgzwAVkAdQGuAPmPVvUqn46UJj++HwllplQc41+E9PmTL5/pkzZw4oSVjIixEhRBOg/QLJvuEYpQvAISLuAOASkRuNRt2RnZz8ZkYin9K2yBKbsQIewF9omuZZ5U9U6JOZYQh0qDBLqMhuwGmAWwpRflwARqbD4ODQAVWfUP5MEIcnT65ZoWr2RQMYcYxCOG+prg5lLG2mmdyIcV7OKvrVmG3bTzDTToVgqdTlDBGvMwyjqLPKUj2b023bXs1MW1D+dz89RLzZMIx9siCnkgAAAK7r3uJ5vAbDBx4zSqz4JQC7dZ12BcX2VQVwjUU8yEzLACwDrj+VVSznALQTcbthGMdL8cUrBeBaP7HA92kJEUyAZ+Wfzs3C1X18dzj1ZhegHmYITeMjo+3hlbr8CxaKrbo8eyv0AAAAAElFTkSuQmCC);
+	background-repeat: no-repeat;
+	-webkit-background-size: 20px 20px;
+	background-size: 20px 20px;
+	background-position: 8px center;
+	line-height: 14px;
+}
+
+.app-topbar .app-button[reload].right {
+	padding: 15px 50px 15px 27px;
+	height: 14px;
+	background-image: url(data:image/png;base64,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);
+	background-repeat: no-repeat;
+	-webkit-background-size: 20px 20px;
+	background-size: 20px 20px;
+	background-position: 8px center;
+	line-height: 14px;
+}
+
+.app-topbar .app-button[setup].right {
+	padding: 15px 10px 15px 27px;
+	height: 14px;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAA3XQAAN10BGYBGXQAAAAd0SU1FB+ALCAwsDSZuRqsAAAClSURBVHja7dnBDcJADERRO6ImTnSVOiiMdJFVoA1zQKKJedPBvoOl1e/zfD+651lV98raMdN7r3W9Ah//R+i1rqngbRU+AAAAAAAAAAAAAMkAR/D7j22m91CE33d4ZtwAAAAAAAAAIHO3tT66QOkCbgAAAAAAAAAAAAAAAIEAukDpAm4AAAAAAAAAEDhdQBfQBRxBAAAAAAAAAAAAAKkAukAFd4Evm7ZOkUIl2u4AAAAASUVORK5CYII=);
+	background-repeat: no-repeat;
+	-webkit-background-size: 20px 20px;
+	background-size: 20px 20px;
+	background-position: 8px center;
+	line-height: 14px;
+}
+
+/* Content */
+
+.app-page,
+.app-content {
+    background-color: rgb(239,239,244);
+}
+
+.app-section,
+.app-list > li,
+.app-list > li.app-button,
+.app-content .app-button,
+.app-input {
+	border: none;
+}
+
+.app-section {
+	margin: 16px;
+	padding: 8px;
+	background: #FFF;
+	border-bottom: 1px solid rgba(0,0,0,0.1);
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+}
+.app-ios-7 .app-section,
+.app-ios-8 .app-section {
+	border-bottom: none;
+}
+.app-section.app-button {
+	margin: 16px;
+	padding: 0;
+}
+p.app-section {
+	padding: 12px 16px;
+	color: #665;
+}
+.app-content .app-section > * {
+	margin: 8px 0 0;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+}
+.app-content .app-section > :first-child {
+	margin-top: 0;
+}
+
+
+
+/* Lists */
+
+.app-list {}
+.app-list > label {
+	height: 28px;
+	background-color: #D5E5E6;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	color: #778;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 28px;
+}
+.app-android .app-list > label {
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+}
+.app-list > li {
+	background-color: #FFF;
+	color: #444;
+}
+.app-list > li,
+.app-list > li.app-button {
+	border-top: 1px solid rgba(0,0,0,0.05);
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.app-android .app-list > li,
+.app-android .app-list > li.app-button {
+	padding-top: 0;
+	padding-bottom: 0;
+	height: 47px;
+	line-height: 47px;
+}
+.app-list > li.app-button.active {
+	border-top: 1px solid rgba(0,0,0,0.0);
+}
+.app-list > li:first-child,
+.app-list > li.app-button:first-child,
+.app-list > label + li,
+.app-list > label + li.app-button,
+.app-list > label + li.app-button.active,
+.app-list > li.app-button.active + li,
+.app-list > li.app-button.active + li.app-button {
+	border-top-color: transparent;
+}
+
+
+
+/* Buttons */
+
+.app-content .app-button {
+	background-color: #FFF;
+	color: #17B;
+    cursor:pointer;
+}
+.app-content .app-button.active {
+	background-color: #DDD;
+}
+.app-content .app-button.teal {
+	background-color: #2B9;
+	color: #F3F4F5;
+}
+.app-content .app-button.teal.active {
+	background-color: #197;
+}
+.app-content .app-button.green {
+	background-color: #3C7;
+	color: #F3F4F5;
+}
+.app-content .app-button.green.active {
+	background-color: #2A6;
+}
+.app-content .app-button.yellow {
+	background-color: #EC1;
+	color: #333435;
+}
+.app-content .app-button.yellow.active {
+	background-color: #DB0;
+}
+.app-content .app-button.orange {
+	background-color: #E82;
+	color: #F3F4F5;
+}
+.app-content .app-button.orange.active {
+	background-color: #C50;
+}
+.app-content .app-button.red {
+	background-color: #DD4539;
+	color: #F3F4F5;
+}
+.app-content .app-button.red.active {
+	background-color: #C43;
+}
+.app-content .app-button.blue {
+	background-color: #4486F0;
+	color: #F3F4F5;
+}
+.app-content .app-button.blue.active {
+	background-color: #27A;
+}
+.app-content .app-button.dark-blue {
+	background-color: #345;
+	color: #F3F4F5;
+}
+.app-content .app-button.dark-blue.active {
+	background-color: #234;
+}
+.app-content .app-button.grey70 {
+	background-color: #AAA;
+	color: #FFF;
+}
+.app-content .app-button.grey.active {
+	background-color: #999;
+	color: #FFF;
+}
+
+/* Status Field */
+
+.app-content .app-status {
+	margin: 0px auto;
+    padding : 0px 0px 0px 20px;
+	height: 40px;
+	border-bottom: 1px solid #AAA;
+	line-height: 40px;
+	overflow: hidden;
+	text-align: left;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.app-content .app-status {
+	background-color: #111;
+	color: #FFF;
+}
+
+/* Inputs */
+input.app-input {
+	height: 44px;
+	background: #FFF;
+	line-height: 24px;
+	border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+.app-android input.app-input {
+	height: 48px;
+	line-height: 18px;
+}
+.app-section input.app-input {
+	border-bottom: none;
+}
+.app-android .app-section input.app-input {
+	height: 40px;
+	line-height: 20px;
+}
+.app-input[type="search"] {
+	padding-left: 34px;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACjElEQVR42r3Wz2sTQRjG8e2maW1rTYIoaPEgHqz/gD+KFi8VRb0pVPTi2UPNQRRCEHpQkCKIp0ilQg/BVqQKUi8q1lRzERQ0x3pQVKJIxTaxpql+DzkMD+xkNo1d+NBudt5535md3VnPdmQyGfP/FrSjC+trOhDxmnxo4k70I4lxzOA18riPYRzFFolvSvJBPMU8/los4w3S8JtRRCfGUZJEK3KuKiigV4pwHzl/43gYkLSKMhZRQsVsZ7T9jN1ShFPyCCahHVbwEiM4gyM4gRQe4Tu04DnskCLqFjACTf4Vg4gHxPo4gCfQ2HyY0e/BvIziIzY7LtgIpqC37YLrLIxJ8AK2SbBLIW+ln29ordfBdryXFZ2Eh7CLuBdVo4gyTmuhGjyA30byOexq5B2CKLIyC7fqBZ6V0U8jagkJ299jtHmWVXxJAsZq1xot4DD+GP3NYqOtgJQUkFllAQMoG/3l9WnSXS4p9yy7ys3suAzoOWK2gJMS8AKJBpP7uCj9PagXtBdFI+AH+mvXwhbQjbzslFfqPYYJ5OQ23IEPD2HeA6dkXyihz6WDFJblNTpkPN+BiWHO5E8ZyCvXytfhiwRXkZa2Qf0cRBG6F+yXWGsRhwL292nsRBei8NGKDmzCZePbQL1DPMw9TGJFR1IzgxtI4yqm8Av6LaDnOfSEmYlzWNKZCKJtAtrnEJcirNvqPnwK6tTyyfbM+F2vF9DmOhPmLfmABSzJVlvBIooYRQIeJiyFFlzXhJ73YQjXMYqbSOEYuqXtBtyTxLomtjrv8a7taswiJiy3bxYxr8mHLmYfWcua6JHQ5hcCP2BN3Eb7/8yva2LSSH4XsbVKbm5413AeCePamhYRRYv52z/AKK4/BRObOQAAAABJRU5ErkJggg==);
+	background-repeat: no-repeat;
+	background-position: 12px center;
+	-webkit-background-size: 16px 16px;
+	background-size: 16px 16px;
+}
+.app-input[type="search"].no-icon, .app-android .app-input[type="search"].no-icon-android, .app-ios .app-input[type="search"].no-icon-ios {
+	padding-left: 12px;
+	background-image: none;
+}
+
+
+
+.app-page {
+  width:80%;
+  max-width:600px;
+  margin-left:auto;
+  margin-right:auto;
+  border: 1px solid #666;
+  border-radius:10px;
+}
+
+.app-scrollable {
+  overflow-x:hidden !important;
+  overflow-y:auto !important;
+}
+
+h2 {
+  width:100%;
+  text-align:center;
+  line-height:2em;
+}
