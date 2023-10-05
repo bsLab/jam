@@ -14,6 +14,8 @@ http://git.edu-9.de/sbosse/jam
 <a href="https://www.battleforlibraries.com/">Fight For the Future</a>
 ---
 
+## JavaScript Agent Machine
+
 The JavaScript Agent Machine (JAM) is a multi-agent system framework. The agent processing platform satisfies the following constraints from a software design perspective:
 
 1. Portability with low hardware and operating system dependencies;
