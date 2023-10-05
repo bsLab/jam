@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="webix.css" type="text/css" media="screen" charset="utf-8">
+	<script src="HackTimer.js" type="text/javascript" charset="utf-8"></script>
+	<script src="webix_debug.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+		webix.require.disabled = true;
+		webix.codebase = "./";
+	</script>
+   	<script src="codemirror/codemirror.js"></script>
+	<script src="codemirror/codemirror/lib/codemirror.js"></script>
+	<script src="codemirror/codemirror/mode/javascript/javascript.js"></script>
+	<script src="codemirror/codemirror/mode/xml/xml.js"></script>
+   	<script src="mxClient.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="codemirror/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" type="text/css" href="win.css" charset="utf-8">
+	<title>JAM Playground</title>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+	<style>
+		html, body{
+			height: 100%;
+			padding:0;
+			margin:0;
+		}
+        .webix_el_textarea textarea
+        {
+          border:1px solid #ddd;
+          height:100%;
+          margin:0;
+          padding:5px 10px;
+          color:#666;
+          resize:none;
+          font-size:12px;
+          font-family:"DejaVu Sans Mono",Tahoma;
+        } 
+        .webix_layout_toolbar.webix_toolbar .webix_el_label {
+          font-style: italic;
+          font-size:16px;
+        }
+        .webix_badge{
+          background-color:#A0A0A0;
+        }
+        tt {
+          font-family: "DejaVu Sans Mono",Tahoma;
+          font-size:12px;
+        }
+        input {
+          color:#666;        
+        }
+        .line-error {
+            background: #FBC2C4 !important;
+            color: #8a1f11 !important;
+        }
+        .line-normal {
+            background: white;
+        }
+        @media screen and (-webkit-min-device-pixel-ratio:0) { 
+          input
+          {
+            margin: 0;
+            padding: 0;
+            float: middle;
+            border: 0;
+            border-radius: 0;
+          }
+        }
+  </style>
+</head>
+<body>
+<script>var Shell={};</script>
+<script src="jamutils.js" type="text/javascript" charset="utf-8"></script>
+<script src="jamworld.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8"></script>
+<div id="rootGraphContainer" style="position:relative;overflow:hidden;cursor:default;"></div>
+</body>
+</html>
