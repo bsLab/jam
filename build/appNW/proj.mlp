@@ -1,0 +1,182 @@
+FILES:
+
+
+--- COM ---
+
+@ + js/com/compat.js
+@ + js/com/evalx.js
+@ + js/com/err.js
+@ + js/com/io.js
+@ + js/com/io.app.js
+@ + js/com/io.browser.js
+@ + js/com/nav.js
+@ + js/com/path.js
+@ + js/com/sprintf.js
+
+
+--- JAM ---
+
+@ + js/jam/aios.js
+@ + js/jam/analyzer.js
+@ + js/jam/amp.js
+@ + js/jam/ampCOM.js
+@ + js/jam/ampMAN.js
+@ + js/jam/ampUDP.js
+@ + js/jam/ampHTTP.js
+@ + js/jam/ampStream.js
+@ + js/jam/chan.js
+@ + js/jam/code.js
+@ + js/jam/conf.js
+@ + js/jam/mobi.js
+@ + js/jam/node.js
+@ + js/jam/proc.js
+@ + js/jam/security.js
+@ + js/jam/sig.js
+@ + js/jam/ts.js
+@ + js/jam/world.js
+@ + js/jam/jsonfn.js
+@ + js/jam/sandbox.js
+@ + js/jam/watchdog.js
+
+@ + js/dos/buf.js
+@ + js/dos/network.js
+
+--- APP ORIG DIST NOT USED! ---
+@ + js/ui/appjs/app.html
+@ + js/ui/appjs/jamui.js
+@ + js/ui/appjs/jamutils.js
+@ + js/ui/appjs/Logger.js
+@ + js/ui/appjs/dist/app.css
+@ + js/ui/appjs/dist/app.js
+@ + js/ui/botui/build/botui.js
+@ + js/ui/botui/build/botui.css
+@ + js/ui/dialog/js/prompt-boxes.js
+@ + js/ui/dialog/css/prompt-boxes.css
+
+--- CORDOVA ---
+
+
+
+@ + js/ui/cordova/www/app.html
+@ + js/ui/cordova/www/js/app0.js
+@ + js/ui/cordova/www/css/app.css
+@ + build/appNW/config.js
+
+
+@ + js/ui/cordova/wrapper/cordova.js
+
+--- OS ---
+
+@ + js/os/process.js
+
+--- TOP ---
+
+@ + js/top/makeweblib
+@ + js/top/jamlib.js
+@ + js/top/module.js
+
+--- UI ---
+
+@ + js/ui/cordova/www/js/app.js
+@ + js/ui/cordova/www/js/jamui.js
+@ + js/ui/cordova/www/js/jamutils.js
+@ + js/ui/cordova/www/js/Logger.js
+@ + js/ui/cordova/www/js/botui.js
+@ + js/ui/cordova/www/js/prompt-boxes.js
+
+@ + js/ui/cordova/www/css/app.css
+@ + js/ui/cordova/www/css/prompt-boxes.css
+@ + js/ui/cordova/www/css/botui.css
+
+--- WEB ---
+
+@ + js/web/HackTimer.js
+
+--- AGENTS ---
+
+@ + demo/agents/chat.js
+@ + demo/agents/explorer.js
+// @ + js/ui/cordova/www/js/chat.js
+
+------------
+--- DOS ----
+------------
+
+--- TOP ---
+@ + js/dos/appl/afs.js
+@ + js/dos/appl/boot.js
+@ + js/dos/appl/broker.js
+@ + js/dos/appl/dns.js
+@ + js/dos/appl/gc.js
+@ + js/dos/appl/node.js
+@ + js/dos/appl/shell.js
+@ + js/dos/appl/std.js
+
+--- SHELL ---
+@ + js/dos/ash.js
+@ + js/dos/ext/readline.js
+@ + js/dos/ext/satelize.js
+@ + js/dos/ext/util.js
+
+
+--- SCHED ---
+@ + js/dos/scheduler.js
+
+
+--- RPC ---
+
+@ + js/dos/connection.js
+@ + js/dos/connHTTP.js
+@ + js/dos/connNET.js
+@ + js/dos/connUDP.js
+@ + js/dos/connFIFO.js
+@ + js/dos/buf.js
+@ + js/dos/des48.js
+@ + js/dos/network.js
+@ + js/dos/router.js
+@ + js/dos/rpc.js
+
+--- CLIENT ---
+@ + js/dos/afs.js
+@ + js/dos/dns.js
+@ + js/dos/std.js
+
+--- SRV ---
+@ + js/dos/afs_srv.js
+@ + js/dos/afs_srv_common.js
+@ + js/dos/afs_srv_emb.js
+@ + js/dos/afs_srv_rpc.js
+@ + js/dos/cache.js
+@ + js/dos/capset.js
+@ + js/dos/connHTTPsrv.js
+@ + js/dos/connNETsrv.js
+@ + js/dos/connFIFOsrv.js
+@ + js/dos/connFIFOsrvN.js
+@ + js/dos/dns_srv.js
+@ + js/dos/dns_srv_common.js
+@ + js/dos/dns_srv_emb.js
+@ + js/dos/dns_srv_rpc.js
+@ + js/dos/fcache.js
+@ + js/dos/filesrv.js
+@ + js/dos/freelist.js
+@ + js/dos/host.js
+
+
+@ bug-report
+
+
+
+PROJECT:
+  PROJ_PATH $HOME/proj/jam/
+  SRC_PATH $PROJ_PATH/
+  OBJ_PATH $PROJ_PATH/build
+  VUM_PATH
+  
+COMMANDS:
+  OPEN ALL
+  CLOSE ALL
+  BUILD ALL
+  BUILD CLEAN
+  BUILD INSTALL
+  BUILD VERSION
+
