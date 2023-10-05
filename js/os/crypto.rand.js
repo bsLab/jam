@@ -1,0 +1,229 @@
+/**
+ **      ==============================
+ **       O           O      O   OOOO
+ **       O           O     O O  O   O
+ **       O           O     O O  O   O
+ **       OOOO   OOOO O     OOO  OOOO
+ **       O   O       O    O   O O   O
+ **       O   O       O    O   O O   O
+ **       OOOO        OOOO O   O OOOO
+ **      ==============================
+ **      Dr. Stefan Bosse http://www.bsslab.de
+ **
+ **      COPYRIGHT: THIS SOFTWARE, EXECUTABLE AND SOURCE CODE IS OWNED
+ **                 BY THE AUTHOR(S).
+ **                 THIS SOURCE CODE MAY NOT BE COPIED, EXTRACTED,
+ **                 MODIFIED, OR OTHERWISE USED IN A CONTEXT
+ **                 OUTSIDE OF THE SOFTWARE SYSTEM.
+ **
+ **    $AUTHORS:     Stefan Bosse
+ **    $INITIAL:     (C) 2006-2018 bLAB
+ **    $CREATED:     15-1-16 by sbosse.
+ **    $VERSION:     1.2.4
+ **
+ **    $INFO:
+ **
+ **  Crypto module with HQ random number generators (replacing not available crypto.getRandomValues
+ **  if there is no global crypto module).
+ **
+ **    $ENDOFINFO
+ */
+var crypto = global.crypto || global.msCrypto;
+
+if (!crypto && typeof require != 'undefined') try { crypto=global.crypto=require('require') } catch (e) {};
+
+var twister;
+
+var MersenneTwister = function(seed) {
+	if (seed == undefined) {
+        /**
+        ** It is not sure that Math.random is seeded randomly
+        ** Thus, a combination of current system time and Math.random 
+        ** is used to seed and initialize this random generator
+        */
+		seed = new Date().getTime();
+        seed *= Math.random()*91713;
+        seed |= 0;
+	}
+
+	/* Period parameters */
+	this.N = 624;
+	this.M = 397;
+	this.MATRIX_A = 0x9908b0df;   /* constant vector a */
+	this.UPPER_MASK = 0x80000000; /* most significant w-r bits */
+	this.LOWER_MASK = 0x7fffffff; /* least significant r bits */
+
+	this.mt = new Array(this.N); /* the array for the state vector */
+	this.mti=this.N+1; /* mti==N+1 means mt[N] is not initialized */
+
+	if (seed.constructor == Array) {
+		this.init_by_array(seed, seed.length);
+	}
+	else {
+		this.init_seed(seed);
+	}
+}
+
+/* initializes mt[N] with a seed */
+/* origin name init_genrand */
+MersenneTwister.prototype.init_seed = function(s) {
+	this.mt[0] = s >>> 0;
+	for (this.mti=1; this.mti<this.N; this.mti++) {
+		var s = this.mt[this.mti-1] ^ (this.mt[this.mti-1] >>> 30);
+		this.mt[this.mti] = (((((s & 0xffff0000) >>> 16) * 1812433253) << 16) + (s & 0x0000ffff) * 1812433253)
+		+ this.mti;
+		/* See Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier. */
+		/* In the previous versions, MSBs of the seed affect   */
+		/* only MSBs of the array mt[].                        */
+		/* 2002/01/09 modified by Makoto Matsumoto             */
+		this.mt[this.mti] >>>= 0;
+		/* for >32 bit machines */
+	}
+}
+
+/* initialize by an array with array-length */
+/* init_key is the array for initializing keys */
+/* key_length is its length */
+/* slight change for C++, 2004/2/26 */
+MersenneTwister.prototype.init_by_array = function(init_key, key_length) {
+	var i, j, k;
+	this.init_seed(19650218);
+	i=1; j=0;
+	k = (this.N>key_length ? this.N : key_length);
+	for (; k; k--) {
+		var s = this.mt[i-1] ^ (this.mt[i-1] >>> 30)
+		this.mt[i] = (this.mt[i] ^ (((((s & 0xffff0000) >>> 16) * 1664525) << 16) + ((s & 0x0000ffff) * 1664525)))
+		+ init_key[j] + j; /* non linear */
+		this.mt[i] >>>= 0; /* for WORDSIZE > 32 machines */
+		i++; j++;
+		if (i>=this.N) { this.mt[0] = this.mt[this.N-1]; i=1; }
+		if (j>=key_length) j=0;
+	}
+	for (k=this.N-1; k; k--) {
+		var s = this.mt[i-1] ^ (this.mt[i-1] >>> 30);
+		this.mt[i] = (this.mt[i] ^ (((((s & 0xffff0000) >>> 16) * 1566083941) << 16) + (s & 0x0000ffff) * 1566083941))
+		- i; /* non linear */
+		this.mt[i] >>>= 0; /* for WORDSIZE > 32 machines */
+		i++;
+		if (i>=this.N) { this.mt[0] = this.mt[this.N-1]; i=1; }
+	}
+
+	this.mt[0] = 0x80000000; /* MSB is 1; assuring non-zero initial array */
+}
+
+/* generates a random number on [0,0xffffffff]-interval */
+/* origin name genrand_int32 */
+MersenneTwister.prototype.random_int = function() {
+	var y;
+	var mag01 = new Array(0x0, this.MATRIX_A);
+	/* mag01[x] = x * MATRIX_A  for x=0,1 */
+
+	if (this.mti >= this.N) { /* generate N words at one time */
+		var kk;
+
+		if (this.mti == this.N+1)  /* if init_seed() has not been called, */
+			this.init_seed(5489);  /* a default initial seed is used */
+
+		for (kk=0;kk<this.N-this.M;kk++) {
+			y = (this.mt[kk]&this.UPPER_MASK)|(this.mt[kk+1]&this.LOWER_MASK);
+			this.mt[kk] = this.mt[kk+this.M] ^ (y >>> 1) ^ mag01[y & 0x1];
+		}
+		for (;kk<this.N-1;kk++) {
+			y = (this.mt[kk]&this.UPPER_MASK)|(this.mt[kk+1]&this.LOWER_MASK);
+			this.mt[kk] = this.mt[kk+(this.M-this.N)] ^ (y >>> 1) ^ mag01[y & 0x1];
+		}
+		y = (this.mt[this.N-1]&this.UPPER_MASK)|(this.mt[0]&this.LOWER_MASK);
+		this.mt[this.N-1] = this.mt[this.M-1] ^ (y >>> 1) ^ mag01[y & 0x1];
+
+		this.mti = 0;
+	}
+
+	y = this.mt[this.mti++];
+
+	/* Tempering */
+	y ^= (y >>> 11);
+	y ^= (y << 7) & 0x9d2c5680;
+	y ^= (y << 15) & 0xefc60000;
+	y ^= (y >>> 18);
+
+	return y >>> 0;
+}
+
+/* generates a random number on [0,0x7fffffff]-interval */
+/* origin name genrand_int31 */
+MersenneTwister.prototype.random_int31 = function() {
+	return (this.random_int()>>>1);
+}
+
+/* generates a random number on [0,1]-real-interval */
+/* origin name genrand_real1 */
+MersenneTwister.prototype.random_incl = function() {
+	return this.random_int()*(1.0/4294967295.0);
+	/* divided by 2^32-1 */
+}
+
+/* generates a random number on [0,1)-real-interval */
+MersenneTwister.prototype.random = function() {
+	return this.random_int()*(1.0/4294967296.0);
+	/* divided by 2^32 */
+}
+
+/* generates a random number on (0,1)-real-interval */
+/* origin name genrand_real3 */
+MersenneTwister.prototype.random_excl = function() {
+	return (this.random_int() + 0.5)*(1.0/4294967296.0);
+	/* divided by 2^32 */
+}
+
+/* generates a random number on [0,1) with 53-bit resolution*/
+/* origin name genrand_res53 */
+MersenneTwister.prototype.random_long = function() {
+	var a=this.random_int()>>>5, b=this.random_int()>>>6;
+	return(a*67108864.0+b)*(1.0/9007199254740992.0);
+}
+
+function polyfill () {
+  twister = new MersenneTwister(); // (Math.random()*Number.MAX_SAFE_INTEGER)|0)
+  if (!crypto) crypto=global.crypto={};
+  crypto.getRandomValues = function getRandomValues (abv) {
+    var l = abv.length
+    while (l--) {
+      abv[l] = Math.floor(twister.random() * 256)
+    }
+    return abv
+  }
+  if (!global.Uint8Array && !Uint8Array) throw new Error('crypto.rand: No Uint8Array found!');
+  if (!global.Uint8Array) global.Uint8Array=Uint8Array;
+}
+
+
+function randomByte (min,max) {
+  if (!twister) twister = new MersenneTwister();
+  return Math.floor(twister.random() * (max-min))+min;
+}
+
+function randomBytes (size, cb) {
+  // phantomjs needs to throw
+  if (size > 65536) throw new Error('requested too many random bytes')
+  if (!crypto || !crypto.getRandomValues) polyfill();
+
+  // in case browserify  isn't using the Uint8Array version
+  var rawBytes = new global.Uint8Array(size);
+  // This will not work in older browsers.
+  // See https://developer.mozilla.org/en-US/docs/Web/API/window.crypto.getRandomValues
+  if (size > 0) {  // getRandomValues fails on IE if size == 0
+    crypto.getRandomValues(rawBytes);
+  }
+  // phantomjs doesn't like a buffer being passed here
+  var bytes = new Buffer(rawBytes);
+  if (typeof cb === 'function') {
+    cb(null, bytes)
+  }
+
+  return bytes
+} 
+
+module.exports = {
+  randomByte:randomByte,
+  randomBytes:randomBytes
+}
