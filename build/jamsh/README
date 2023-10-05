@@ -1,0 +1,11 @@
+JAM Interpreter Shell
+---------------------
+
+> load('class.js')
+> out(['SENSOR',1])
+> t=in(['SENSOR',_])
+> a=run(explorer,{dir:DIR.NORTH})
+> kill(a)
+> send(a,'MEAN','X')
+> answer('neighbours','?')
+
