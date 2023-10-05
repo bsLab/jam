@@ -1,0 +1,18 @@
+var Io = require('../io');
+var Net = require('../network');
+var Buf = require('../buf');
+var Rpc = require('../rpc');
+var util = require('util');
+var Rpc = require('../rpc');
+var Conn = require('../connection');
+
+var msg = 'One of the major challenges in Structural Health Monitoring and load monitoring of mechanical structures is the derivation of meaningful information from sensor data. This work investigates a hybrid data processing approach for material-integrated SHM and LM systems by using self-organizing mobile multi-agent systems (MAS), with agent processing platforms scaled to microchip level which offer material-integrated real-time sensor systems, and inverse numerical methods providing the spatial resolved load information from a set of sensors embedded in the technical structure. Inverse numerical approaches usually require a large amount of computational power and storage resources, not suitable for resource constrained sensor node implementations. Instead, off-line computation is performed, with on-line sensor processing by the agent system.[Best Presentation Award winner] Multi-agent systems (MAS) can be used for a decentralized and self-organizing approach of data processing in a distributed system like a sensor network, enabling information extraction, for example, based on pattern recognition, decomposing complex tasks in simpler cooperative agents. MAS-based data processing approaches can aid the Material-integration of Structural-Health-Monitoring applications, with agent processing platforms scaled to microchip level which offer material-integrated real-time sensor processing.The behaviour model of mobile agents suitable for sensor network operations bases on an activity-transition graph (ATG) and is implemented with stack-based program code holding the control and data state of an agent, which can be modified by the agent itself using code morphing techniques, and which is capable to migrate in the network between nodes. The program code is a self contained unit (a container) and embeds the agent data, the initialization instructions, and the ATG. The agent processing platform used for the execution of the agent code is a pipelined multi-stack virtual machine with a zero-operand instruction format, leading to small sized agent program code, low system complexity, and high system performance. Agents processed on one particular network node can interact by using a tuple-space database provided by each sensor node. Remote interaction is provided by propagating signals carrying data. This approach provides a high degree of computational independency from the underlying platform and other agents, and enhanced robustness of the entire heterogeneous environment in the presence of node, sensor, link, data processing, and communication failures. Support for heterogeneous networks considering hardware (System-on-Chip designs) and software (microprocessor) platforms is covered by one design and high-level synthesis flow including functional behavioural simulation.An even-based sensor data processing MAS is used as a test case for the proposed agent processing platform and a microchip level implementation. The sensor data pre-processing MAS delivers sensor data event-based if a change of the sensors was detected (based on pattern recognition), reducing network activity and energy consumption significantly.';
+
+var hostport = Net.uniqport();
+var conn = Conn.UdpConnection(hostport,'localhost','4000');
+var rpcio = Rpc.Rpcio(Rpc.Operation.TRANSREQ,
+  Net.Header(),Buffer(msg));
+rpcio.hostport=hostport;
+conn.send(rpcio,function(stat) {
+});
+
