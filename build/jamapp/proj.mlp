@@ -1,0 +1,208 @@
+FILES:
+
+
+--- COM ---
+
+@ + js/com/compat.js
+@ + js/com/evalx.js
+@ + js/com/err.js
+@ + js/com/getenv.js
+@ + js/com/io.js
+@ + js/com/io.app.js
+@ + js/com/nav.js
+@ + js/com/path.js
+@ + js/com/pwgen.js
+@ + js/com/sprintf.js
+
+--- OS ---
+@ + js/os/assert.js
+@ + js/os/crypto.rand.js
+@ + js/os/events.js
+@ + js/os/getenv.js
+@ + js/os/string_decoder.js
+
+--- JAM ---
+
+@ + js/jam/aios.js
+@ + js/jam/amp.js
+@ + js/jam/ampCOM.js
+@ + js/jam/ampMAN.js
+@ + js/jam/ampStream.js
+@ + js/jam/ampUDP.js
+@ + js/jam/ampHTTP.js
+@ + js/jam/analyzer.js
+@ + js/jam/chan.js
+@ + js/jam/code.js
+@ + js/jam/conf.js
+@ + js/jam/mobi.js
+@ + js/jam/node.js
+@ + js/jam/proc.js
+@ + js/jam/sandbox.js
+@ + js/jam/sig.js
+@ + js/jam/ts.js
+@ + js/jam/world.js
+@ + js/jam/jsonfn.js
+
+--- ML ----
+
+@ + js/ml/dt.js
+@ + js/ml/dti.js
+@ + js/ml/ml.js
+
+--- DB ----
+
+@ + js/db/db.js
+@ + js/db/dbS.js
+
+--- APP ---
+@ + js/ui/app/app.js
+@ + js/ui/app/demo.js
+@ + js/ui/app/demo2.js
+
+
+--- TOP ---
+
+@ + js/top/makeApp
+@ + js/top/makelib
+@ + js/top/jamapp.js
+@ + js/top/jamdos.js
+@ + js/top/jamlib.js
+@ + js/top/loader.js
+@ + js/top/module.js
+@ + js/top/runapp
+
+--- TERM ---
+
+@ + js/term/alias.js
+@ + js/term/blessed.js
+@ + js/term/colors.js
+@ + js/term/events.js
+@ + js/term/helpers.js
+@ + js/term/keys.js
+@ + js/term/program.js
+@ + js/term/tng.js
+@ + js/term/tput.js
+@ + js/term/unicode.js
+@ + js/term/widget.js
+@ + js/term/widgets/ansiimage.js
+@ + js/term/widgets/arrows.js
+@ + js/term/widgets/bigtext.js
+@ + js/term/widgets/box.js
+@ + js/term/widgets/button.js
+@ + js/term/widgets/checkbox.js
+@ + js/term/widgets/element.js
+@ + js/term/widgets/filemanager.js
+@ + js/term/widgets/form.js
+@ + js/term/widgets/image.js
+@ + js/term/widgets/input.js
+@ + js/term/widgets/keyboard.js
+@ + js/term/widgets/layout.js
+@ + js/term/widgets/line.js
+@ + js/term/widgets/list.js
+@ + js/term/widgets/listbar.js
+@ + js/term/widgets/listtable.js
+@ + js/term/widgets/loading.js
+@ + js/term/widgets/log.js
+@ + js/term/widgets/message.js
+@ + js/term/widgets/node.js
+@ + js/term/widgets/overlayimage.js
+@ + js/term/widgets/progressbar.js
+@ + js/term/widgets/prompt.js
+@ + js/term/widgets/question.js
+@ + js/term/widgets/radiobutton.js
+@ + js/term/widgets/radioset.js
+@ + js/term/widgets/screen.js
+@ + js/term/widgets/scrollablebox.js
+@ + js/term/widgets/scrollabletext.js
+@ + js/term/widgets/scrollbar.js
+@ + js/term/widgets/table.js
+@ + js/term/widgets/terminal.js
+@ + js/term/widgets/text.js
+@ + js/term/widgets/textarea.js
+@ + js/term/widgets/textbox.js
+@ + js/term/widgets/tree.js
+@ + js/term/widgets/video.js
+
+
+------------
+--- DOS ----
+------------
+
+--- TOP ---
+@ + js/dos/appl/afs.js
+@ + js/dos/appl/boot.js
+@ + js/dos/appl/broker.js
+@ + js/dos/appl/dns.js
+@ + js/dos/appl/gc.js
+@ + js/dos/appl/node.js
+@ + js/dos/appl/shell.js
+@ + js/dos/appl/std.js
+
+--- SHELL ---
+@ + js/dos/ash.js
+@ + js/dos/ext/readline.js
+@ + js/dos/ext/satelize.js
+@ + js/dos/ext/util.js
+
+
+--- SCHED ---
+@ + js/dos/scheduler.js
+
+
+--- RPC ---
+
+@ + js/dos/connection.js
+@ + js/dos/connHTTP.js
+@ + js/dos/connNET.js
+@ + js/dos/connUDP.js
+@ + js/dos/connFIFO.js
+@ + js/dos/buf.js
+@ + js/dos/des48.js
+@ + js/dos/network.js
+@ + js/dos/router.js
+@ + js/dos/rpc.js
+
+--- CLIENT ---
+@ + js/dos/afs.js
+@ + js/dos/dns.js
+@ + js/dos/std.js
+
+--- SRV ---
+@ + js/dos/afs_srv.js
+@ + js/dos/afs_srv_common.js
+@ + js/dos/afs_srv_emb.js
+@ + js/dos/afs_srv_rpc.js
+@ + js/dos/cache.js
+@ + js/dos/capset.js
+@ + js/dos/connHTTPsrv.js
+@ + js/dos/connNETsrv.js
+@ + js/dos/connFIFOsrv.js
+@ + js/dos/connFIFOsrvN.js
+@ + js/dos/dns_srv.js
+@ + js/dos/dns_srv_common.js
+@ + js/dos/dns_srv_emb.js
+@ + js/dos/dns_srv_rpc.js
+@ + js/dos/fcache.js
+@ + js/dos/filesrv.js
+@ + js/dos/freelist.js
+@ + js/dos/host.js
+
+
+@ bug-report
+
+
+
+PROJECT:
+  PROJ_PATH $HOME/proj/jam/
+  SRC_PATH $PROJ_PATH/
+  OBJ_PATH $PROJ_PATH/build
+  VUM_PATH
+  
+COMMANDS:
+  OPEN ALL
+  CLOSE ALL
+  BUILD ALL
+  BUILD CLEAN
+  BUILD INSTALL
+  BUILD VERSION
+
