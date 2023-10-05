@@ -1,0 +1,46 @@
+{
+  "agents": {
+    "level": 1
+  },
+  "domain": "default",
+  "expert": false,
+  "keyboard": false,
+  "public": {
+    "IP(1)": {
+      "address": "134.102.219.1",
+      "port": 10001,
+      "local": "*",
+      "enable": true
+    }
+  },
+  "nodename": null,
+  "links": [
+    "IP(1)",
+    "IP(2)",
+    "IP(3)",
+    "IP(4)",
+    "NORTH",
+    "SOUTH",
+    "WEST",
+    "EAST"
+  ],
+  "log": {
+    "node": false,
+    "agent": true,
+    "class": false,
+    "time": false
+  },
+  "logJam": {
+    "world": false,
+    "node": false,
+    "pid": false,
+    "time": false
+  },
+  "proto": "udp",
+  "script": "load('node.js');\ncreate('node',{},3);\n",
+  "security": false,
+  "sensors": true,
+  "simple": false,
+  "verbose": 0,
+  "worldname":null
+}
