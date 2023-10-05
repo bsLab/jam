@@ -1,0 +1,71 @@
+#!/bin/bash
+
+TOP=/home/sbosse/proj/jam
+APP=jam
+MAIN=$TOP/js/top/jam.js
+
+INSTALLDIR=/opt/jam
+MAKEAPP=$TOP/tools/makeapp
+JSMIN=$TOP/tools/jsmin
+MV=mv
+RM=rm
+CHMOD=chmod
+CAT=cat
+ECHO=echo
+CC=gcc
+INSTALL=$TOP/tools/install.sh
+
+if [ $# = 0 ]
+then
+    echo "Usage: build <targets>"
+    echo "Targets: all app clean install"
+    exit 1
+fi
+
+check ()
+{
+    if [ $? != 0 ]
+    then
+        echo "Abort due to errors building target."
+        exit 1
+    fi
+}
+
+makeapp()
+{
+  $MAKEAPP $MAIN -d -v -h -c _dummy.js
+  check
+  $ECHO Creating $APP
+  $ECHO "#!/usr/bin/node" > header
+  $CAT header bundle.js > $APP
+  $ECHO Creating $APP.min
+  $CAT $APP | $JSMIN > $APP.min
+  check
+  $CHMOD a+x $APP.min
+  $MV $APP $APP.debug
+  $MV $APP.min $APP
+  $RM bundle.js header            
+}
+
+for TARGET in $@
+do
+    echo "Building target [$TARGET] ..."
+    case $TARGET in
+        all)
+            makeapp
+            ;;
+        app)
+            makeapp
+            ;;
+        clean)  
+            $RM -f $APP header bundle.js
+            ;;
+        install)
+            $INSTALL -d $INSTALLDIR
+            $INSTALL -d $INSTALLDIR/bin
+            $INSTALL -C $APP $INSTALLDIR/bin
+            check
+            ;;
+		
+    esac
+done
