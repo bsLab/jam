@@ -1,0 +1,90 @@
+use jam/aios as AI
+use jam/chan as CH
+use jam/mobi as MO
+use jam/node as NO
+use jam/ts as TS
+
+class jam = {
+  node: object,
+  world: object,
+  run: boolean,
+  options: object,
+  
+  syntax: object {
+    find: function (@root,@typ,@name),
+    location: function (elem,short) -> string,
+    name: function (elem) -> string,
+    offset: number
+  },
+  addClass: method (@templates),
+  addNode: method (nodeDesc)
+    with nodeDesc: {x,y,id},
+  addNodes: method (@nodes) -> AI.id [],
+  analyze: method (@ac,@options) -> {report:string,interface},
+  analyzeSyntax: private method (Esprima.syntax,options:object),
+  connectNodes: method (@connections),
+  connectTo: method (to:string "<dir->url>|<url>",nodeid?:AI.id),
+  connected: method (dir:MO.dir,nodeid?:AI.id) -> none|boolean|string|string [],
+  compileClass: method (name:string,constructor:function,@options),
+  createAgent: method (ac:string,args:[]|{},level:number,className:string) -> AI.id,
+  createAgentOn: method (nodeid:AI.id,ac:string,args:[]|{},level:number,className:string) -> AI.id,
+  createPort: method (dir:MO.dir,@options,@nodeid) -> CH.channel,
+  disconnect: method (to:MO.dir,nodeid?:AI.id),
+  emit: method(@event,@arg1,..),
+  // Execute an agent snapshot delivered in JSON+ text format 
+  execute: method (data:string,file?:string),
+  executeOn: method (data:string,node:number|string,file?:string),
+  extend: method (level:number|number[],name:string,function,argn?:number|number []),
+  getNode: method (string|number|object) -> NO.node|undefeined,
+  getNodeName: method (@nodeNumberorPosition) -> string,
+  getWorldName : method () -> string,
+  init: method (callback),
+  inp: method (TS.pattern) -> TS.tuple|none,
+  kill: method (AI.id),
+  lookup: method (dir:MO.dir,callback?:function,nodeid?:AI.id) -> none|boolean|string|string [],
+  migrate: method (@data),
+  on: method (event:string,handler:function),
+  open: method (file:string,@options),
+  out: method (TS.tuple),
+  rd: method (TS.pattern) -> TS.tuple,
+  readClass: method (file:string,@options),
+  register: function (node:NO.node),
+  removeNode: method (AI.id),
+  rm: method (TS.pattern),
+  saveSnapshot: method (aid:string,file?:string,kill?:boolean) -> string|undefined,
+  saveSnapshotOn: method (aid:string,node:number|string,file?:string,kill?:boolean) -> string|undefined,
+  schedule: method (),
+  setCurrentNode: method (number),
+  signal: method (to:AI.id,sig:string,arg:*,@broadcast?),
+  start: method (),
+  stats: method (@kind) -> object
+    with @kind={'process'},
+  step: method (steps:number,callback:function),
+  stop: method (),
+  time: method () -> number,
+  ts: method (pat:TS.pattern,callback:function) -> TS.pattern,
+  version: method () -> string
+}
+
+Jam: constructor (options) -> jam
+  with options : { 
+    connections?, 
+    print?:function (string), 
+    provider:function (TS.pattern) -> TS.tuple|none, 
+    consumer:function (TS.tuple) -> boolean, 
+    @classes?, 
+    id?:AI.id     is node identifier, 
+    verbose?:number, 
+    TMO?:number   is default cache timeout,
+    nolimits?:boolean,
+    nowatch?:boolean,
+    log?:{}
+  }
+  and connections : { 
+    $kind : {
+      send:function(data:string|buffer,dest:MO.DIR) -> number, 
+      link?:function (MO.DIR) -> boolean
+    } , .. 
+  }
+  and $kind = {north,south,west,east,nw,sw,ne,se,up,down,path,dos,ip}
+ 
