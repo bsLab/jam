@@ -1,0 +1,17 @@
+{
+  "name": "SEJAM2",
+  "version": "1.7.2",
+  "description": "Simulator Environment for JAM",
+  "main": "pkg/main.js",
+  "window": {
+    "toolbar": false,
+    "width": 1200,
+    "height": 800,
+    "position": "mouse"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dr. Stefan Bosse",
+  "license": "BSD"
+}
