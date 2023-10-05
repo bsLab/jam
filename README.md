@@ -35,6 +35,6 @@ JAM is entirely programmed in JavaScript and satisfies the first and third const
 
 The software can be found in the *dist* folder.
 
-**New Book**
+## The Book
 
 [Crowdsourcing and Simulation with Mobile Agents and the JavaScript Agent Machine](https://leanpub.com/jamabx)
