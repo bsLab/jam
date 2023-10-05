@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<head>
+    <META HTTP-EQUIV="content-type" CONTENT="text/html; charset=utf-8">
+    <title>JAM Shell</title>
+    <link rel="stylesheet" href="../web/jquery.css" type="text/css">
+    <script type="text/javascript" src="../web/jquery.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../web/jsconsole.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../web/HackTimer.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../web/inspect.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../web/utils.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../web/ui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../web/app.js" charset="utf-8"></script>
+    <script src="../../build/jamsh.browser/libjamsh.browser.debug.js"></script>
+    <script type="text/javascript">
+    </script>
+    <script type="text/javascript">
+    </script>
+
+    <style type="text/css">
+        body { color: black;   counter-reset: inputCounter; font-size: 0.8em; margin:50px; }
+        html {
+            width: 100%;
+            height: 100%;
+            margin: 0px; /* Space from this element (entire page) and others*/
+            padding: 5px; /*space from content and border*/
+            border: solid #888;
+            border-width: 0px;
+            display:block;
+            box-sizing: border-box;
+            overflow-x:hidden;
+        }
+        h1 { font: bold 1.5em Arial; }
+        h3 { margin-top: 0; margin-bottom: 0em; }
+        h3 + span { margin: 0; }
+
+        /* Console */
+        div.console { 
+          word-wrap: break-word; 
+          overflow-y:auto; 
+          height:inherit; 
+          font-family: droidsansmonow01 , monospace !important; 
+          font-size: inherit; 
+          color:black; 
+        }
+        div.console div.jquery-console-prompt-box { 
+          font-family: droidsansmonow01 , monospace !important; 
+        }
+        div.console div.jquery-console-message { 
+          font-family: droidsansmonow01 , monospace !important; 
+        }
+        /* First console */
+        div.console div.jquery-console-inner
+         { width:auto; height:auto;  background:#eee; padding:0.5em;
+           overflow:auto }
+        div.console div.jquery-console-prompt-box
+         { color:black; font-family:monospace; }
+        div.console div.jquery-console-focus span.jquery-console-cursor
+         { background:black; color:white; font-weight:bold }
+        div.console div.jquery-console-message-error
+         { color:red; font-family:sans-serif; font-weight:bold;
+           padding:0.1em; }
+        div.console div.jquery-console-message-value
+         { color:blue; font-family:monospace;
+           padding:0.1em; }
+        div.console div.jquery-console-message-type
+         { color:green; font-family:monospace;
+           padding:0.1em; }
+        div.console span.jquery-console-prompt-label { 
+          font-weight:bold }
+        
+    </style>
+</head>
+<body>
+<div id="shellcontainer"></div>
+<script>
+var Options = Utils.parseUrl(document.URL); 
+function initShell () {
+  var container = $('#shellcontainer');
+  var cell=$('<div/>',{
+    class:'',
+    style:'height:500px;',
+  });
+  var jsconsole=$('<div/>',{
+    class:'console',
+  }).appendTo(cell);
+  cell.appendTo(container);
+  var controller = jsconsole.console({
+      promptLabel: '> ',
+      commandValidate:function(line) {
+        if (line == "") return false;
+        else return true;
+      },
+      commandHandle:function(line) {
+        Commands.exec(line);
+        return [{msg:'',className:'jquery-console-message-type'}];
+      },
+      completeHandle : function (text) {
+        console.log(text);
+        return []
+      },
+      scrollHandle: function () {
+        jsconsole.prop({ scrollTop: jsconsole.prop("scrollHeight") });
+      },
+      autofocus:true,
+      animateScroll:true,
+      promptHistory:true,
+      echo:false,
+   });
+  var options = {
+    cmd : null,
+    name : "jam",
+    nameopts : {length:8, memorable:true, lowercase:true},
+    Nameopts : {length:8, memorable:true, uppercase:true},
+    log : { Time: true, Network: false },
+    output : function () {
+      var msg = arguments[0];
+      controller.report(msg,'jquery-console-message-value');
+    },
+    server : true,
+    modules : {
+      UI: UI,
+    }
+  }
+  Shell = SHELL(options);
+  Shell.init();
+  Commands = Shell.cmd();
+}
+initShell();
+if (Options.load) {
+  Commands.script(Options.load);
+}
+</script>
+</body>
+</html>
