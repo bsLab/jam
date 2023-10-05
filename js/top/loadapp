@@ -1,0 +1,26 @@
+#!/usr/bin/node
+// Load a standalone and self-contained JS application
+// Version 1.1.1
+
+var TOP='/home/sbosse/proj/jam/js';
+global.PATH=[process.cwd(),TOP];
+global.MODE='makeapp';
+global.TARGET='node'; // | 'browser'
+
+var Main,
+    argv=['load'];
+
+process.argv.shift();
+process.argv.shift();
+Main=process.argv[0];
+process.argv.shift();
+for (p in process.argv) argv.push(process.argv[p]);
+
+if (!Main) {
+  console.log('usage: loadapp <main.js>  [<program args>]');
+  process.exit();
+}
+
+
+var loader = require(TOP+'/top/loader');
+loader.load(Main).main(argv);
