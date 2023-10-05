@@ -1,0 +1,201 @@
+FILES:
+
+
+--- COM ---
+
+@ + js/com/compat.js
+@ + js/com/evalx.js
+@ + js/com/err.js
+@ + js/com/io.js
+@ + js/com/minify.js
+@ + js/com/nav.js
+@ + js/com/path.js
+@ + js/com/sprintf.js
+
+--- OS ---
+@ + js/os/crypto.rand.js
+@ + js/os/polyfill.js
+
+
+--- JAM ---
+
+@ + js/jam/aios.js
+@ + js/jam/amp.js
+@ + js/jam/ampCOM.js
+@ + js/jam/ampMAN.js
+@ + js/jam/ampStream.js
+@ + js/jam/ampUDP.js
+@ + js/jam/ampTCP.js
+@ + js/jam/ampHTTP.js
+@ + js/jam/ampHTTPS.js
+@ + js/jam/analyzer.js
+@ + js/jam/chan.js
+@ + js/jam/code.js
+@ + js/jam/conf.js
+@ + js/jam/mobi.js
+@ + js/jam/jsob.js
+@ + js/jam/jsonfn.js
+@ + js/jam/node.js
+@ + js/jam/proc.js
+@ + js/jam/sandbox.js
+@ + js/jam/sig.js
+@ + js/jam/ts.js
+@ + js/jam/world.js
+
+--- ML ----
+
+@ + js/ml/c45.js
+@ + js/ml/dt.js
+@ + js/ml/dti.js
+@ + js/ml/dts.js
+@ + js/ml/ice.js
+@ + js/ml/knn.js
+@ + js/ml/mlp.js
+@ + js/ml/ml.js
+@ + js/ml/rf.js
+@ + js/ml/svm.js
+@ + js/ml/stats.js
+
+--- DB ----
+
+@ + js/db/db.js
+@ + js/db/dbS.js
+@ + js/db/dbQ.js
+@ + js/db/sqljson.js
+
+@ + js/sql/sqlite3.js
+
+--- PARSER ----
+
+@ + js/parser/papaparse.js
+
+--- SIMU ----
+
+@ + js/simu/simu.js
+@ + js/simu/simuWEB.js
+@ + js/simu/aiosXnet.js
+@ + js/simu/simuPHY.js
+@ + js/simu/simuSENS.js
+
+--- RTREE ----
+
+@ + js/rtree/geojson.js
+@ + js/rtree/rectangle.js
+@ + js/rtree/rtree.js
+@ + js/rtree/rbush.js
+
+--- UI ---
+@ + js/ui/sejam2/main.js
+@ + js/ui/sejam2/sejam2.html
+@ + js/ui/sejam2/sejam2web.html
+@ + js/ui/sejam2/sejam2.js
+@ + js/ui/sejam2/sejam2-gui.js
+@ + js/ui/sejam2/sejam2-plot.js
+
+--- SHELL ---
+@ + js/ui/sejam2/winshell.js
+@ + js/shell/shell.js
+
+@ + js/ui/webix/webix.css
+@ + js/ui/webix/common/win.css
+@ + js/ui/webix/webix.js
+@ + js/ui/webix/webix_debug.js
+
+@ + js/ui/cannon/cannon.js
+@ + js/ui/cannon/cannon.gui.js
+@ + js/ui/cannon/dat.gui.js
+@ + js/ui/cannon/three.js
+
+@ + js/ui/graphics/graphics.js
+
+
+@ + js/ui/clippy/agent.js
+@ + js/ui/clippy/animator.js
+@ + js/ui/clippy/balloon.js
+@ + js/ui/clippy/load.js
+@ + js/ui/clippy/queue.js
+
+@ + js/ui/clippy/clippy.css
+@ + js/ui/botui/build/botui.js
+@ + js/ui/botui/build/botui.css
+@ + js/ui/botui/build/botui-theme-default.css
+
+@ + js/ui/chart/Chart.js
+@ + js/ui/chart/Chart-matrix.js
+
+--- SQL ---
+
+@ + js/sql/sqlite3.js
+
+--- DOC ----
+
+@ + js/doc/marked.js
+
+--- WEB ---
+@ + js/web/jamweb.js
+@ + js/web/jamutils.js
+@ + js/web/jamworld.js
+@ + js/web/jam.html
+
+
+
+--- OS ----
+
+@ + js/os/base64.js
+@ + js/os/bindings.js
+@ + js/os/deasync.js
+@ + js/os/lz-string.js
+
+--- TOP ---
+
+@ + js/top/makeapp
+@ + js/top/makeAPP
+@ + js/top/makeweb
+@ + js/top/jam.js
+@ + js/top/jamc.js
+@ + js/top/jamdos.js
+@ + js/top/jamlib.js
+@ + js/top/module.js
+@ + js/top/runapp
+@ + js/top/sejam.js
+@ + js/top/sejam2.js
+
+
+
+--- UI MX ----
+
+@ + js/ui/mxgraph/editors/config/sejam.xml
+@ + js/ui/mxgraph/editors/sejam.html
+@ + js/ui/mxgraph/src/css/common.css
+@ + js/ui/mxgraph/src/js/mxClient.js
+@ + js/ui/mxgraph/src/js/editor/mxEditor.js
+@ + js/ui/mxgraph/src/js/model/mxCell.js
+@ + js/ui/mxgraph/src/js/util/mxCodeEditor.js
+@ + js/ui/mxgraph/src/js/util/mxLog.js
+@ + js/ui/mxgraph/src/js/util/mxInspector.js
+@ + js/ui/mxgraph/src/js/util/mxWindow.js
+@ + js/ui/mxgraph/src/js/util/utils.js
+@ + js/ui/mxgraph/src/js/util/mxUtils.js
+
+@ + js/ui/webix/webix_debug.js
+
+@ + scripts/sejam2
+
+@ bug-report
+
+
+
+PROJECT:
+  PROJ_PATH $HOME/proj/jam/
+  SRC_PATH $PROJ_PATH/
+  OBJ_PATH $PROJ_PATH/build
+  VUM_PATH
+  
+COMMANDS:
+  OPEN ALL
+  CLOSE ALL
+  BUILD ALL
+  BUILD CLEAN
+  BUILD INSTALL
+  BUILD VERSION
+
