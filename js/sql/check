@@ -1,0 +1,13 @@
+require('./c2');
+open(process.argv[2]);
+
+console.log(SQLITE_VERSION)
+if (0) {
+  console.log(memset)
+  console.log(sqlite3pager_open);
+}
+if (1) {
+  var iRef = ref(0);
+  sqlite3Randomness(4,iRef);
+  console.log(($(iRef)>>>0).toString(16))
+}
