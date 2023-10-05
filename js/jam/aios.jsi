@@ -1,0 +1,179 @@
+/**
+ **      ==============================
+ **       O           O      O   OOOO
+ **       O           O     O O  O   O
+ **       O           O     O O  O   O
+ **       OOOO   OOOO O     OOO  OOOO
+ **       O   O       O    O   O O   O
+ **       O   O       O    O   O O   O
+ **       OOOO        OOOO O   O OOOO
+ **      ==============================
+ **      Dr. Stefan Bosse http://www.bsslab.de
+ **
+ **      COPYRIGHT: THIS SOFTWARE, EXECUTABLE AND SOURCE CODE IS OWNED
+ **                 BY THE AUTHOR(S).
+ **                 THIS SOURCE CODE MAY NOT BE COPIED, EXTRACTED,
+ **                 MODIFIED, OR OTHERWISE USED IN A CONTEXT
+ **                 OUTSIDE OF THE SOFTWARE SYSTEM.
+ **
+ **    $AUTHORS:     Stefan Bosse
+ **    $INITIAL:     (C) 2006-2018 bLAB
+ **    $CREATED:     12-09-17 by sbosse.
+ **    $VERSION:     1.1.3
+ **    $RCS:         $Id$
+ **    $INFO:
+ **
+ **    AIOS API signature
+ **
+ **    $ENDOFINFO
+ */
+ 
+open jam/ts as TS
+open jam/mobi as MO
+open jam/proc as PRO
+open dos/network as NET
+
+type block = 
+  [] |
+  function [] |
+  [function,'arg1,..] []
+type id = string
+
+aidgen: function () -> string
+
+aios0: object {
+  abs: function (number) -> number,
+  add: function (a:number|array|object,b:number|array|object) -> number|array|object,
+  alt: function (TS.pattern [],callback:function,all?:boolean) ,
+  concat: function (a:array,b:array) -> array,
+  contains : function (object|array,@elem) -> boolean,
+  copy : function (object|array)  -> object|array,
+  div: function (number,number) -> number,
+  empty: function (object) -> boolean,
+  equal: function (@a,@b) -> boolean,
+  exists: function (TS.pattern) -> boolean,
+  filter: function (array,function) -> array,
+  head: function (array) -> *,
+  id: function () -> string,
+  inp: function (TS.pattern,callback:function,all?:boolean,tmo?:number) -> TS.tuple|TS.tuple []|none,
+  int: function (number) -> number,
+  iter:function (array|object,function),
+  kill:function (id),
+  log:function(string) ,
+  length: function (@o)  -> number,
+  ml: object,
+  mark: function (TS.tuple,tmo:number) ,
+  map:function (array|object,function) -> array|object,
+  matrix: function (@x,@y,@init?:number) -> [][],
+  max: function (a:number,b:number) -> number,
+  me: function () -> id,
+  myClass: function () -> id,
+  myNode: function () -> id,
+  myParent: function () -> id,
+  neg: function (number|array) -> number|array,
+  negotiate:function (@resource,@value,@cap) -> boolean,
+  nn: object,
+  out: function (TS.tuple),
+  privilege: function () -> number,
+  random: function ('a:number|array,@b,@frac) -> number|*,
+  rd: function (TS.pattern,callback:function,all?:boolean,tmo?:number) -> TS.tuple|TS.tuple []|none,
+  rm: function (TS.pattern,all?:boolean) -> boolean,
+  sleep: function (milli:number) ,
+  sort: function (array,function) -> array,
+  sum: function (@obj,function) -> number,
+  string:function (@obj) -> string,
+  tail:function (array) -> array,
+  time:function () -> number,
+  timer: object {
+    add: function (tmo:number,sig:string,@arg,repeat:boolean) -> sig:string,
+    delete: function (sig:string)
+  },
+  try_alt: function (tmo:number,TS.pattern [],callback:function,all:boolean),
+  try_inp: function (tmo:number,TS.pattern,callback:function,all:boolean) -> TS.tuple | TS.tuple [] | none,
+  try_rd: function (tmo:number,TS.pattern,callback:function,all:boolean) -> TS.tuple | TS.tuple [] | none,
+  wakeup: function (PRO.process?),
+  zero: function (@value) -> boolean,
+  Vector: function (@x,@y,@z) -> object {x,y,z},
+  // Scheduling
+  B: function (block),
+  CP: function (),
+  I: function (object,next:function,block,finalize:function),
+  L: function (init:function,cond:function,next:function,block),
+  Math: object
+}
+
+aios1: object aios0 with { 
+  act: object {
+    add: function (act:string,code:function),
+    delete: function (act:string),
+    update: function (act:string,code:function)
+  },
+  create: function(ac:string,args:[],level?:number) -> id,
+  Export:function (name:string,code:function),
+  fork:function (parameter:object) -> id,
+  Import:function (@name),
+  link:function (MO.DIR),
+  opposite: function (MO.DIR) -> MO.DIR,
+  send: function (to:MO.DIR,sig:string,arg:*),
+  timer: object {
+    add : function (milli:number,sig:string,arg:*,repeat:boolean),
+    delete: function (sig:string)
+  },
+  trans: object {
+    add: function (from:string,cond:function),
+    delete: function (trans:string)
+    update: function (from:string,cond:function)
+  },
+  wakeup: function(PRO.process)
+}
+
+aios2: object aios1 with {
+  
+}
+aios3: object aios2 with {
+  
+}
+
+aios: object=aios1
+
+callback: function; 
+collect: function;
+config: function (@parameters) with
+ @parameters: {
+  'log-':string,
+  'log+':string,
+  print:function,
+  printAgent:function,
+  verbose:number
+ }; 
+current: object 
+err: function (@msg)
+fork: function
+kill: function (@agent) -> boolean
+killOn: function (@agent,@node)
+lock: function
+loop: function (@services)
+on: function
+options: object
+schedule: function (PRO.process)
+scheduler: function (@service) 
+time: function 
+
+Chan =   module jam/chan
+Code =   module jam/code
+Mobi =   module jam/mobi
+Node =   module jam/node
+Proc =   module jam/proc
+Sig =    module jam/sig
+Simu =   module jam/simu
+Ts =     module jam/ts
+World =  module jam/world
+CB: function (PRO.process,callback:function)
+CP: function ()
+B: function (block)
+I: function (object,next:function,block,finalize:function)
+L: function (init:function,cond:function,next:function,block)
+enum DIR = MO.DIR
+warn: function (string)
+watchdog: object
+
