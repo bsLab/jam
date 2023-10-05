@@ -1,0 +1,159 @@
+head	1.2;
+access;
+symbols;
+locks
+	sbosse:1.2; strict;
+comment	@# @;
+
+
+1.2
+date	2020.02.03.09.45.01;	author sbosse;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2017.05.20.15.56.53;	author sbosse;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@.
+@
+text
+@/**
+ **      ==============================
+ **       O           O      O   OOOO
+ **       O           O     O O  O   O
+ **       O           O     O O  O   O
+ **       OOOO   OOOO O     OOO  OOOO
+ **       O   O       O    O   O O   O
+ **       O   O       O    O   O O   O
+ **       OOOO        OOOO O   O OOOO
+ **      ==============================
+ **      Dr. Stefan Bosse http://www.bsslab.de
+ **
+ **      COPYRIGHT: THIS SOFTWARE, EXECUTABLE AND SOURCE CODE IS OWNED
+ **                 BY THE AUTHOR(S).
+ **                 THIS SOURCE CODE MAY NOT BE COPIED, EXTRACTED,
+ **                 MODIFIED, OR OTHERWISE USED IN A CONTEXT
+ **                 OUTSIDE OF THE SOFTWARE SYSTEM.
+ **
+ **    $AUTHORS:     Vadim Kiryukhin, Stefan Bosse
+ **    $INITIAL:     (C) 2006-2017 Vadim Kiryukhin
+ **    $MODIFIED:    by sbosse.
+ **    $RCS:         $Id: jsonfn.js,v 1.1 2017/05/20 15:56:53 sbosse Exp $
+ **    $VERSION:     1.1.7
+ **
+ **    $INFO:
+ **
+ ** JSONfn - javascript (both node.js and browser) plugin to stringify, 
+ **          parse and clone objects with embedded functions in an optional masked context (mask).
+ **
+ **     browser:
+ **         JSONfn.stringify(obj);
+ **         JSONfn.parse(str[, date2obj]);
+ **         JSONfn.clone(obj[, date2obj]);
+ **
+ **     nodejs:
+ **       var JSONfn = require('path/to/json-fn');
+ **       JSONfn.stringify(obj);
+ **       JSONfn.parse(str[, date2obj]);
+ **       JSONfn.clone(obj[, date2obj]);
+ **
+ **
+ **     @@obj      -  Object;
+ **     @@str      -  String, which is returned by JSONfn.stringify() function; 
+ **     @@date2obj - Boolean (optional); if true, date string in ISO8061 format
+ **                 is converted into a Date object; otherwise, it is left as a String.
+ **
+ **    $ENDOFINFO
+ */
+
+var current=none;
+
+(function (exports) {
+
+  exports.stringify = function (obj) {
+
+    return JSON.stringify(obj, function (key, value) {
+      if (value instanceof Function || typeof value == 'function') {
+        return value.toString(true);  // try minification (true) if supported
+      }
+      if (value instanceof RegExp) {
+        return '_PxEgEr_' + value;
+      }
+      return value;
+    });
+  };
+
+  exports.parse = function (str, mask) {
+    var code;
+    try {
+      with (mask) {
+        code= JSON.parse(str, function (key, value) {
+          var prefix;
+
+          try {
+            if (typeof value != 'string') {
+              return value;
+            }
+            if (value.length < 8) {
+              return value;
+            }
+
+            prefix = value.substring(0, 8);
+
+            if (prefix === 'function') {
+              return eval('(' + value + ')');
+            }
+            if (prefix === '_PxEgEr_') {
+              return eval(value.slice(8));
+            }
+            return value;
+          } catch (e) {
+            throw {error:e,value:value};
+          }
+        });
+     };
+    } catch (e) {
+      // within mask there was no current reference
+      if (current) current.error=e.value||str;
+      throw e.error||e;
+    }
+   return code;
+  };
+
+  exports.clone = function (obj, date2obj) {
+    return exports.parse(exports.stringify(obj), date2obj);
+  };
+
+  exports.current =function (module) { current=module.current; };
+
+}(typeof exports === 'undefined' ? (window.JSONfn = {}) : exports));
+
+
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d22 2
+a23 2
+ **    $RCS:         $Id: aios.js,v 1.2 2017/05/19 05:13:27 sbosse Exp $
+ **    $VERSION:     1.1.6
+d28 1
+a28 1
+ **          parse and clone objects with functions with masked context (mask).
+d58 1
+a58 1
+        return value.toString();
+@
