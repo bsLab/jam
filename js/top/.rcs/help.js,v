@@ -1,0 +1,33 @@
+head	1.1;
+access;
+symbols;
+locks
+	sbosse:1.1; strict;
+comment	@# @;
+
+
+1.1
+date	2020.02.03.09.45.01;	author sbosse;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@.
+@
+text
+@var Doc = Require('doc/doc');
+
+var Sections = {
+  Into:FileEmbedded('doc/../../doc/jam.md','utf8'),
+  Lib:FileEmbedded('doc/../../doc/api.md','utf8'),
+  Aios:FileEmbedded('doc/../../doc/aios.md','utf8'),
+}
+
+print(Sections.Aios)
+@
