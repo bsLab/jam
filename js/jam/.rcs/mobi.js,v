@@ -1,0 +1,478 @@
+head	1.3;
+access;
+symbols;
+locks
+	sbosse:1.3; strict;
+comment	@# @;
+
+
+1.3
+date	2020.02.03.09.45.01;	author sbosse;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2017.05.27.18.20.36;	author sbosse;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2017.05.20.15.56.53;	author sbosse;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.3
+log
+@.
+@
+text
+@/**
+ **      ==============================
+ **       O           O      O   OOOO
+ **       O           O     O O  O   O
+ **       O           O     O O  O   O
+ **       OOOO   OOOO O     OOO  OOOO
+ **       O   O       O    O   O O   O
+ **       O   O       O    O   O O   O
+ **       OOOO        OOOO O   O OOOO
+ **      ==============================
+ **      Dr. Stefan Bosse http://www.bsslab.de
+ **
+ **      COPYRIGHT: THIS SOFTWARE, EXECUTABLE AND SOURCE CODE IS OWNED
+ **                 BY THE AUTHOR(S).
+ **                 THIS SOURCE CODE MAY NOT BE COPIED, EXTRACTED,
+ **                 MODIFIED, OR OTHERWISE USED IN A CONTEXT
+ **                 OUTSIDE OF THE SOFTWARE SYSTEM.
+ **
+ **    $AUTHORS:     Stefan Bosse
+ **    $INITIAL:     (C) 2006-2020 bLAB
+ **    $CREATED:     15-1-16 by sbosse.
+ **    $RCS:         $Id: mobi.js,v 1.2 2017/05/27 18:20:36 sbosse Exp $
+ **    $VERSION:     1.10.1
+ **
+ **    $INFO:
+ **
+ **  JavaScript AIOS Agent Mobilityn Module
+ **
+ **    $ENDOFINFO
+ */
+
+var Comp = Require('com/compat');
+var Net;
+
+var options = {
+  version:'1.10.1'
+}
+
+function addr2url(addr) {
+  return typeof addr=='number'?String(addr):addr.address+':'+addr.port;
+}
+
+if (global.config.dos) Net=Require('dos/network');
+
+var current=none;
+var Aios = none;
+
+/** Direction type; used with move and link? operations
+ *  The link operation can eitehr return a boolean value or
+ *  a list of reachable destiantions (PATH/IP only).
+ *  NORTH, ..., are used for P2P connections only. 
+ */
+var DIRS= ['NORTH','SOUTH','WEST','EAST','LEFT','RIGHT','UP','DOWN','ORIGIN','NW','NE','SW','SE',
+           'DELTA','RANGE','NODE','IP','PATH','CAP'];
+
+/*
+
+enum DIR = {
+  NORTH , SOUTH , .. ,
+  IP(ip:string) , .. 
+  } : dir
+tyoe dir = NORTH | SOUTH | .. | IP {tag,ip:string } | ..
+*/
+var DIR = {
+  NORTH:'DIR.NORTH',
+  SOUTH:'DIR.SOUTH',
+  WEST:'DIR.WEST',
+  EAST:'DIR.EAST',
+  LEFT:'DIR.LEFT',
+  RIGHT:'DIR.RIGHT',
+  UP:'DIR.UP',
+  DOWN:'DIR.DOWN',
+  ORIGIN:'DIR.ORIGIN',
+  NW:'DIR.NW',
+  NE:'DIR.NE',
+  SW:'DIR.SW',
+  SE:'DIR.SE',
+  
+  BACKWARD:'DIR.BACKWARD',
+  FORWARD:'DIR.FORWARD',
+  OPPOSITE:'DIR.OPPOSITE',
+
+  // Assuming:  z-> x     N
+  //            |        W+E  U(+z)/D(-z)
+  //            v y       S
+  DELTA: function (addr) { return {tag:"DIR.DELTA",delta:addr} },
+  // Only for link? operation
+  RANGE: function (r) { return {tag:"DIR.RANGE",radius:r} },  
+  // Address a node (identifier name) directly
+  NODE: function (node) { return {tag:"DIR.NODE",node:node} },
+  IP:function (addr) { return {tag:"DIR.IP",ip:addr} },
+  /*
+  ** 
+  ** Path can contain filter, e.g. range /distance[0-5], /distance[5], .. 
+  ** or sets of destinations, e.g., /node*
+  ** or a hopping array [dest1,dest2,..]
+  ** type of path = string | string array
+  */
+  PATH:function (path) { return {tag:"DIR.PATH",path:path} },
+  CAP:function (cap) { return {tag:"DIR.CAP",cap:cap} }
+}
+
+DIR.tag = {
+  NORTH:'DIR.NORTH',
+  SOUTH:'DIR.SOUTH',
+  WEST:'DIR.WEST',
+  EAST:'DIR.EAST',
+  LEFT:'DIR.LEFT',
+  RIGHT:'DIR.RIGHT',
+  UP:'DIR.UP',
+  DOWN:'DIR.DOWN',
+  ORIGIN:'DIR.ORIGIN',
+  NW:'DIR.NW',
+  NE:'DIR.NE',
+  SW:'DIR.SW',
+  SE:'DIR.SE',
+  BACKWARD:'DIR.BACKWARD',
+  FORWARD:'DIR.FORWARD',
+  OPPOSITE:'DIR.OPPOSITE',
+  DELTA:'DIR.DELTA',
+  RANGE:'DIR.RANGE',
+  NODE:'DIR.NODE',
+  IP:'DIR.IP',
+  PATH:'DIR.PATH',
+  CAP:'DIR.CAP',
+}
+/** Back direction. In case of IP, the remote address on receiving agent code is used.
+ */
+
+function opposite (dir,next) {
+  var chan;
+  switch (dir.tag||dir) {
+    case DIR.NORTH: return DIR.SOUTH;
+    case DIR.SOUTH: return DIR.NORTH;
+    case DIR.WEST:  return DIR.EAST;
+    case DIR.EAST:  return DIR.WEST;
+    case DIR.LEFT:  return DIR.RIGHT;
+    case DIR.RIGHT: return DIR.LEFT;
+    case DIR.UP:    return DIR.DOWN;
+    case DIR.DOWN:  return DIR.UP;
+    case DIR.NW:    return DIR.SE;
+    case DIR.NE:    return DIR.SW;
+    case DIR.SE:    return DIR.NW;
+    case DIR.SW:    return DIR.NE;
+    case BACKWARD:  return DIR.FORWARD;
+    case FORWARD:   return DIR.BACKWARD;
+    case OPPOSITE:  return DIR.OPPOSITE;
+    case DIR.tag.DELTA: 
+      if (!next) return DIR.DELTA(dir.delta.map(function (v) {return -v}));
+      else return;
+    case DIR.tag.IP: 
+      // try to use current process back attribute containing remote IP address upon receiving
+      if (current.process && current.process.back && current.process.back.tag==DIR.tag.IP) return current.process.back;
+      else return none;
+    case DIR.tag.NODE:
+      // try to use current process back attribute containing remote IP address upon receiving
+      if (current.process && current.process.back) {
+        switch (current.process.back.tag) {
+          case DIR.tag.IP: 
+            // Try to resolve node name
+            if (current.node && current.node.connections.ip && current.node.connections.ip.reverse) 
+              return DIR.NODE(current.node.connections.ip.reverse(current.process.back.ip));
+            else 
+              return current.process.back;
+          case DIR.tag.NODE: 
+            return current.process.back;
+          default:
+            return none;
+        }
+      } else return none;
+    
+    case 'DIR.PATH': 
+      // TODO: this node name/path!
+      return none;
+    case 'DIR.CAP': 
+      // TODO: this node capability!
+      return none;
+    default: 
+      return none;
+  }
+};
+
+// Create a valid DIR compatible type from a lowercase name specifier (e.g., north -> DIR.NORTH
+DIR.from = function (name) {
+  var Dir=name.toUpperCase();
+  if (DIRS.indexOf(Dir) == -1) return;
+  return {tag:'DIR.'+Dir}
+}
+// Create a valid lowercase name specifier from DIR (e.g. DIR.NORTH -> north)
+DIR.to = function (dir) {
+  if ((dir.tag||dir).substr(0,4)!='DIR.') return;
+  return (dir.tag||dir).substr(4).toLowerCase();
+}
+
+DIR.isDir = function (o) {
+  return (o.tag||o).indexOf('DIR')==0;
+}
+DIR.opposite=opposite;
+DIR.print = function (dir) {
+  if (!dir) return 'undefined';
+  var name=(dir.tag||dir).substring(4);
+  switch (dir.tag||dir) {
+    case 'DIR.DELTA':
+      return name+'('+Comp.printf.list(dir.delta)+')';
+    case 'DIR.RANGE':
+      return name+'('+dir.radius+')';
+    case 'DIR.NODE':
+      return name+'('+dir.node+')';
+    case 'DIR.IP': 
+      return name+'('+(dir.ip==undefined?'*':dir.ip)+')';
+    case 'DIR.PATH': 
+      return name+'('+dir.path+')';
+    case 'DIR.CAP':
+      return name+'('+dir.cao+')';
+    default:
+      if (!dir.ip) return name
+      else return name+'('+addr2url(dir.ip)+')';
+  }
+};
+DIR.toString = function (dir) {
+  function format(ip) {
+    if (ip==undefined) return '';
+    if (typeof ip == 'number') return ip;
+    if (typeof ip == 'string') return '"'+ip+'"';
+  }
+  switch (dir.tag) {
+    case DIR.NORTH: return 'DIR.North('+format(dir.ip)+')';
+    case DIR.SOUTH: return 'DIR.South('+format(dir.ip)+')';
+    case DIR.WEST:  return 'DIR.West('+format(dir.ip)+')';
+    case DIR.EAST:  return 'DIR.East('+format(dir.ip)+')';
+    case DIR.tag.IP:    return 'DIR.IP('+format(dir.ip)+')';
+  }
+  return dir;
+}
+/** Search a channel that is connected to node 'destnode'
+ *
+ */
+function lookup(node,destnode) {
+  var chan,path;
+  if (node.connections.ip && node.connections.ip.lookup) {
+    path=node.connections.ip.lookup(destnode);
+    if (path) return {chan:node.connections.ip,dest:path};
+  }
+}
+
+/** Move current agent to new node 
+ *
+ */
+function move(dir) {
+  var node1=current.node,
+      chan=none,
+      dest,
+      stat,
+      path,
+      alive = function () {return 1},
+      nokill=false,
+      name=DIR.to(dir),
+      msg;
+  switch (dir.tag||dir) {
+    case 'DIR.IP':    
+      chan=node1.connections.ip; 
+      dest=dir.ip; 
+      break;
+    case 'DIR.DELTA':
+      current.process.dir=Comp.obj.copy(dir);
+      if (dir.delta[0]>0 && node1.connections.east && node1.connections.east.status()) 
+        current.process.dir.delta[0]--,chan=node1.connections.east;
+      else if (dir.delta[0]<0 && node1.connections.west && node1.connections.west.status()) 
+        current.process.dir.delta[0]++,chan=node1.connections.west;
+      else if (dir.delta[1]>0 && node1.connections.south && node1.connections.south.status()) 
+        current.process.dir.delta[1]--,chan=node1.connections.south;
+      else if (dir.delta[1]<0 && node1.connections.north && node1.connections.north.status()) 
+        current.process.dir.delta[1]++,chan=node1.connections.north;
+      else if (dir.delta[2]>0 && node1.connections.up && node1.connections.up.status()) 
+        current.process.dir.delta[2]--,chan=node1.connections.up;
+      else if (dir.delta[2]<0 && node1.connections.down && node1.connections.down.status()) 
+        current.process.dir.delta[2]++,chan=node1.connections.down;
+      break;
+    case 'DIR.NODE':
+      if (node1.connections.range && 
+          node1.connections.range[dir.node] && 
+          node1.connections.range[dir.node].status()) 
+        chan=node1.connections.range[dir.node],dest=dir.node;
+      else {
+        // Find node name -> channel mapping
+        dest=lookup(node1,dir.node); 
+        if (dest) chan=dest.chan,dest=dest.dest;
+      }
+      break;
+    case 'DIR.PATH':
+      // TODO
+      // if (!current.network) {current.error='No connection to path '+dir.path; throw 'MOVE'};
+      if (Comp.obj.isArray(dir.path)) {
+        path=Comp.array.pop(dir.path);
+      } else path = dir.path;
+      chan=node1.connections.path; dest=path; 
+      nokill=true;
+      break;
+    case 'DIR.CAP':
+      // TODO
+      if (!current.network) {current.error='No connection to server '+dir.cap; throw 'MOVE'};
+      chan=node1.connections.dos; dest=Net.Parse.capability(dir.cap).cap; 
+      nokill=true; 
+      break;
+    default:
+      if (!name) {
+        current.error='ENOCHANNEL';
+        throw 'MOVE';
+      }
+      chan=node1.connections[name];
+  }
+  // print(node1.connections);
+  // print(chan)
+  if (chan==none || !chan.status(dest)) {
+    current.error='No connection to direction '+DIR.print(dir); throw 'MOVE'
+  };
+  
+  if (!current.process.back) current.process.back=Aios.DIR.opposite(dir);
+  node1.stats.migrate++;
+    
+  if (Aios.options.fastcopy && chan.virtual) msg=Aios.Code.toObject(current.process);
+  else msg=Aios.Code.ofCode(current.process,false);
+  
+  current.process.move=dir;
+
+  /* NEWCOMM | context is current process !!!! */ 
+  chan.send({agent:msg,to:dest,context:current.process});
+  // kill or supend ghost agent
+  if (!nokill) current.process.kill=true;       // discard process now
+  else         current.process.suspended=true;  // discard process after send op finished
+  //print(current.process.print());
+
+}
+
+module.exports = {
+  agent:{
+    move:move,
+    opposite:opposite,
+    DIR:DIR
+  },
+  current:function (module) { current=module.current; Aios=module; },
+  DIR:DIR,
+  DIRS:DIRS,
+  options:options
+}
+@
+
+
+1.2
+log
+@*** empty log message ***
+@
+text
+@d20 1
+a20 1
+ **    $INITIAL:     (C) 2006-2017 bLAB
+d22 2
+a23 2
+ **    $RCS:         $Id: mobi.js,v 1.1 2017/05/20 15:56:53 sbosse Exp $
+ **    $VERSION:     1.4.3
+d35 8
+d53 11
+d78 13
+d96 2
+d103 30
+a132 2
+function opposite (dir) {
+  switch (dir) {
+d135 3
+a137 3
+    case DIR.WEST: return DIR.EAST;
+    case DIR.EAST: return DIR.WEST;
+    case DIR.LEFT: return DIR.RIGHT;
+d139 41
+a179 16
+    case DIR.UP: return DIR.DOWN;
+    case DIR.DOWN: return DIR.UP;
+    case DIR.NW: return DIR.SE;
+    case DIR.NE: return DIR.SW;
+    case DIR.SE: return DIR.NW;
+    case DIR.SW: return DIR.NE;
+    case DIR.IP: 
+      // TODO: node IP?
+      return DIR.ORIGIN;
+    case DIR.PATH: 
+      // TODO: node name?
+      return DIR.ORIGIN;
+    case DIR.CAP: 
+      // TODO: node capability?
+      return DIR.ORIGIN;
+    default: return DIR.ORIGIN;
+d183 15
+d199 46
+d254 1
+d257 1
+d260 30
+a289 7
+    case DIR.NORTH: chan=node1.connections.north; break;
+    case DIR.SOUTH: chan=node1.connections.south; break;
+    case DIR.WEST:  chan=node1.connections.west; break;
+    case DIR.EAST:  chan=node1.connections.east; break;
+    case DIR.UP:  chan=node1.connections.up; break;
+    case DIR.DOWN:  chan=node1.connections.down; break;
+    case DIR.IP:    chan=node1.connections.ip; dest=dir.ip; break;
+d293 4
+a296 1
+      chan=node1.connections.path; dest=dir.path; 
+d305 6
+a310 1
+    default: throw 'MOVE';
+d315 1
+a315 1
+    current.error='No connection to direction '+dir; throw 'MOVE'
+d318 1
+d325 3
+a327 2
+  chan.send(msg,dest,current);
+  
+d329 2
+a330 2
+  if (!nokill) current.process.kill=true;
+  else         current.process.suspended=true;
+d342 3
+a344 1
+  DIR:DIR
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d22 2
+a23 2
+ **    $RCS:         $Id: aios.js,v 1.2 2017/05/19 05:13:27 sbosse Exp $
+ **    $VERSION:     1.4.1
+d83 9
+a116 1
+      break;
+d139 2
+a140 2
+  if (!Aios.options.dirty) msg=Aios.Code.ofCode(current.process,false);
+  else msg=Aios.Code.toObject(current.process);
+@
