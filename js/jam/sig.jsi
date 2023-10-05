@@ -1,0 +1,15 @@
+use jam/mobi as MO
+use jam/proc as PRO
+use jam/aios as AI
+
+agent : object {
+  broadcast: function (^ac,^range,^sig,arg:*)
+  send: function (target:AI.id,sig:string,arg:*),
+  sendto: function (to:MO.DIR,sig:string,arg:*),
+  sleep: function (milli:number),
+  timer: object {
+    add : function (milli:number,sig:string,arg:*,repeat:boolean),
+    delete: function (sig:string)
+  },
+  wakeup: function (PRO.process)
+}
