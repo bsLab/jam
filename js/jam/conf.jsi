@@ -1,0 +1,14 @@
+agent: object {
+  act: object {
+    add: function (act:string,code:function),
+    delete: function (act:string),
+    update: function (act:string,code:function)
+  },
+
+  trans: object {
+    add: function (from:string,cond:function),
+    delete: function (trans:string)
+    update: function (from:string,cond:function)
+  }
+}
+
