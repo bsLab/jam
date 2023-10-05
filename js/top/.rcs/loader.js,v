@@ -1,0 +1,149 @@
+head	1.2;
+access;
+symbols;
+locks
+	sbosse:1.2; strict;
+comment	@# @;
+
+
+1.2
+date	2017.05.27.18.20.44;	author sbosse;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2017.05.23.07.00.54;	author sbosse;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@*** empty log message ***
+@
+text
+@/**
+ **      ==================================
+ **      OOOO   OOOO OOOO  O      O   OOOO
+ **      O   O  O    O     O     O O  O   O
+ **      O   O  O    O     O     O O  O   O
+ **      OOOO   OOOO OOOO  O     OOO  OOOO
+ **      O   O     O    O  O    O   O O   O
+ **      O   O     O    O  O    O   O O   O
+ **      OOOO   OOOO OOOO  OOOO O   O OOOO
+ **      ==================================
+ **      BSSLAB, Dr. Stefan Bosse http://www.bsslab.de
+ **
+ **      COPYRIGHT: THIS SOFTWARE, EXECUTABLE AND SOURCE CODE IS OWNED
+ **                 BY THE AUTHOR.
+ **                 THIS SOURCE CODE MAY NOT BE COPIED, EXTRACTED,
+ **                 MODIFIED, OR OTHERWISE USED IN A CONTEXT
+ **                 OUTSIDE OF THE SOFTWARE SYSTEM.
+ **
+ **    $AUTHORS:     Stefan Bosse
+ **    $INITIAL:     (C) 2006-2016 BSSLAB
+ **    $CREATED:     1/7/16 by sbosse.
+ **    $RCS:         $Id: aios.js,v 1.2 2017/05/19 05:13:27 sbosse Exp $
+ **    $VERSION:     1.1.2
+ **
+ **    $INFO:
+ **
+ **  Sandbox Loader
+ **
+ **    $ENDOFINFO
+ */
+var log = function (arg) {
+  console.log(arg);
+}
+
+if (global.TARGET=='node')  { 
+  var fs = require('fs');
+
+  /** Load a self-contained JS program in a sandbox environment.
+   *  Returns a module object {main: function(args) {..}}.
+   *  The program can be started by executing m.main([arg1,..]).
+   *  File version 
+  */
+  function loadfile (file,maskext) {
+    var m = {},
+        p,
+        mask = {
+          console:{
+          log:log,
+          warn:log
+          },
+          process:{
+            argv:[],
+            cwd:process.cwd,
+            env:process.env,
+            exit:function () {},
+            on:process.on
+          }
+        },
+        text, reg;
+    if (maskext) for (p in maskext) {
+      mask[p]=maskext[p];
+    }
+    text = fs.readFileSync(file,'utf8');
+
+    reg = /#!/
+    text=text.replace(reg,'//');
+    with (mask) {
+      m=eval('var x={main:function(args) {process.argv=args; '+text+'}}; x')
+    }
+    return m;
+  }
+}
+/** Load a self-contained JS program in a sandbox environment.
+ *  Returns a module object {main: function(args) {..}}.
+ *  The program can be started by executing m.main([arg1,..]).
+ *  Text version.
+*/
+function load (text,maskext) {
+  var m = {},
+      p,
+      mask = {
+        console:{
+        log:log,
+        warn:log
+        },
+        process:{
+          argv:[],
+          cwd:process.cwd,
+          env:process.env,
+          exit:function () {},
+          on:(typeof process != 'undefined')?process.on:function () {}
+        }
+      },
+      text, reg;
+  if (maskext) for (p in maskext) {
+    mask[p]=maskext[p];
+  }
+
+  reg = /#!/
+  text=text.replace(reg,'//');
+  with (mask) {
+    m=eval('var x={main:function(args) {process.argv=args; '+text+'}}; x')
+  }
+  return m;
+}
+
+
+module.exports = {
+  load:load,
+  loadfile:loadfile!=undefined?loadfile:undefined
+}
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d22 1
+@
