@@ -1,0 +1,183 @@
+#!/bin/bash
+
+TOP=/home/sbosse/proj/jam
+SRC=$TOP/js
+APP=sejam2-app
+MAIN=$TOP/js/ui/sejam2/sejam2.js
+
+INSTALLDIR=/opt/jam
+MAKEAPP=$TOP/tools/makeAPP
+
+JSMIN=$TOP/tools/`uname`/jsmin
+INLINER=/usr/bin/inliner
+
+
+MV=mv
+RM=rm
+CP=cp
+ZIP=zip
+CHMOD=chmod
+CAT=cat
+ECHO=echo
+CC=gcc
+SED=sed
+INSTALL=$TOP/tools/install.sh
+AUX="ui/sejam2/sejam2.html ui/sejam2/main.js web/codemirror web/HackTimer.js web/HackTimerWorker.js"
+AUX="$AUX ui/webix/webix.js ui/webix/webix_debug.js ui/webix/webix.css ui/webix/common/win.css" 
+AUX="$AUX ui/webix/fonts ui/graphics/graphics.min.js ui/graphics/graphics.js"
+AUX="$AUX ui/sejam2/icons ui/cannon sql/sqlite3.js sql/sqlite3C.js"
+AUX="$AUX ui/botui/vue.js"
+AUX="$AUX ui/botui/vue-select.js"
+AUX="$AUX ui/botui/fontawesome.js"
+AUX="$AUX ui/botui/fontawesome.css"
+AUX="$AUX ui/botui/font-awesome-css.min.css"
+AUX="$AUX ui/botui/es6-promise.min.js"
+AUX="$AUX ui/botui/build/botui.js"
+AUX="$AUX ui/botui/build/botui.css"
+AUX="$AUX ui/botui/build/botui-theme-default.css"
+AUX="$AUX ui/clippy"
+AUX="$AUX ui/chart/Chart.js"
+AUX="$AUX ui/chart/Chart-matrix.js"
+AUX="$AUX ui/chart/Chart.css"
+AUX="$AUX ui/chart/canvas2svg.js"
+AUX="$AUX ui/webui/redpointer.png"
+AUX="$AUX web/jquery.min.js"
+
+
+if [ $# = 0 ]
+then
+    echo "Usage: build <targets>"
+    echo "Targets: all app pkg mono clean install"
+    exit 1
+fi
+
+check ()
+{
+    if [ $? != 0 ]
+    then
+        echo "Abort due to errors building target."
+        exit 1
+    fi
+}
+
+makeapp()
+{
+   $MAKEAPP -exit $MAIN -v -h # -c ac1.js
+   check
+   $ECHO Creating $APP.js
+   $CAT bundle.js > $APP.js
+   $ECHO Creating $APP.min.js
+   $CAT $APP.js | $JSMIN > $APP.min.js
+   check
+   $CHMOD a+x $APP.min.js
+   $MV $APP.js $APP.debug.js
+   $MV $APP.min.js $APP.js
+   $RM bundle.js             
+}
+
+makepkg()
+{
+  mkdir -p pkg
+  for file in $AUX
+  do
+    echo $CP $SRC/$file pkg/
+    if [ -d $SRC/$file ]
+    then
+      $CP -r $SRC/$file pkg/
+    else
+      $CP $SRC/$file pkg/
+    fi
+  done 
+  echo $CP $APP.js pkg/
+  $CP $APP.js pkg/
+  echo $CP $APP.debug.js pkg/
+  $CP $APP.debug.js pkg/
+  
+}
+
+makesingle()
+{
+  echo "Creating sejam2.nw"
+  cd $INSTALLDIR/sejam2
+  $ZIP -r /tmp/sejam2.nw *
+  cd -;
+  $MV /tmp/sejam2.nw .
+}
+
+
+install_dir() {
+    for i in "$1"/*;do
+        if [ -d "$i" ];then
+            echo "dir: $i"
+            $INSTALL -d $INSTALLDIR/sejam2/$i
+            check
+            install_dir "$i"
+        elif [ -f "$i" ]; then
+            echo "file: $i"
+            $INSTALL -C $i $INSTALLDIR/sejam2/${i%/*}
+            check
+        fi
+    done
+}
+
+for TARGET in $@
+do
+    echo "Building target [$TARGET] ..."
+    case $TARGET in
+        app)
+            makeapp
+            check
+            ## makesingle
+            check
+            ;;
+        pkg)
+            makepkg
+            ;;
+        mono)
+            $INSTALL -d $INSTALLDIR
+            $INSTALL -d $INSTALLDIR/bin
+            rm -rf $INSTALLDIR/sejam2
+            $INSTALL -d $INSTALLDIR/sejam2
+            $SED -e "s/pkg\///" package.json > $INSTALLDIR/sejam2/package.json
+            $INSTALL -C $TOP/scripts/sejam2 $INSTALLDIR/bin
+            cd pkg; install_dir . 
+            cd -
+            check
+            makesingle
+            check
+            ;;
+        all)
+            makeapp
+            check
+            makepkg
+            check
+            $INSTALL -d $INSTALLDIR
+            $INSTALL -d $INSTALLDIR/bin
+            rm -rf $INSTALLDIR/sejam2
+            $INSTALL -d $INSTALLDIR/sejam2
+            $SED -e "s/pkg\///" package.json > $INSTALLDIR/sejam2/package.json
+            $INSTALL -C $TOP/scripts/sejam2 $INSTALLDIR/bin
+            cd pkg; install_dir . 
+            cd -
+            check
+            makesingle
+            check
+            ;;
+        clean)  
+            $RM -f $APP header bundle.js
+            ;;
+        install)
+            $INSTALL -d $INSTALLDIR
+            $INSTALL -d $INSTALLDIR/bin
+            rm -rf $INSTALLDIR/sejam2
+            $INSTALL -d $INSTALLDIR/sejam2
+            $SED -e "s/pkg\///" package.json > $INSTALLDIR/sejam2/package.json
+            $INSTALL -C $TOP/scripts/sejam2 $INSTALLDIR/bin
+            cd pkg; install_dir . 
+            cd -
+            $INSTALL -C sejam2.nw $INSTALLDIR/bin
+            check
+            ;;
+		
+    esac
+done
