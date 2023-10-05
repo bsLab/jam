@@ -3,7 +3,7 @@ JavaScript Agent Machine Software Framework - Mobile Agents for the Web and IoT
 
 ---
 
-**Starting from 10/2023, this repository is not updated and any updates are only availble here**:
+**Starting from 10/2023, this repository is not updated frequently (or at all) and any recent updates are only availble here**:
 
 http://git.edu-9.de/sbosse/jam
 
