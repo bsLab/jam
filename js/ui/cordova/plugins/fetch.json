@@ -1,0 +1,91 @@
+{
+    "cordova-plugin-whitelist": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-whitelist@1"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-android-sensor-listeners": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/QuentinRoy/cordova-plugin-android-sensor-listeners",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-file": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-file@4.1"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-compat": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-compat"
+        },
+        "is_top_level": false,
+        "variables": {}
+    },
+    "cordova-plugin-networking-bluetooth": {
+        "source": {
+            "type": "local",
+            "path": "/media/sf_tmp/bluetooth"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-contacts": {
+        "source": {
+            "type": "local",
+            "path": "/media/sf_tmp/cordova-plugin-contacts-2.0.x"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "org.apache.cordova.geolocation": {
+        "source": {
+            "type": "local",
+            "path": "/tmp/cordova-plugin-geolocation-0.3.6"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cl.rmd.cordova.dialoggps": {
+        "source": {
+            "type": "local",
+            "path": "/media/sf_tmp/cordova-dialog-gps-master"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-device": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-device"
+        },
+        "is_top_level": false,
+        "variables": {}
+    },
+    "cordova-plugin-http": {
+        "source": {
+            "type": "local",
+            "path": "/tmp/cordova-HTTP-master"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-background-mode": {
+        "source": {
+            "type": "local",
+            "path": "/media/sf_tmp/cordova-plugin-background-mode-974d6c4e2a6599dd6e47c4031a85b7054b06e3b3"
+        },
+        "is_top_level": true,
+        "variables": {}
+    }
+}
