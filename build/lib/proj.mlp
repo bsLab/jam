@@ -1,0 +1,107 @@
+FILES:
+
+
+--- COM ---
+
+@ + js/com/compat.js
+@ + js/com/evalx.js
+@ + js/com/err.js
+@ + js/com/io.js
+@ + js/com/io.browser.js
+@ + js/com/io.app.js
+@ + js/com/io.js
+@ + js/com/nav.js
+@ + js/com/path.js
+@ + js/com/pwgen.js
+@ + js/com/sprintf.js
+@ + js/com/cbl.js
+
+
+--- JAM ---
+
+@ + js/jam/aios.js
+@ + js/jam/analyzer.js
+@ + js/jam/amp.js
+@ + js/jam/ampCOM.js
+@ + js/jam/ampMAN.js
+@ + js/jam/ampUDP.js
+@ + js/jam/ampHTTP.js
+@ + js/jam/ampStream.js
+@ + js/jam/chan.js
+@ + js/jam/code.js
+@ + js/jam/conf.js
+@ + js/jam/mobi.js
+@ + js/jam/node.js
+@ + js/jam/proc.js
+@ + js/jam/sig.js
+@ + js/jam/ts.js
+@ + js/jam/world.js
+@ + js/jam/jsonfn.js
+@ + js/jam/sandbox.js
+@ + js/jam/watchdog.js
+
+@ + js/dos/buf.js
+@ + js/dos/network.js
+
+--- ML ----
+
+@ + js/ml/C45.js
+@ + js/ml/dt.js
+@ + js/ml/dti.js
+@ + js/ml/knn.js
+@ + js/ml/math.js
+@ + js/ml/ml.js
+@ + js/ml/svm.js
+
+--- NN ----
+
+@ + js/nn/nn.js
+
+--- DB ----
+
+@ + js/db/db.js
+
+
+--- OS ----
+
+@ + js/os/base64.js
+@ + js/os/crypto.js
+@ + js/os/getenv.js
+@ + js/os/lz-string.js
+@ + js/os/typedarray.js
+
+--- DOS ---
+@ + js/dos/buf.js
+@ + js/dos/des48.js
+@ + js/dos/network.js
+
+
+--- TOP ---
+
+@ + js/top/loader.js
+@ + js/top/module.js
+@ + js/top/makelib
+@ + js/top/jamlib.js
+@ + js/top/runapp
+
+---- NETWORK ----
+@ + js/dos/buf.js
+
+@ bug-report
+
+
+
+PROJECT:
+  PROJ_PATH $HOME/proj/jam/
+  SRC_PATH $PROJ_PATH/
+  OBJ_PATH $PROJ_PATH/build
+  VUM_PATH
+  
+COMMANDS:
+  OPEN ALL
+  CLOSE ALL
+  BUILD ALL
+  BUILD CLEAN
+  BUILD INSTALL
+  BUILD VERSION
+
