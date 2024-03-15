@@ -85,6 +85,7 @@ FILES:
 @ + js/rtree/rbush.js
 
 --- UI ---
+@ + js/ui/sejam2/file.js
 @ + js/ui/sejam2/main.js
 @ + js/ui/sejam2/sejam2.html
 @ + js/ui/sejam2/sejam2web.html
