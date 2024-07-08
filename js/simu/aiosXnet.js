@@ -522,7 +522,8 @@ function aiosXnet(aiosXsimu,module) {
     else return set;
   }
   /*
-  ** Generic create operation (NetLogo comp., physical agents)
+  ** Generic create operation (NetLogo comp., **physical** agents)
+  ** Creates node+agent pair.
   **
   ** Note: callback is executed in that agent context!
   */
@@ -715,6 +716,14 @@ function aiosXnet(aiosXsimu,module) {
     },
   }
 
+  // TODO send net agents a signal
+  function signal (destination,signal,argument) {
+    // destination is agent id;
+    // we need the node id, too
+    var agent = self.world.getAgentProcess(destination);
+    return agent?agent.node:'??'
+  }
+  
   function set(p,v) {
     var node=current.node,
         agent=current.process.agent,
@@ -859,6 +868,7 @@ function aiosXnet(aiosXsimu,module) {
     group:group,
     set:set,
     setxy:setxy,
+    signal:signal,
     turn:turn,
     within:within
   }
